@@ -62,7 +62,49 @@ const approvals = [
     { name: 'Astra Zen Limited', type: 'NEW SERVICE', status: 'New', time: 'Just now' },
 ];
 
+import { platformService } from '../services/platformService';
+import { PlatformStats } from '../types/api';
+
 const Dashboard = () => {
+    const [loading, setLoading] = React.useState(true);
+    const [platformData, setPlatformData] = React.useState<PlatformStats | null>(null);
+
+    React.useEffect(() => {
+        const fetchStats = async () => {
+            try {
+                const data = await platformService.getOverviewStats();
+                setPlatformData(data);
+            } catch (error) {
+                console.error('Error fetching dashboard stats:', error);
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchStats();
+    }, []);
+
+    const dynamicStats = [
+        { label: 'Total Users', value: platformData?.total_users.toLocaleString() || '12,840', change: `+${platformData?.growth.users}%`, icon: Users, color: 'text-blue-500', bg: 'bg-blue-50' },
+        { label: 'Active Users', value: platformData?.active_users.toLocaleString() || '11,200', change: '+5.2%', icon: UserCheck, color: 'text-teal-500', bg: 'bg-teal-50' },
+        { label: 'Total Companies', value: platformData?.total_companies.toLocaleString() || '3,450', icon: Briefcase, color: 'text-indigo-500', bg: 'bg-indigo-50' },
+        { label: 'Pending Approvals', value: platformData?.pending_approvals.toLocaleString() || '42', icon: Clock, color: 'text-amber-500', bg: 'bg-amber-50', urgent: true },
+        { label: 'Total Products', value: platformData?.total_products.toLocaleString() || '45,200', icon: Package, color: 'text-purple-500', bg: 'bg-purple-50' },
+        { label: 'Pending Products', value: '128', icon: Clock, color: 'text-orange-500', bg: 'bg-orange-50' },
+        { label: 'Total Services', value: '12,400', icon: Wrench, color: 'text-pink-500', bg: 'bg-pink-50' },
+        { label: 'Revenue', value: platformData ? `$${platformData.revenue.toLocaleString()}` : '$245,000', change: `+${platformData?.growth.revenue}%`, icon: DollarSign, color: 'text-emerald-500', bg: 'bg-emerald-50' },
+    ];
+
+    if (loading) {
+        return (
+            <div className="flex items-center justify-center min-h-[60vh]">
+                <div className="flex flex-col items-center gap-4">
+                    <div className="w-12 h-12 border-4 border-teal-500/20 border-t-teal-500 rounded-full animate-spin"></div>
+                    <p className="text-slate-400 font-bold animate-pulse text-sm">Synchronizing Platform Data...</p>
+                </div>
+            </div>
+        );
+    }
+
     return (
         <div className="space-y-8 animate-in fade-in duration-500">
             <div className="flex items-center justify-between">
@@ -83,10 +125,10 @@ const Dashboard = () => {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                {stats.map((stat, idx) => (
-                    <div key={idx} className="premium-card p-6 relative overflow-hidden">
+                {dynamicStats.map((stat, idx) => (
+                    <div key={idx} className="premium-card p-6 relative overflow-hidden group hover:scale-[1.02] transition-transform duration-300">
                         <div className="flex justify-between items-start">
-                            <div className={`${stat.bg} ${stat.color} p-2.5 rounded-xl`}>
+                            <div className={`${stat.bg} ${stat.color} p-2.5 rounded-xl group-hover:scale-110 transition-transform`}>
                                 <stat.icon size={22} />
                             </div>
                             {stat.change && (
@@ -96,7 +138,7 @@ const Dashboard = () => {
                                 </div>
                             )}
                             {stat.urgent && (
-                                <div className="text-amber-600 bg-amber-50 px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider">
+                                <div className="text-amber-600 bg-amber-50 px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider animate-pulse">
                                     Requires Action
                                 </div>
                             )}
@@ -106,7 +148,7 @@ const Dashboard = () => {
                             <h3 className="text-2xl font-bold text-slate-900 mt-1 font-outfit">{stat.value}</h3>
                         </div>
                         {/* Subtle background decoration */}
-                        <div className="absolute -right-2 -bottom-2 text-slate-50/50">
+                        <div className="absolute -right-2 -bottom-2 text-slate-500/5 transition-colors group-hover:text-teal-500/5">
                             <stat.icon size={80} />
                         </div>
                     </div>

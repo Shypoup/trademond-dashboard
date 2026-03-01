@@ -74,7 +74,45 @@ const revenueForecast = [
     { name: 'May', actual: 7000, predicted: 7500 },
 ];
 
+import { platformService } from '../services/platformService';
+import { PlatformStats } from '../types/api';
+
 const Platform = () => {
+    const [loading, setLoading] = React.useState(true);
+    const [platformData, setPlatformData] = React.useState<PlatformStats | null>(null);
+
+    React.useEffect(() => {
+        const fetchPlatformData = async () => {
+            try {
+                const data = await platformService.getOverviewStats();
+                setPlatformData(data);
+            } catch (error) {
+                console.error('Error fetching platform data:', error);
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchPlatformData();
+    }, []);
+
+    const dynamicMainStats = [
+        { label: 'Total Users', value: platformData?.total_users.toLocaleString() || '1,248,392', change: `+${platformData?.growth.users}%`, color: 'text-teal-600', bg: 'bg-teal-50' },
+        { label: 'Active Users', value: platformData?.active_users.toLocaleString() || '842,102', change: '+5.2%', color: 'text-blue-600', bg: 'bg-blue-50' },
+        { label: 'Total Companies', value: platformData?.total_companies.toLocaleString() || '45,210', change: '+8.1%', color: 'text-indigo-600', bg: 'bg-indigo-50' },
+        { label: 'Active Companies', value: '32,104', change: '+3.2%', color: 'text-emerald-600', bg: 'bg-emerald-50' },
+    ];
+
+    if (loading) {
+        return (
+            <div className="flex items-center justify-center min-h-[60vh]">
+                <div className="flex flex-col items-center gap-4">
+                    <div className="w-12 h-12 border-4 border-teal-500/20 border-t-teal-500 rounded-full animate-spin"></div>
+                    <p className="text-slate-400 font-bold animate-pulse text-sm">Querying Platform Metrics...</p>
+                </div>
+            </div>
+        );
+    }
+
     return (
         <div className="space-y-8 animate-in fade-in duration-700">
             <div className="flex items-center justify-between">
@@ -95,7 +133,7 @@ const Platform = () => {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                {mainStats.map((stat, idx) => (
+                {dynamicMainStats.map((stat, idx) => (
                     <div key={idx} className="premium-card p-6 border-b-4 border-slate-100 hover:border-teal-500 transition-all group">
                         <div className="flex justify-between items-start">
                             <p className="text-slate-500 text-[11px] font-bold uppercase tracking-widest">{stat.label}</p>

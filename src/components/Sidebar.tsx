@@ -1,5 +1,5 @@
 import React from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import {
     LayoutDashboard,
     ShoppingBag,
@@ -17,6 +17,7 @@ import {
 } from 'lucide-react';
 import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
+import { authService } from '../services/authService';
 
 function cn(...inputs: ClassValue[]) {
     return twMerge(clsx(inputs));
@@ -32,6 +33,7 @@ const navItems = [
         children: [
             { label: 'Products', path: '/products' },
             { label: 'Services', path: '/services' },
+            { label: 'Tags', path: '/tags' },
             { label: 'Categories', path: '/categories' }
         ]
     },
@@ -45,6 +47,26 @@ const navItems = [
 ];
 
 const Sidebar = () => {
+    const navigate = useNavigate();
+    const [user, setUser] = React.useState<any>(null);
+
+    React.useEffect(() => {
+        const fetchProfile = async () => {
+            try {
+                const profile = await authService.getProfile();
+                setUser(profile);
+            } catch (error) {
+                console.error('Failed to fetch profile:', error);
+            }
+        };
+        fetchProfile();
+    }, []);
+
+    const handleLogout = () => {
+        authService.logout();
+        navigate('/login');
+    };
+
     return (
         <aside className="fixed left-0 top-0 h-screen w-64 bg-[#0a2525] text-slate-300 border-r border-[#0e3131] flex flex-col z-50">
             <div className="p-6 flex items-center gap-3">
@@ -113,21 +135,30 @@ const Sidebar = () => {
                     <Settings size={18} />
                     <span>Settings</span>
                 </button>
-                <button className="flex w-full items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-slate-400 hover:bg-rose-500/10 hover:text-rose-400 transition-all">
+                <button
+                    onClick={handleLogout}
+                    className="flex w-full items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-slate-400 hover:bg-rose-500/10 hover:text-rose-400 transition-all"
+                >
                     <LogOut size={18} />
                     <span>Logout</span>
                 </button>
             </div>
 
-            <div className="p-4 bg-[#0d2e2e] m-4 rounded-2xl flex items-center gap-3 border border-white/5">
+            <NavLink
+                to="/profile"
+                className={({ isActive }) => cn(
+                    "p-4 m-4 rounded-2xl flex items-center gap-3 border transition-all cursor-pointer",
+                    isActive ? "bg-[#008080]/20 border-[#008080]/40" : "bg-[#0d2e2e] border-white/5 hover:border-white/10 hover:bg-[#113a3a]"
+                )}
+            >
                 <div className="w-10 h-10 rounded-full bg-slate-800 overflow-hidden border border-white/10">
-                    <img src="https://ui-avatars.com/api/?name=Alex+Rivera&background=008080&color=fff" alt="User" />
+                    <img src={user?.avatar || `https://ui-avatars.com/api/?name=${user?.name || 'Admin'}&background=008080&color=fff`} alt="User" />
                 </div>
                 <div className="flex-1 min-w-0">
-                    <p className="text-xs font-bold text-white truncate">Alex Rivera</p>
-                    <p className="text-[10px] text-slate-500 truncate">System Admin</p>
+                    <p className="text-xs font-bold text-white truncate">{user?.name || 'Admin'}</p>
+                    <p className="text-[10px] text-slate-500 truncate">{user?.email || 'System Admin'}</p>
                 </div>
-            </div>
+            </NavLink>
         </aside>
     );
 };
