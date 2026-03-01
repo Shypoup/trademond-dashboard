@@ -126,3 +126,16 @@ export interface ApiResponse<T> {
     per_page: number;
   };
 }
+
+export interface PlatformStats {
+  total_users: number;
+  active_users: number;
+  total_companies: number;
+  pending_approvals: number;
+  total_products: number;
+  revenue: number;
+  growth: {
+    users: number;
+    revenue: number;
+  };
+}
