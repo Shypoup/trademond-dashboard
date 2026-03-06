@@ -13,7 +13,17 @@ import {
     HelpCircle,
     Briefcase,
     Boxes,
-    ClipboardList
+    ClipboardList,
+    Layers,
+    List,
+    Beaker,
+    Star,
+    DollarSign,
+    Heart,
+    Network,
+    HardDrive,
+    Search,
+    Download
 } from 'lucide-react';
 import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
@@ -34,16 +44,29 @@ const navItems = [
             { label: 'Products', path: '/products' },
             { label: 'Services', path: '/services' },
             { label: 'Tags', path: '/tags' },
-            { label: 'Categories', path: '/categories' }
+            { label: 'Tag Proposals', path: '/tag-proposals' }
         ]
     },
-    { label: 'Governance', type: 'label' },
+    { label: 'Engagement', type: 'label' },
     { label: 'Moderation', icon: ShieldCheck, path: '/moderation', badge: 12 },
-    { label: 'Payments', icon: CreditCard, path: '/payments' },
-    { label: 'CMS', icon: FileText, path: '/cms' },
-    { label: 'Infrastructure', type: 'label' },
-    { label: 'System', icon: Database, path: '/system' },
-    { label: 'Support Tickets', icon: HelpCircle, path: '/support', badge: 5 },
+    { label: 'Reviews', icon: Star, path: '/reviews' },
+    { label: 'Follows Graph', icon: Network, path: '/follows' },
+    { label: 'Likes Metrics', icon: Heart, path: '/likes' },
+    { label: 'Monetization', type: 'label' },
+    { label: 'Plans & Pricing', icon: DollarSign, path: '/plans' },
+    { label: 'Global Features', icon: Layers, path: '/features' },
+    { label: 'Subscriptions', icon: ClipboardList, path: '/subscriptions' },
+    { label: 'Per-Entity Bypasses', icon: Settings, path: '/feature-overrides' },
+    { label: 'System Entitlements', icon: Layers, path: '/entitlements' },
+    { label: 'Keyword Sponsored', icon: Star, path: '/sponsorships' },
+    { label: 'Platform Settings', type: 'label' },
+    { label: 'Curated Content', icon: List, path: '/curated-lists' },
+    { label: 'A/B Experiments', icon: Beaker, path: '/experiments' },
+    { label: 'Platform Settings', icon: Settings, path: '/settings' },
+    { label: 'System APIs', type: 'label' },
+    { label: 'Search Re-indexer', icon: Search, path: '/search' },
+    { label: 'Media Store', icon: HardDrive, path: '/media' },
+    { label: 'Data Imports (*.xlsx)', icon: Download, path: '/imports' },
 ];
 
 const Sidebar = () => {

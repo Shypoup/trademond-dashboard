@@ -10,6 +10,22 @@ import Services from './pages/Services';
 import Tags from './pages/Tags';
 import Profile from './pages/Profile';
 import Login from './pages/Login';
+import Plans from './pages/Plans';
+import Features from './pages/Features';
+import Subscriptions from './pages/Subscriptions';
+import Reviews from './pages/Reviews';
+import CuratedLists from './pages/CuratedLists';
+import Sponsorships from './pages/Sponsorships';
+import Experiments from './pages/Experiments';
+import TagProposals from './pages/TagProposals';
+import Entitlements from './pages/Entitlements';
+import FeatureOverrides from './pages/FeatureOverrides';
+import Follows from './pages/Follows';
+import Likes from './pages/Likes';
+import MediaManagement from './pages/Media';
+import SearchManagement from './pages/SearchManagement';
+import AdminSettings from './pages/AdminSettings';
+import Imports from './pages/Imports';
 
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   const token = localStorage.getItem('trademond_token');
@@ -42,6 +58,27 @@ function App() {
           <Route path="platform" element={<Platform />} />
           <Route path="tags" element={<Tags />} />
           <Route path="listings" element={<Products />} /> {/* Redirecting for demo */}
+
+          {/* New administrative routes */}
+          <Route path="plans" element={<Plans />} />
+          <Route path="features" element={<Features />} />
+          <Route path="subscriptions" element={<Subscriptions />} />
+          <Route path="reviews" element={<Reviews />} />
+          <Route path="curated-lists" element={<CuratedLists />} />
+          <Route path="sponsorships" element={<Sponsorships />} />
+          <Route path="experiments" element={<Experiments />} />
+
+          {/* Newly requested complete routes */}
+          <Route path="tag-proposals" element={<TagProposals />} />
+          <Route path="entitlements" element={<Entitlements />} />
+          <Route path="feature-overrides" element={<FeatureOverrides />} />
+          <Route path="follows" element={<Follows />} />
+          <Route path="likes" element={<Likes />} />
+          <Route path="media" element={<MediaManagement />} />
+          <Route path="search" element={<SearchManagement />} />
+          <Route path="settings" element={<AdminSettings />} />
+          <Route path="imports" element={<Imports />} />
+
           <Route path="*" element={<Dashboard />} />
         </Route>
       </Routes>

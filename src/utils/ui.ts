@@ -23,7 +23,7 @@ export const formatDate = (dateString?: string): string => {
   }
 };
 
-export const formatCurrency = (amount: number | string | undefined): string => {
+export const formatCurrency = (amount: number | string | undefined | null): string => {
   if (amount === undefined || amount === null) return 'N/A';
   const num = typeof amount === 'string' ? parseFloat(amount) : amount;
   if (isNaN(num)) return String(amount);

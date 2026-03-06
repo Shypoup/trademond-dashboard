@@ -103,7 +103,7 @@ const Profile = () => {
                 });
 
                 // Fetch companies as they are needed for products/services too
-                const resp = await companyService.getUserCompanies();
+                const resp = await companyService.getCompanies();
                 setUserCompanies(resp.data);
                 if (resp.data.length > 0) {
                     setSelectedCompanyId(resp.data[0].id);
@@ -137,7 +137,7 @@ const Profile = () => {
     const fetchCompanies = async () => {
         setTabLoading(true);
         try {
-            const resp = await companyService.getUserCompanies();
+            const resp = await companyService.getCompanies();
             setUserCompanies(resp.data);
         } catch (error) {
             console.error('Failed to fetch companies:', error);
@@ -149,7 +149,7 @@ const Profile = () => {
     const fetchProducts = async (companyId: string | number) => {
         setTabLoading(true);
         try {
-            const resp = await productService.getUserProducts(companyId);
+            const resp = await productService.getProducts({ company_id: companyId });
             setUserProducts(resp.data);
         } catch (error) {
             console.error('Failed to fetch products:', error);
@@ -161,7 +161,7 @@ const Profile = () => {
     const fetchServices = async (companyId: string | number) => {
         setTabLoading(true);
         try {
-            const resp = await serviceService.getUserServices(companyId);
+            const resp = await serviceService.getServices({ company_id: companyId });
             setUserServices(resp.data);
         } catch (error) {
             console.error('Failed to fetch services:', error);
@@ -215,7 +215,7 @@ const Profile = () => {
     const handleDeleteCompany = async (id: string | number) => {
         if (!confirm('Are you sure you want to delete this company? All its listings will be hidden.')) return;
         try {
-            await companyService.deleteCompany(id);
+            await companyService.deleteCompany(String(id));
             setUserCompanies(prev => prev.filter(c => c.id !== id));
             setMessage({ type: 'success', text: 'Company deleted' });
         } catch (error) {
@@ -226,7 +226,7 @@ const Profile = () => {
     const handleDeleteProduct = async (id: string | number) => {
         if (!confirm('Delete this product?')) return;
         try {
-            await productService.deleteProduct(id);
+            await productService.deleteProduct(String(id));
             setUserProducts(prev => prev.filter(p => p.id !== id));
             setMessage({ type: 'success', text: 'Product deleted' });
         } catch (error) {
@@ -237,7 +237,7 @@ const Profile = () => {
     const handleDeleteService = async (id: string | number) => {
         if (!confirm('Delete this service?')) return;
         try {
-            await serviceService.deleteService(id);
+            await serviceService.deleteService(String(id));
             setUserServices(prev => prev.filter(s => s.id !== id));
             setMessage({ type: 'success', text: 'Service deleted' });
         } catch (error) {
@@ -248,13 +248,13 @@ const Profile = () => {
     const handleToggleStatus = async (type: 'company' | 'product' | 'service', id: string | number) => {
         try {
             if (type === 'company') {
-                await companyService.toggleStatus(id);
+                await companyService.togglePublished(String(id));
                 setUserCompanies(prev => prev.map(c => c.id === id ? { ...c, published: !c.published } : c));
             } else if (type === 'product') {
-                await productService.updateProductStatus(id, ''); // Backend might toggle if status empty or using patched endpoint
+                await productService.togglePublished(String(id));
                 setUserProducts(prev => prev.map(p => p.id === id ? { ...p, published: !p.published } : p));
             } else if (type === 'service') {
-                await serviceService.updateServiceStatus(id, '');
+                await serviceService.togglePublished(String(id));
                 setUserServices(prev => prev.map(s => s.id === id ? { ...s, published: !s.published } : s));
             }
         } catch (error) {
@@ -302,16 +302,16 @@ const Profile = () => {
             setFormSaving(true);
             try {
                 if (modal.type === 'company') {
-                    if (isEditing) await companyService.updateCompany(modal.editingId!, localForm);
+                    if (isEditing) await companyService.updateCompany(String(modal.editingId!), localForm);
                     else await companyService.createCompany(localForm);
                     fetchCompanies();
                 } else if (modal.type === 'product') {
-                    if (isEditing) await productService.updateProduct(modal.editingId!, localForm);
-                    else await productService.createProduct(localForm);
+                    if (isEditing) await productService.updateProduct(String(modal.editingId!), localForm);
+                    else await productService.updateProduct('', localForm); // Admin products are managed, not created from dashboard
                     fetchProducts(selectedCompanyId);
                 } else if (modal.type === 'service') {
-                    if (isEditing) await serviceService.updateService(modal.editingId!, localForm);
-                    else await serviceService.createService(localForm);
+                    if (isEditing) await serviceService.updateService(String(modal.editingId!), localForm);
+                    else await serviceService.updateService('', localForm); // Admin services are managed, not created from dashboard
                     fetchServices(selectedCompanyId);
                 }
                 setModal({ ...modal, isOpen: false });

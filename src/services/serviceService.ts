@@ -3,37 +3,37 @@ import { Service, ApiResponse } from '../types/api';
 
 export const serviceService = {
   getServices: async (params?: any) => {
-    const response = await apiClient.get<ApiResponse<Service>>('/service', { params });
+    const response = await apiClient.get<ApiResponse<Service>>('/admin/services', { params });
     return response.data;
   },
 
-  getService: async (id: string | number) => {
-    const response = await apiClient.get<Service>(`/service/${id}`);
+  getService: async (id: string) => {
+    const response = await apiClient.get<Service>(`/admin/services/${id}`);
     return response.data;
   },
 
-  getUserServices: async (companyId: string | number, params?: any) => {
-    const response = await apiClient.get<ApiResponse<Service>>(`/me/companies/${companyId}/services`, { params });
+  updateService: async (id: string, data: any) => {
+    const response = await apiClient.patch(`/admin/services/${id}`, data);
     return response.data;
   },
 
-  createService: async (data: any) => {
-    const response = await apiClient.post('/service', data);
+  deleteService: async (id: string) => {
+    const response = await apiClient.delete(`/admin/services/${id}`);
     return response.data;
   },
 
-  updateService: async (id: string | number, data: any) => {
-    const response = await apiClient.put(`/service/${id}`, data);
+  restoreService: async (id: string) => {
+    const response = await apiClient.post(`/admin/services/${id}/restore`);
     return response.data;
   },
 
-  updateServiceStatus: async (id: string | number, status: string) => {
-    const response = await apiClient.patch(`/service/${id}/published`, { status });
+  toggleActive: async (id: string) => {
+    const response = await apiClient.post(`/admin/services/${id}/toggle-active`);
     return response.data;
   },
 
-  deleteService: async (id: string | number) => {
-    const response = await apiClient.delete(`/service/${id}`);
+  togglePublished: async (id: string) => {
+    const response = await apiClient.post(`/admin/services/${id}/toggle-published`);
     return response.data;
-  }
+  },
 };
