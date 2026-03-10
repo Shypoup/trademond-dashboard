@@ -1,4 +1,4 @@
-﻿import React from 'react';
+import React from 'react';
 import {
     Search,
     Plus,
@@ -32,6 +32,25 @@ import { companyService } from '../services/companyService';
 import { categoryService } from '../services/categoryService';
 import { Product, Company, Category } from '../types/api';
 import { displayBilingual, formatCurrency } from '../utils/ui';
+
+// Shadcn UI Components
+import { Button } from "@/components/ui/button";
+import {
+    Dialog,
+    DialogContent,
+    DialogHeader,
+    DialogTitle,
+    DialogFooter,
+} from "@/components/ui/dialog";
+import {
+    Sheet,
+    SheetContent,
+    SheetHeader,
+    SheetTitle,
+} from "@/components/ui/sheet";
+import { Badge } from "@/components/ui/badge";
+import { Separator } from "@/components/ui/separator";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 
 // Helper to extract nested json:api fields or fallback to flat struct
 const getProductData = (item: any) => {
@@ -481,18 +500,18 @@ const Products = () => {
                                         </td>
                                         {/* Status */}
                                         <td className="px-4 py-4">
-                                            <div className="flex items-center gap-1.5">
-                                                <span className={`w-1.5 h-1.5 rounded-full shrink-0 ${status.dot}`}></span>
-                                                <span className={`text-[13px] font-semibold ${status.text}`}>{status.label}</span>
-                                            </div>
+                                            <Badge variant="outline" className={`${status.bg} ${status.text} border-transparent font-bold text-[11px]`}>
+                                                <div className={`w-1.5 h-1.5 rounded-full mr-2 ${status.dot}`} />
+                                                {status.label}
+                                            </Badge>
                                         </td>
                                         {/* Views */}
                                         <td className="px-4 py-4 text-right">
-                                            <span className="text-[13px] font-medium text-slate-600">{data.views > 0 ? data.views.toLocaleString() : '—'}</span>
+                                            <span className="text-[13px] font-bold text-slate-700">{data.views > 0 ? data.views.toLocaleString() : '—'}</span>
                                         </td>
                                         {/* Price */}
                                         <td className="px-4 py-4 text-right">
-                                            <span className="text-[13px] font-semibold text-slate-800">
+                                            <span className="text-[14px] font-black text-slate-900">
                                                 {data.price !== null && data.price !== '' && data.price !== undefined
                                                     ? formatCurrency(data.price)
                                                     : '—'}
@@ -500,49 +519,53 @@ const Products = () => {
                                         </td>
                                         {/* Updated */}
                                         <td className="px-4 py-4">
-                                            <span className="text-[12px] text-slate-400">{timeAgo(data.updatedAt || data.createdAt)}</span>
+                                            <span className="text-[12px] text-slate-400 font-medium">{timeAgo(data.updatedAt || data.createdAt)}</span>
                                         </td>
                                         {/* Actions */}
                                         <td className="px-4 py-4 text-right">
-                                            <div className="flex items-center justify-end gap-0.5">
-                                                {/* View Details */}
-                                                <button
-                                                    title="View Details"
+                                            <div className="flex items-center justify-end gap-1">
+                                                <Button
+                                                    variant="ghost"
+                                                    size="icon-sm"
                                                     onClick={() => setDetailProduct(p)}
-                                                    className="p-1.5 rounded-lg text-slate-400 hover:text-teal-600 hover:bg-teal-50 transition-colors"
+                                                    className="text-slate-400 hover:text-teal-600 hover:bg-teal-50"
                                                 >
                                                     <ExternalLink size={15} />
-                                                </button>
-                                                <button
-                                                    title={data.active ? 'Deactivate' : 'Activate'}
+                                                </Button>
+                                                <Button
+                                                    variant="ghost"
+                                                    size="icon-sm"
                                                     onClick={() => handleToggleActive(p.id)}
                                                     disabled={togglingId === `active-${p.id}`}
-                                                    className={`p-1.5 rounded-lg transition-colors ${data.active ? 'text-emerald-500 hover:bg-emerald-50' : 'text-slate-300 hover:bg-slate-100 hover:text-slate-500'}`}
+                                                    className={data.active ? 'text-emerald-500 hover:bg-emerald-50' : 'text-slate-300 hover:bg-slate-100'}
                                                 >
                                                     {togglingId === `active-${p.id}` ? <Loader2 size={15} className="animate-spin" /> : data.active ? <ToggleRight size={15} /> : <ToggleLeft size={15} />}
-                                                </button>
-                                                <button
-                                                    title={data.published ? 'Unpublish' : 'Publish'}
+                                                </Button>
+                                                <Button
+                                                    variant="ghost"
+                                                    size="icon-sm"
                                                     onClick={() => handleTogglePublished(p.id)}
                                                     disabled={togglingId === `pub-${p.id}`}
-                                                    className={`p-1.5 rounded-lg transition-colors ${data.published ? 'text-sky-500 hover:bg-sky-50' : 'text-slate-300 hover:bg-slate-100 hover:text-slate-500'}`}
+                                                    className={data.published ? 'text-sky-500 hover:bg-sky-50' : 'text-slate-300 hover:bg-slate-100'}
                                                 >
                                                     {togglingId === `pub-${p.id}` ? <Loader2 size={15} className="animate-spin" /> : data.published ? <Eye size={15} /> : <EyeOff size={15} />}
-                                                </button>
-                                                <button
-                                                    title="Edit"
+                                                </Button>
+                                                <Button
+                                                    variant="ghost"
+                                                    size="icon-sm"
                                                     onClick={() => handleOpenModal(p)}
-                                                    className="p-1.5 rounded-lg text-slate-400 hover:text-blue-600 hover:bg-blue-50 transition-colors"
+                                                    className="text-slate-400 hover:text-blue-600 hover:bg-blue-50"
                                                 >
                                                     <Edit size={15} />
-                                                </button>
-                                                <button
-                                                    title="Delete"
+                                                </Button>
+                                                <Button
+                                                    variant="ghost"
+                                                    size="icon-sm"
                                                     onClick={() => handleDelete(p.id)}
-                                                    className="p-1.5 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition-colors"
+                                                    className="text-slate-400 hover:text-rose-600 hover:bg-rose-50"
                                                 >
                                                     <Trash2 size={15} />
-                                                </button>
+                                                </Button>
                                             </div>
                                         </td>
                                     </tr>
@@ -612,10 +635,10 @@ const Products = () => {
                         </button>
                     </div>
                 </div>
-            </div>
+            </div >
 
             {/* Stats Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            < div className="grid grid-cols-1 md:grid-cols-3 gap-4" >
                 <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-5 flex items-center gap-4">
                     <div className="w-11 h-11 rounded-xl bg-teal-50 flex items-center justify-center shrink-0">
                         <CheckCircle className="text-teal-600" size={22} />
@@ -656,263 +679,254 @@ const Products = () => {
                         </div>
                     </div>
                 </div>
-            </div>
+            </div >
 
             {/* Edit Modal */}
-            {isModalOpen && (
-                <div className="fixed inset-0 z-[60] flex items-center justify-center p-4">
-                    <div className="absolute inset-0 bg-slate-900/50 backdrop-blur-sm" onClick={() => setIsModalOpen(false)}></div>
-                    <div className="relative w-full max-w-2xl bg-white rounded-2xl shadow-2xl overflow-hidden flex flex-col animate-in zoom-in-95 duration-200">
-                        <div className="px-6 py-4 border-b border-slate-100 flex items-center justify-between">
-                            <h3 className="text-lg font-bold text-slate-900">{editingId ? 'Edit Product' : 'Add New Product'}</h3>
-                            <button onClick={() => setIsModalOpen(false)} className="p-1.5 hover:bg-slate-100 rounded-lg transition-colors text-slate-400">
-                                <X size={18} />
-                            </button>
-                        </div>
+            < Dialog open={isModalOpen} onOpenChange={setIsModalOpen} >
+                <DialogContent className="max-w-2xl p-0 gap-0 overflow-hidden rounded-3xl border-none shadow-2xl">
+                    <DialogHeader className="px-8 py-6 bg-slate-50/80 backdrop-blur-md border-b">
+                        <DialogTitle className="text-xl font-bold text-slate-900 font-outfit">
+                            {editingId ? 'Refine Product' : 'List New Product'}
+                        </DialogTitle>
+                    </DialogHeader>
 
-                        <form onSubmit={handleSubmit} className="flex flex-col max-h-[75vh]">
-                            <div className="p-6 space-y-5 overflow-y-auto flex-1">
-                                <div className="grid grid-cols-2 gap-5">
-                                    <div className="space-y-1.5">
-                                        <label className="text-[11px] font-bold text-slate-400 uppercase tracking-widest">English Name</label>
-                                        <input required className="w-full h-11 bg-slate-50 border border-slate-200 rounded-xl px-4 text-sm font-medium focus:bg-white focus:border-teal-500 transition-all outline-none" value={formData.name.en} onChange={e => updateBilingual('name', 'en', e.target.value)} />
-                                    </div>
-                                    <div className="space-y-1.5">
-                                        <label className="text-[11px] font-bold text-slate-400 uppercase tracking-widest text-right block">الإسم بالعربية</label>
-                                        <input dir="rtl" className="w-full h-11 bg-slate-50 border border-slate-200 rounded-xl px-4 text-sm font-medium focus:bg-white focus:border-teal-500 transition-all outline-none" value={formData.name.ar} onChange={e => updateBilingual('name', 'ar', e.target.value)} />
-                                    </div>
+                    <form onSubmit={handleSubmit} className="flex flex-col">
+                        <div className="p-8 space-y-6 max-h-[70vh] overflow-y-auto premium-scrollbar">
+                            <div className="grid grid-cols-2 gap-6">
+                                <div className="space-y-2">
+                                    <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest">English Name</label>
+                                    <input required className="w-full h-12 bg-slate-50 border border-slate-200 rounded-xl px-4 text-sm font-bold focus:bg-white focus:border-teal-500 transition-all outline-none" value={formData.name.en} onChange={e => updateBilingual('name', 'en', e.target.value)} />
                                 </div>
-                                <div className="grid grid-cols-2 gap-5">
-                                    <div className="space-y-1.5">
-                                        <label className="text-[11px] font-bold text-slate-400 uppercase tracking-widest">Category</label>
-                                        <div className="relative">
-                                            <select className="w-full h-11 bg-slate-50 border border-slate-200 rounded-xl px-4 text-sm font-medium appearance-none outline-none focus:border-teal-500 transition-all" value={formData.category_id} onChange={e => setFormData({ ...formData, category_id: e.target.value })}>
-                                                <option value="">Select Category...</option>
-                                                {categories.map((c: any) => <option key={c.id} value={String(c.id)}>{displayBilingual(c.name)}</option>)}
-                                            </select>
-                                            <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" size={15} />
-                                        </div>
-                                    </div>
-                                    <div className="space-y-1.5">
-                                        <label className="text-[11px] font-bold text-slate-400 uppercase tracking-widest">Company</label>
-                                        <div className="relative">
-                                            <select className="w-full h-11 bg-slate-50 border border-slate-200 rounded-xl px-4 text-sm font-medium appearance-none outline-none focus:border-teal-500 transition-all" value={formData.company_id} onChange={e => setFormData({ ...formData, company_id: e.target.value })}>
-                                                <option value="">Select Company...</option>
-                                                {companies.map((c: any) => <option key={c.id} value={String(c.id)}>{displayBilingual(c.name)}</option>)}
-                                            </select>
-                                            <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" size={15} />
-                                        </div>
-                                    </div>
+                                <div className="space-y-2">
+                                    <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest text-right block">الإسم بالعربية</label>
+                                    <input dir="rtl" className="w-full h-12 bg-slate-50 border border-slate-200 rounded-xl px-4 text-sm font-bold focus:bg-white focus:border-teal-500 transition-all outline-none text-right" value={formData.name.ar} onChange={e => updateBilingual('name', 'ar', e.target.value)} />
                                 </div>
-                                <div className="grid grid-cols-2 gap-5">
-                                    <div className="space-y-1.5">
-                                        <label className="text-[11px] font-bold text-slate-400 uppercase tracking-widest">Price (USD)</label>
-                                        <input type="number" step="0.01" min="0" className="w-full h-11 bg-slate-50 border border-slate-200 rounded-xl px-4 text-sm font-medium focus:bg-white focus:border-teal-500 transition-all outline-none" value={formData.price} onChange={e => setFormData({ ...formData, price: e.target.value })} />
-                                    </div>
-                                    <div className="space-y-1.5">
-                                        <label className="text-[11px] font-bold text-slate-400 uppercase tracking-widest">SKU</label>
-                                        <input className="w-full h-11 bg-slate-50 border border-slate-200 rounded-xl px-4 text-sm font-medium focus:bg-white focus:border-teal-500 transition-all outline-none" value={formData.sku} onChange={e => setFormData({ ...formData, sku: e.target.value })} />
-                                    </div>
-                                </div>
-                                {editingId && (
-                                    <div className="flex items-center gap-3 p-4 bg-slate-50 rounded-xl border border-slate-200">
-                                        <label className="flex items-center gap-2 cursor-pointer select-none">
-                                            <input type="checkbox" checked={formData.active} onChange={e => setFormData({ ...formData, active: e.target.checked })} className="rounded border-slate-300 text-teal-600 focus:ring-teal-500" />
-                                            <span className="text-sm font-semibold text-slate-700">Mark as Active</span>
-                                        </label>
-                                    </div>
-                                )}
                             </div>
-                            <div className="px-6 py-4 border-t border-slate-100 flex justify-end gap-3 bg-slate-50/50">
-                                <button type="button" className="px-5 py-2 rounded-xl text-sm font-semibold text-slate-600 hover:bg-slate-200 transition-all" onClick={() => setIsModalOpen(false)}>Cancel</button>
-                                <button type="submit" disabled={formSaving} className="px-8 py-2 bg-teal-600 rounded-xl text-sm font-bold text-white hover:bg-teal-700 transition-all flex items-center gap-2">
-                                    {formSaving && <Loader2 className="animate-spin" size={15} />}
-                                    {editingId ? 'Save Changes' : 'Add Product'}
-                                </button>
+                            <div className="grid grid-cols-2 gap-6">
+                                <div className="space-y-2">
+                                    <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest">Category</label>
+                                    <div className="relative">
+                                        <select className="w-full h-12 bg-slate-50 border border-slate-200 rounded-xl px-4 text-sm font-bold appearance-none outline-none focus:border-teal-500 transition-all cursor-pointer" value={formData.category_id} onChange={e => setFormData({ ...formData, category_id: e.target.value })}>
+                                            <option value="">Select Category...</option>
+                                            {categories.map((c: any) => <option key={c.id} value={String(c.id)}>{displayBilingual(c.name)}</option>)}
+                                        </select>
+                                        <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" size={16} />
+                                    </div>
+                                </div>
+                                <div className="space-y-2">
+                                    <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest">Company</label>
+                                    <div className="relative">
+                                        <select className="w-full h-12 bg-slate-50 border border-slate-200 rounded-xl px-4 text-sm font-bold appearance-none outline-none focus:border-teal-500 transition-all cursor-pointer" value={formData.company_id} onChange={e => setFormData({ ...formData, company_id: e.target.value })}>
+                                            <option value="">Select Company...</option>
+                                            {companies.map((c: any) => <option key={c.id} value={String(c.id)}>{displayBilingual(c.name)}</option>)}
+                                        </select>
+                                        <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" size={16} />
+                                    </div>
+                                </div>
                             </div>
-                        </form>
-                    </div>
-                </div>
-            )}
+                            <div className="grid grid-cols-2 gap-6">
+                                <div className="space-y-2">
+                                    <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest">Price (USD)</label>
+                                    <input type="number" step="0.01" min="0" className="w-full h-12 bg-slate-50 border border-slate-200 rounded-xl px-4 text-sm font-bold focus:bg-white focus:border-teal-500 transition-all outline-none" value={formData.price} onChange={e => setFormData({ ...formData, price: e.target.value })} />
+                                </div>
+                                <div className="space-y-2">
+                                    <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest">SKU</label>
+                                    <input className="w-full h-12 bg-slate-50 border border-slate-200 rounded-xl px-4 text-sm font-bold focus:bg-white focus:border-teal-500 transition-all outline-none" value={formData.sku} onChange={e => setFormData({ ...formData, sku: e.target.value })} />
+                                </div>
+                            </div>
+                            {editingId && (
+                                <div className="flex items-center gap-4 p-5 bg-teal-50/50 rounded-2xl border border-teal-100/50">
+                                    <div className="relative inline-flex items-center cursor-pointer">
+                                        <input type="checkbox" checked={formData.active} onChange={e => setFormData({ ...formData, active: e.target.checked })} className="sr-only peer" id="active-toggle" />
+                                        <div className="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-teal-600"></div>
+                                        <label htmlFor="active-toggle" className="ml-3 text-sm font-bold text-slate-700 select-none">Mark as Active & Approved</label>
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+                        <DialogFooter className="px-8 py-6 bg-slate-50/80 backdrop-blur-md border-t flex items-center justify-between sm:justify-between">
+                            <Button type="button" variant="ghost" onClick={() => setIsModalOpen(false)} className="px-6 rounded-xl font-bold text-slate-500 hover:bg-slate-200/50">
+                                Discard
+                            </Button>
+                            <Button type="submit" disabled={formSaving} className="px-10 bg-teal-600 hover:bg-teal-700 rounded-xl font-black text-white shadow-lg shadow-teal-600/20">
+                                {formSaving && <Loader2 className="animate-spin mr-2" size={16} />}
+                                {editingId ? 'Update Listing' : 'Publish Product'}
+                            </Button>
+                        </DialogFooter>
+                    </form>
+                </DialogContent>
+            </Dialog >
+
             {/* ────── Detail Drawer ────── */}
-            {detailProduct && (() => {
-                const d = getProductData(detailProduct);
-                const status = getStatus(d);
-                return (
-                    <>
-                        {/* Backdrop */}
-                        <div
-                            className="fixed inset-0 z-[50] bg-slate-900/30 backdrop-blur-[2px] transition-opacity"
-                            onClick={() => setDetailProduct(null)}
-                        />
-                        {/* Panel */}
-                        <div className="fixed top-0 right-0 h-full z-[60] w-[460px] bg-white shadow-2xl flex flex-col overflow-hidden"
-                            style={{ animation: 'slideInRight 0.25s cubic-bezier(0.16,1,0.3,1)' }}
-                        >
-                            {/* Banner image */}
-                            <div className="relative h-52 bg-slate-800 shrink-0 overflow-hidden">
-                                <img
-                                    src={d.image || `https://ui-avatars.com/api/?name=${encodeURIComponent(displayBilingual(d.name))}&background=1e293b&color=94a3b8&size=460`}
-                                    alt={displayBilingual(d.name)}
-                                    className="w-full h-full object-cover opacity-90"
-                                />
-                                {/* Header actions */}
-                                <div className="absolute top-3 left-3 right-3 flex items-center justify-between">
-                                    <div className="flex gap-1.5">
-                                        <span className={`text-[10px] font-black px-2.5 py-1 rounded-full uppercase tracking-wide ${status.bg} ${status.text} border border-white/20`}>
-                                            {status.label === 'Pending' ? 'Pending Moderation' : status.label}
-                                        </span>
-                                        {d.categoryName && d.categoryName !== 'N/A' && (
-                                            <span className="text-[10px] font-black px-2.5 py-1 rounded-full uppercase tracking-wide bg-slate-700/70 text-white border border-white/20">
-                                                {displayBilingual(d.categoryName)}
-                                            </span>
-                                        )}
-                                    </div>
-                                    <div className="flex gap-1">
-                                        <button className="w-8 h-8 rounded-full bg-black/30 backdrop-blur-sm flex items-center justify-center text-white hover:bg-black/50 transition-colors">
-                                            <Share2 size={14} />
-                                        </button>
-                                        <button
-                                            onClick={() => setDetailProduct(null)}
-                                            className="w-8 h-8 rounded-full bg-black/30 backdrop-blur-sm flex items-center justify-center text-white hover:bg-black/50 transition-colors"
-                                        >
-                                            <X size={14} />
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-
-                            {/* Scrollable body */}
-                            <div className="flex-1 overflow-y-auto">
-                                {/* Title block */}
-                                <div className="px-6 pt-5 pb-4 border-b border-slate-100">
-                                    <h2 className="text-xl font-bold text-slate-900 leading-snug">{displayBilingual(d.name)}</h2>
-                                    {d.name?.ar && <p className="text-sm text-slate-400 mt-0.5" dir="rtl">{d.name.ar}</p>}
-                                    <p className="text-sm text-slate-500 mt-3 leading-relaxed">
-                                        {displayBilingual(d.description) || <span className="italic text-slate-300">No description provided.</span>}
-                                    </p>
-                                    {d.sku && <p className="text-[11px] text-slate-400 mt-2">SKU: <span className="font-semibold text-slate-600">{d.sku}</span></p>}
-                                </div>
-
-                                {/* Stats pills */}
-                                <div className="px-6 py-4 flex gap-4 border-b border-slate-100">
-                                    <div className="flex items-center gap-1.5 text-slate-500">
-                                        <Heart size={14} className="text-rose-400" />
-                                        <span className="text-sm font-semibold">{d.likesCount}</span>
-                                        <span className="text-xs text-slate-400">Likes</span>
-                                    </div>
-                                    <div className="flex items-center gap-1.5 text-slate-500">
-                                        <MessageSquare size={14} className="text-blue-400" />
-                                        <span className="text-sm font-semibold">{d.reviewsCount}</span>
-                                        <span className="text-xs text-slate-400">Reviews</span>
-                                    </div>
-                                    {d.price !== null && d.price !== '' && (
-                                        <div className="ml-auto">
-                                            <span className="text-lg font-bold text-slate-800">{formatCurrency(d.price)}</span>
-                                        </div>
-                                    )}
-                                </div>
-
-                                {/* Company card */}
-                                <div className="px-6 py-4 border-b border-slate-100">
-                                    <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-3">Company</p>
-                                    <div className="flex items-center justify-between">
-                                        <div className="flex items-center gap-3">
-                                            <div className="w-10 h-10 rounded-xl bg-teal-50 border border-teal-100 flex items-center justify-center shrink-0">
-                                                <Building2 size={18} className="text-teal-600" />
-                                            </div>
-                                            <div>
-                                                <p className="text-sm font-bold text-slate-800">{displayBilingual(d.companyName)}</p>
-                                                <p className="text-[11px] text-slate-400">Company partner</p>
-                                            </div>
-                                        </div>
-                                        <button className="text-[12px] font-semibold text-teal-600 hover:text-teal-700 transition-colors">View Profile →</button>
-                                    </div>
-                                </div>
-
-                                {/* Owner */}
-                                {(d.ownerName || d.ownerEmail) && (
-                                    <div className="px-6 py-4 border-b border-slate-100">
-                                        <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-3">Owner</p>
-                                        <div className="flex items-center gap-3">
-                                            <div className="w-9 h-9 rounded-full bg-slate-100 border border-slate-200 flex items-center justify-center shrink-0">
-                                                <User size={16} className="text-slate-400" />
-                                            </div>
-                                            <div>
-                                                {d.ownerName && <p className="text-sm font-bold text-slate-800">{d.ownerName}</p>}
-                                                {d.ownerEmail && <p className="text-[11px] text-slate-400">{d.ownerEmail}</p>}
-                                            </div>
-                                        </div>
-                                    </div>
-                                )}
-
-                                {/* Tags */}
-                                {d.tags.length > 0 && (
-                                    <div className="px-6 py-4 border-b border-slate-100">
-                                        <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-3">Tags</p>
-                                        <div className="flex flex-wrap gap-1.5">
-                                            {d.tags.map((tag: any) => (
-                                                <span key={tag.id} className="flex items-center gap-1 text-[11px] font-semibold bg-teal-50 text-teal-700 border border-teal-100 px-2.5 py-1 rounded-full">
-                                                    <Tag size={10} />{displayBilingual(tag.name)}
-                                                </span>
-                                            ))}
-                                        </div>
-                                    </div>
-                                )}
-
-                                {/* Admin notes field */}
-                                <div className="px-6 py-4">
-                                    <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">Admin Notes (Internal Only)</p>
-                                    <textarea
-                                        rows={3}
-                                        placeholder="Add internal notes about this product..."
-                                        className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm text-slate-700 resize-none focus:outline-none focus:border-teal-400 focus:bg-white transition-all"
+            < Sheet open={!!detailProduct} onOpenChange={(open) => !open && setDetailProduct(null)}>
+                <SheetContent side="right" className="p-0 sm:max-w-md w-full border-none shadow-2xl flex flex-col">
+                    {detailProduct && (() => {
+                        const d = getProductData(detailProduct);
+                        const status = getStatus(d);
+                        return (
+                            <>
+                                <div className="relative h-64 shrink-0 overflow-hidden bg-slate-900">
+                                    <img
+                                        src={d.image || `https://ui-avatars.com/api/?name=${encodeURIComponent(displayBilingual(d.name))}&background=1e293b&color=94a3b8&size=500`}
+                                        alt={displayBilingual(d.name)}
+                                        className="w-full h-full object-cover transition-transform duration-700 hover:scale-110"
                                     />
+                                    <div className="absolute inset-0 bg-gradient-to-t from-slate-900/80 via-transparent to-black/20 pointer-events-none" />
+
+                                    <div className="absolute top-4 left-4 right-4 flex items-center justify-between">
+                                        <div className="flex gap-2">
+                                            <Badge className={`${status.bg} ${status.text} border-white/20 backdrop-blur-md px-3 py-1 font-black text-[10px] uppercase tracking-wider`}>
+                                                {status.label === 'Pending' ? 'Needs Review' : status.label}
+                                            </Badge>
+                                            {d.premium && (
+                                                <Badge className="bg-amber-100 text-amber-700 border-white/20 backdrop-blur-md px-3 py-1 font-black text-[10px] uppercase tracking-wider">
+                                                    Premium
+                                                </Badge>
+                                            )}
+                                        </div>
+                                    </div>
+
+                                    <div className="absolute bottom-6 left-6 right-6">
+                                        <h2 className="text-2xl font-black text-white leading-tight font-outfit drop-shadow-lg">
+                                            {displayBilingual(d.name)}
+                                        </h2>
+                                        {d.name?.ar && <p className="text-white/70 text-sm mt-1 font-medium drop-shadow-md" dir="rtl">{d.name.ar}</p>}
+                                    </div>
                                 </div>
-                            </div>
 
-                            {/* Footer actions */}
-                            <div className="px-6 py-4 border-t border-slate-100 bg-white flex items-center gap-3">
-                                <button
-                                    onClick={() => { handleDelete(d.id); setDetailProduct(null); }}
-                                    className="flex-1 h-11 flex items-center justify-center gap-2 rounded-xl border border-rose-200 text-rose-600 text-sm font-bold hover:bg-rose-50 transition-colors"
-                                >
-                                    <Trash2 size={15} /> Delete
-                                </button>
-                                <button
-                                    onClick={() => { handleToggleActive(d.id); }}
-                                    disabled={togglingId === `active-${d.id}`}
-                                    className={`flex-1 h-11 flex items-center justify-center gap-2 rounded-xl text-sm font-bold transition-colors border ${d.active
-                                        ? 'border-slate-200 text-slate-600 hover:bg-slate-50'
-                                        : 'border-emerald-200 text-emerald-600 hover:bg-emerald-50'
-                                        }`}
-                                >
-                                    {togglingId === `active-${d.id}` ? <Loader2 size={15} className="animate-spin" /> : d.active ? <ToggleLeft size={15} /> : <ToggleRight size={15} />}
-                                    {d.active ? 'Deactivate' : 'Activate'}
-                                </button>
-                                <button
-                                    onClick={() => { handleTogglePublished(d.id); }}
-                                    disabled={togglingId === `pub-${d.id}`}
-                                    className={`flex-1 h-11 flex items-center justify-center gap-2 rounded-xl text-sm font-bold transition-colors ${d.published
-                                        ? 'bg-slate-800 text-white hover:bg-slate-700'
-                                        : 'bg-[#008080] text-white hover:bg-[#006666]'
-                                        }`}
-                                >
-                                    {togglingId === `pub-${d.id}` ? <Loader2 size={15} className="animate-spin" /> : d.published ? <EyeOff size={15} /> : <Eye size={15} />}
-                                    {d.published ? 'Unpublish' : 'Publish'}
-                                </button>
-                            </div>
-                        </div>
+                                <div className="flex-1 overflow-y-auto premium-scrollbar">
+                                    <div className="p-8 space-y-8">
+                                        {/* Description */}
+                                        <div className="space-y-4">
+                                            <p className="text-sm text-slate-600 leading-relaxed font-medium">
+                                                {displayBilingual(d.description) || <span className="italic text-slate-300">No narrative provided for this item.</span>}
+                                            </p>
+                                            <div className="flex flex-wrap gap-2">
+                                                <div className="flex items-center gap-1.5 px-3 py-1.5 bg-slate-50 rounded-lg text-slate-500 border border-slate-100">
+                                                    <Tag size={12} className="text-slate-400" />
+                                                    <span className="text-[11px] font-bold">{displayBilingual(d.categoryName)}</span>
+                                                </div>
+                                                {d.sku && (
+                                                    <div className="flex items-center gap-1.5 px-3 py-1.5 bg-slate-50 rounded-lg text-slate-500 border border-slate-100">
+                                                        <span className="text-[10px] font-bold text-slate-400">SKU</span>
+                                                        <span className="text-[11px] font-bold text-slate-700 uppercase">{d.sku}</span>
+                                                    </div>
+                                                )}
+                                            </div>
+                                        </div>
 
-                        <style>{`
-                            @keyframes slideInRight {
-                                from { transform: translateX(100%); }
-                                to   { transform: translateX(0); }
-                            }
-                        `}</style>
-                    </>
-                );
-            })()}
+                                        <Separator className="bg-slate-100" />
+
+                                        {/* Stats Row */}
+                                        <div className="grid grid-cols-3 gap-4">
+                                            <div className="p-4 rounded-2xl bg-rose-50/50 border border-rose-100/50 flex flex-col items-center gap-1">
+                                                <Heart size={18} className="text-rose-500" />
+                                                <span className="text-lg font-black text-slate-900 mt-1">{d.likesCount}</span>
+                                                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Faves</span>
+                                            </div>
+                                            <div className="p-4 rounded-2xl bg-blue-50/50 border border-blue-100/50 flex flex-col items-center gap-1">
+                                                <MessageSquare size={18} className="text-blue-500" />
+                                                <span className="text-lg font-black text-slate-900 mt-1">{d.reviewsCount}</span>
+                                                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Feed</span>
+                                            </div>
+                                            <div className="p-4 rounded-2xl bg-teal-50/50 border border-teal-100/50 flex flex-col items-center gap-1">
+                                                <Eye size={18} className="text-teal-500" />
+                                                <span className="text-lg font-black text-slate-900 mt-1">{d.views}</span>
+                                                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Reach</span>
+                                            </div>
+                                        </div>
+
+                                        {/* Company Card */}
+                                        <div className="space-y-4">
+                                            <h3 className="text-[11px] font-black text-slate-400 uppercase tracking-[0.2em]">Partner Hub</h3>
+                                            <div className="group flex items-center justify-between p-4 rounded-3xl border border-slate-100 bg-white/50 hover:bg-white hover:shadow-xl hover:shadow-slate-200/50 transition-all cursor-pointer">
+                                                <div className="flex items-center gap-4">
+                                                    <Avatar className="w-14 h-14 border-4 border-white shadow-lg shadow-slate-200">
+                                                        <AvatarImage src={`https://ui-avatars.com/api/?name=${encodeURIComponent(displayBilingual(d.companyName))}&background=0f172a&color=fff`} />
+                                                        <AvatarFallback className="bg-teal-600 text-white font-black text-xl">{String(displayBilingual(d.companyName))[0]}</AvatarFallback>
+                                                    </Avatar>
+                                                    <div>
+                                                        <p className="text-sm font-black text-slate-900 leading-none">{displayBilingual(d.companyName)}</p>
+                                                        <p className="text-[12px] text-teal-600 font-bold mt-1.5 flex items-center gap-1.5">
+                                                            <CheckCircle size={12} /> Gold Supplier
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                                <div className="w-10 h-10 rounded-full bg-slate-50 flex items-center justify-center text-slate-300 group-hover:bg-teal-50 group-hover:text-teal-600 transition-all">
+                                                    <ExternalLink size={16} />
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        {/* Owner Info */}
+                                        {(d.ownerName || d.ownerEmail) && (
+                                            <div className="space-y-4">
+                                                <h3 className="text-[11px] font-black text-slate-400 uppercase tracking-[0.2em]">Point of Contact</h3>
+                                                <div className="flex items-center gap-4 p-4 rounded-2xl border border-dashed border-slate-200">
+                                                    <div className="w-11 h-11 rounded-full bg-slate-100 flex items-center justify-center shrink-0">
+                                                        <User size={20} className="text-slate-400" />
+                                                    </div>
+                                                    <div>
+                                                        <p className="text-sm font-bold text-slate-800 leading-none">{d.ownerName}</p>
+                                                        <p className="text-[11px] text-slate-500 mt-1 font-medium italic">{d.ownerEmail}</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        )}
+
+                                        {/* Internal Section */}
+                                        <div className="pt-4">
+                                            <div className="bg-slate-50 rounded-2xl p-6 border border-slate-200/60 shadow-inner">
+                                                <div className="flex items-center gap-2 mb-4">
+                                                    <AlertTriangle size={14} className="text-amber-500" />
+                                                    <h4 className="text-[11px] font-black text-slate-500 uppercase tracking-widest">Internal Admin Ledger</h4>
+                                                </div>
+                                                <textarea
+                                                    rows={3}
+                                                    placeholder="Append audit notes or moderation logs..."
+                                                    className="w-full bg-white border border-slate-200 rounded-xl px-4 py-3 text-sm text-slate-700 resize-none focus:outline-none focus:border-teal-400 focus:shadow-[0_0_0_4px_rgba(20,184,166,0.1)] transition-all font-medium"
+                                                />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* Footer actions */}
+                                <div className="p-6 border-t bg-slate-50/80 backdrop-blur-md flex items-center gap-3">
+                                    <Button
+                                        variant="outline"
+                                        onClick={() => { handleDelete(d.id); setDetailProduct(null); }}
+                                        className="flex-1 h-12 rounded-xl border-rose-200 text-rose-600 font-bold hover:bg-rose-50 hover:text-rose-700 hover:border-rose-300 transition-all"
+                                    >
+                                        <Trash2 size={16} className="mr-2" /> Scrap
+                                    </Button>
+
+                                    <Button
+                                        variant="outline"
+                                        onClick={() => handleToggleActive(d.id)}
+                                        disabled={togglingId === `active-${d.id}`}
+                                        className={`flex-1 h-12 rounded-xl font-bold transition-all ${d.active ? 'border-slate-200 text-slate-600 hover:bg-white' : 'border-emerald-200 text-emerald-600 hover:bg-emerald-50'
+                                            }`}
+                                    >
+                                        {togglingId === `active-${d.id}` ? <Loader2 size={16} className="animate-spin" /> : d.active ? <ToggleLeft size={16} className="mr-2" /> : <ToggleRight size={16} className="mr-2" />}
+                                        {d.active ? 'Halt' : 'Resume'}
+                                    </Button>
+
+                                    <Button
+                                        onClick={() => handleTogglePublished(d.id)}
+                                        disabled={togglingId === `pub-${d.id}`}
+                                        className={`flex-1 h-12 rounded-xl font-black transition-all shadow-lg ${d.published ? 'bg-slate-800 hover:bg-slate-700' : 'bg-[#008080] hover:bg-[#006666]'
+                                            } text-white`}
+                                    >
+                                        {togglingId === `pub-${d.id}` ? <Loader2 size={16} className="animate-spin" /> : d.published ? <EyeOff size={16} className="mr-2" /> : <Eye size={16} className="mr-2" />}
+                                        {d.published ? 'Retract' : 'Broadcast'}
+                                    </Button>
+                                </div>
+                            </>
+                        );
+                    })()}
+                </SheetContent>
+            </Sheet>
         </div>
     );
 };
