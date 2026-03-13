@@ -2,29 +2,31 @@ import React from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import {
     LayoutDashboard,
-    ShoppingBag,
     Users,
     Settings,
     LogOut,
     ShieldCheck,
-    FileText,
-    CreditCard,
-    Database,
-    HelpCircle,
     Briefcase,
     Boxes,
-    ClipboardList,
-    Layers,
-    List,
-    Beaker,
     Star,
     DollarSign,
+    ClipboardList,
+    Zap,
     Heart,
-    Network,
-    HardDrive,
-    Search,
-    Download
+    UserPlus,
+    Image,
+    Search as SearchIcon,
+    Globe,
+    FlaskConical,
+    Award,
+    ListOrdered,
+    Download,
+    FileCode,
+    Lock,
+    ToggleRight,
+    Tags as TagsIcon
 } from 'lucide-react';
+
 import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 import { authService } from '../services/authService';
@@ -33,40 +35,41 @@ function cn(...inputs: ClassValue[]) {
     return twMerge(clsx(inputs));
 }
 
-const navItems = [
-    { label: 'General', type: 'label' },
+const navItems: any[] = [
+    { label: 'Overview', type: 'label' },
     { label: 'Dashboard', icon: LayoutDashboard, path: '/' },
-    { label: 'Users & Access', icon: Users, path: '/users' },
+    { label: 'Users', icon: Users, path: '/users' },
     { label: 'Companies', icon: Briefcase, path: '/companies' },
-    {
-        label: 'Listings', icon: Boxes, path: '/listings',
-        children: [
-            { label: 'Products', path: '/products' },
-            { label: 'Services', path: '/services' },
-            { label: 'Tags', path: '/tags' },
-            { label: 'Tag Proposals', path: '/tag-proposals' }
-        ]
-    },
+    
+    { label: 'Catalog', type: 'label' },
+    { label: 'Products', icon: Boxes, path: '/products' },
+    { label: 'Services', icon: FileCode, path: '/services' },
+    { label: 'Tags', icon: TagsIcon, path: '/tags' },
+    { label: 'Tag Proposals', icon: TagsIcon, path: '/tag-proposals' },
+    { label: 'Media', icon: Image, path: '/media' },
+    { label: 'Search Index', icon: SearchIcon, path: '/search' },
+
     { label: 'Engagement', type: 'label' },
-    { label: 'Moderation', icon: ShieldCheck, path: '/moderation', badge: 12 },
     { label: 'Reviews', icon: Star, path: '/reviews' },
-    { label: 'Follows Graph', icon: Network, path: '/follows' },
-    { label: 'Likes Metrics', icon: Heart, path: '/likes' },
+    { label: 'Curated Lists', icon: ListOrdered, path: '/curated-lists' },
+    { label: 'Follows', icon: UserPlus, path: '/follows' },
+    { label: 'Likes', icon: Heart, path: '/likes' },
+
     { label: 'Monetization', type: 'label' },
-    { label: 'Plans & Pricing', icon: DollarSign, path: '/plans' },
-    { label: 'Global Features', icon: Layers, path: '/features' },
+    { label: 'Plans', icon: DollarSign, path: '/plans' },
     { label: 'Subscriptions', icon: ClipboardList, path: '/subscriptions' },
-    { label: 'Per-Entity Bypasses', icon: Settings, path: '/feature-overrides' },
-    { label: 'System Entitlements', icon: Layers, path: '/entitlements' },
-    { label: 'Keyword Sponsored', icon: Star, path: '/sponsorships' },
-    { label: 'Platform Settings', type: 'label' },
-    { label: 'Curated Content', icon: List, path: '/curated-lists' },
-    { label: 'A/B Experiments', icon: Beaker, path: '/experiments' },
-    { label: 'Platform Settings', icon: Settings, path: '/settings' },
-    { label: 'System APIs', type: 'label' },
-    { label: 'Search Re-indexer', icon: Search, path: '/search' },
-    { label: 'Media Store', icon: HardDrive, path: '/media' },
-    { label: 'Data Imports (*.xlsx)', icon: Download, path: '/imports' },
+    { label: 'Features', icon: Zap, path: '/features' },
+    { label: 'Sponsorships', icon: Award, path: '/sponsorships' },
+
+    { label: 'Executive', type: 'label' },
+    { label: 'Platform', icon: Globe, path: '/platform' },
+    { label: 'Imports', icon: Download, path: '/imports' },
+    { label: 'Experiments', icon: FlaskConical, path: '/experiments' },
+    { label: 'Entitlements', icon: Lock, path: '/entitlements' },
+    { label: 'Feature Overrides', icon: ToggleRight, path: '/feature-overrides' },
+    
+    { label: 'System', type: 'label' },
+    { label: 'Settings', icon: Settings, path: '/settings' },
 ];
 
 const Sidebar = () => {
@@ -103,7 +106,7 @@ const Sidebar = () => {
             </div>
 
             <nav className="flex-1 overflow-y-auto px-4 py-4 space-y-1">
-                {navItems.map((item, idx) => {
+                {navItems.map((item: any, idx) => {
                     if (item.type === 'label') {
                         return (
                             <div key={idx} className="mt-6 mb-2 px-2 text-[10px] font-bold text-slate-500 uppercase tracking-widest">
@@ -126,15 +129,10 @@ const Sidebar = () => {
                             >
                                 <Icon size={18} className={cn("transition-colors", "group-hover:text-teal-400")} />
                                 <span className="flex-1">{item.label}</span>
-                                {item.badge && (
-                                    <span className="bg-rose-500 text-white text-[10px] px-1.5 py-0.5 rounded-full font-bold">
-                                        {item.badge}
-                                    </span>
-                                )}
                             </NavLink>
                             {item.children && (
                                 <div className="ml-9 mt-1 space-y-1">
-                                    {item.children.map((child, cIdx) => (
+                                    {item.children.map((child: any, cIdx: number) => (
                                         <NavLink
                                             key={cIdx}
                                             to={child.path}

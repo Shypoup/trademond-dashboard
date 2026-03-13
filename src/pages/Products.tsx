@@ -20,7 +20,7 @@ import {
     ChevronLeft,
     ChevronRight,
     ExternalLink,
-    Tag,
+    Tag as TagIcon,
     Building2,
     User,
     Heart,
@@ -30,18 +30,13 @@ import {
 import { productService } from '../services/productService';
 import { companyService } from '../services/companyService';
 import { categoryService } from '../services/categoryService';
-import { Product, Company, Category } from '../types/api';
+import { tagService } from '../services/tagService';
+import { Product, Company, Category, Tag } from '../types/api';
 import { displayBilingual, formatCurrency } from '../utils/ui';
+import { toast } from "sonner";
 
 // Shadcn UI Components
 import { Button } from "@/components/ui/button";
-import {
-    Dialog,
-    DialogContent,
-    DialogHeader,
-    DialogTitle,
-    DialogFooter,
-} from "@/components/ui/dialog";
 import {
     Sheet,
     SheetContent,
@@ -51,6 +46,15 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select";
+
 
 // Helper to extract nested json:api fields or fallback to flat struct
 const getProductData = (item: any) => {
@@ -116,6 +120,7 @@ const Products = () => {
     const [totalProducts, setTotalProducts] = React.useState(0);
     const [companies, setCompanies] = React.useState<Company[]>([]);
     const [categories, setCategories] = React.useState<Category[]>([]);
+    const [allTags, setAllTags] = React.useState<Tag[]>([]);
 
     // Filters
     const [search, setSearch] = React.useState('');
@@ -135,7 +140,7 @@ const Products = () => {
 
     // Modal state
     const [isModalOpen, setIsModalOpen] = React.useState(false);
-    const [editingId, setEditingId] = React.useState<string | number | null>(null);
+    const [editingId, setEditingId] = React.useState<number | null>(null);
     const [formSaving, setFormSaving] = React.useState(false);
     const [togglingId, setTogglingId] = React.useState<string | null>(null);
     const [formData, setFormData] = React.useState({
@@ -146,7 +151,10 @@ const Products = () => {
         price: '',
         sku: '',
         active: true,
+        published: false,
+        tags: [] as string[],
     });
+    const [deleteProductId, setDeleteProductId] = React.useState<string | number | null>(null);
 
     const extractCompaniesData = (data: any[]) => {
         if (!Array.isArray(data)) return [];
@@ -190,9 +198,24 @@ const Products = () => {
                 if (catRes && catRes.data) setCategories(extractCategoriesData(catRes.data));
                 else if (Array.isArray(catRes)) setCategories(extractCategoriesData(catRes));
             } catch (err) { console.error('Error fetching categories:', err); }
+            try {
+                const tagsRes = await tagService.getTags({ per_page: 200 });
+                if (tagsRes && tagsRes.data) setAllTags(tagsRes.data as Tag[]);
+                else if (Array.isArray(tagsRes)) setAllTags(tagsRes as Tag[]);
+            } catch (err) { console.error('Error fetching tags:', err); }
         } finally {
             setLoading(false);
         }
+    };
+
+    const resetFilters = () => {
+        setSearch('');
+        setFilterCategory('all');
+        setFilterStatus('all');
+        setFilterCompany('all');
+        setPage(1);
+        fetchData();
+        toast.info("Filters reset and data refreshed");
     };
 
     React.useEffect(() => { fetchData(); }, []);
@@ -204,10 +227,10 @@ const Products = () => {
             const nameStr = displayBilingual(d.name).toLowerCase();
             const skuStr = (d.sku || '').toLowerCase();
             const searchMatch = !search || nameStr.includes(search.toLowerCase()) || skuStr.includes(search.toLowerCase());
-            const catMatch = !filterCategory || String(d.categoryId) === filterCategory;
-            const compMatch = !filterCompany || String(d.companyId) === filterCompany;
+            const catMatch = !filterCategory || filterCategory === 'all' || String(d.categoryId) === filterCategory;
+            const compMatch = !filterCompany || filterCompany === 'all' || String(d.companyId) === filterCompany;
             const status = getStatus(d);
-            const statusMatch = !filterStatus || status.label.toLowerCase() === filterStatus.toLowerCase();
+            const statusMatch = !filterStatus || filterStatus === 'all' || status.label.toLowerCase() === filterStatus.toLowerCase();
             return searchMatch && catMatch && compMatch && statusMatch;
         });
     }, [productList, search, filterCategory, filterStatus, filterCompany]);
@@ -215,33 +238,57 @@ const Products = () => {
     const totalPages = Math.max(1, Math.ceil(filtered.length / rowsPerPage));
     const paginatedList = filtered.slice((page - 1) * rowsPerPage, page * rowsPerPage);
 
-    const handleOpenModal = (product?: Product) => {
+    const handleOpenModal = (product: any = null) => {
         if (product) {
+            setEditingId(product.id);
             const data = getProductData(product);
-            setEditingId(data.id);
             setFormData({
-                name: typeof data.name === 'string' ? { en: data.name, ar: '' } : data.name,
-                description: typeof data.description === 'string' ? { en: data.description, ar: '' } : data.description,
-                company_id: String(data.companyId),
-                category_id: String(data.categoryId),
+                name: { en: data.name.en || '', ar: data.name.ar || '' },
+                description: { en: data.description.en || '', ar: data.description.ar || '' },
+                category_id: String(data.categoryId || ''),
+                company_id: String(data.companyId || ''),
                 price: String(data.price || ''),
                 sku: data.sku || '',
-                active: data.active,
+                active: !!data.active,
+                published: !!data.published,
+                tags: data.tags ? data.tags.map((t: any) => String(t.id)) : []
             });
         } else {
             setEditingId(null);
-            setFormData({ name: { en: '', ar: '' }, description: { en: '', ar: '' }, company_id: '', category_id: '', price: '', sku: '', active: true });
+            setFormData({
+                name: { en: '', ar: '' },
+                description: { en: '', ar: '' },
+                category_id: '',
+                company_id: '',
+                price: '',
+                sku: '',
+                active: true,
+                published: true,
+                tags: []
+            });
         }
         setIsModalOpen(true);
     };
 
-    const handleDelete = async (id: string | number) => {
-        if (!window.confirm('Are you sure you want to delete this product?')) return;
+
+    /**
+     * Confirms product deletion from the server and locally updates the list.
+     */
+    const handleConfirmDeleteProduct = async () => {
+        if (!deleteProductId) return;
+        const id = deleteProductId;
         try {
             await productService.deleteProduct(String(id));
             setProductList(prev => prev.filter(p => p.id !== id));
-            setTotalProducts(prev => prev - 1);
-        } catch (error) { console.error('Delete failed', error); }
+            setTotalProducts((prev: number) => Math.max(0, prev - 1));
+            setDetailProduct((prev: any) => (prev && getProductData(prev).id === id ? null : prev));
+            toast.success('Product deleted');
+        } catch (error) {
+            console.error('Delete failed', error);
+            toast.error('Failed to delete product');
+        } finally {
+            setDeleteProductId(null);
+        }
     };
 
     const handleToggleActive = async (id: string | number) => {
@@ -274,17 +321,59 @@ const Products = () => {
         e.preventDefault();
         setFormSaving(true);
         try {
-            if (editingId) await productService.updateProduct(String(editingId), formData);
+            const basePayload = {
+                company_id: formData.company_id,
+                category_id: formData.category_id,
+                name: formData.name,
+                description: formData.description,
+                tags: formData.tags,
+                locale: 'en',
+                searchable: true,
+                active: formData.active,
+                published: formData.published,
+            };
+
+            if (formData.price !== '') {
+                (basePayload as any).price = Number(formData.price);
+            }
+            if (formData.sku) {
+                (basePayload as any).sku = formData.sku;
+            }
+
+            if (editingId) {
+                await productService.updateProduct(String(editingId), basePayload);
+            } else {
+                await productService.createProduct(basePayload as any);
+            }
             await fetchData();
             setIsModalOpen(false);
         } catch (error) {
             console.error('Save failed', error);
-            alert('Failed to save product');
+            toast.error('Failed to save product', {
+                description: 'Please review the form data and try again.',
+            });
         } finally { setFormSaving(false); }
     };
 
     const updateBilingual = (field: string, lang: 'en' | 'ar', val: string) => {
         setFormData((prev: any) => ({ ...prev, [field]: { ...(prev[field] || {}), [lang]: val } }));
+    };
+
+    /**
+     * Toggles a tag identifier in the form tag list.
+     *
+     * The API expects `tags` to be an array of tag IDs (strings),
+     * matching the contract described in the admin Postman collection.
+     */
+    const toggleTagSelection = (tagId: string) => {
+        setFormData((prev: any) => {
+            const current: string[] = prev.tags || [];
+            const exists = current.includes(tagId);
+            return {
+                ...prev,
+                tags: exists ? current.filter(id => id !== tagId) : [...current, tagId],
+            };
+        });
     };
 
     const toggleSelect = (id: string) => {
@@ -366,55 +455,53 @@ const Products = () => {
                     </div>
 
                     {/* Category filter */}
-                    <div className="relative">
-                        <select
-                            value={filterCategory}
-                            onChange={e => { setFilterCategory(e.target.value); setPage(1); }}
-                            className="h-9 pl-3 pr-8 bg-white border border-slate-200 rounded-lg text-sm text-slate-600 font-medium appearance-none focus:outline-none focus:border-teal-400 cursor-pointer"
-                        >
-                            <option value="">Category</option>
-                            {categories.map((c: any) => <option key={c.id} value={String(c.id)}>{displayBilingual(c.name)}</option>)}
-                        </select>
-                        <ChevronDown className="absolute right-2 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" size={14} />
-                    </div>
+                    <Select value={filterCategory} onValueChange={(val: string | null) => { setFilterCategory(val ?? 'all'); setPage(1); }}>
+                        <SelectTrigger className="h-9 w-fit min-w-[130px] bg-white border-slate-200 text-slate-600 font-medium px-3">
+                            <SelectValue placeholder="Category" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectItem value="all">All Categories</SelectItem>
+                            {categories.map((c: any) => (
+                                <SelectItem key={c.id} value={String(c.id)}>
+                                    {displayBilingual(c.name)}
+                                </SelectItem>
+                            ))}
+                        </SelectContent>
+                    </Select>
 
                     {/* Status filter */}
-                    <div className="relative">
-                        <select
-                            value={filterStatus}
-                            onChange={e => { setFilterStatus(e.target.value); setPage(1); }}
-                            className="h-9 pl-3 pr-8 bg-white border border-slate-200 rounded-lg text-sm text-slate-600 font-medium appearance-none focus:outline-none focus:border-teal-400 cursor-pointer"
-                        >
-                            <option value="">Status</option>
-                            <option value="Approved">Approved</option>
-                            <option value="Pending">Pending</option>
-                            <option value="Suspended">Suspended</option>
-                            <option value="Rejected">Rejected</option>
-                        </select>
-                        <ChevronDown className="absolute right-2 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" size={14} />
-                    </div>
+                    <Select value={filterStatus} onValueChange={(val:any) => { setFilterStatus(val); setPage(1); }}>
+                        <SelectTrigger className="h-9 w-fit min-w-[110px] bg-white border-slate-200 text-slate-600 font-medium px-3">
+                            <SelectValue placeholder="Status" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectItem value="all">All Status</SelectItem>
+                            <SelectItem value="Approved">Approved</SelectItem>
+                            <SelectItem value="Pending">Pending</SelectItem>
+                            <SelectItem value="Suspended">Suspended</SelectItem>
+                            <SelectItem value="Rejected">Rejected</SelectItem>
+                        </SelectContent>
+                    </Select>
 
                     {/* Company filter */}
-                    <div className="relative">
-                        <select
-                            value={filterCompany}
-                            onChange={e => { setFilterCompany(e.target.value); setPage(1); }}
-                            className="h-9 pl-3 pr-8 bg-white border border-slate-200 rounded-lg text-sm text-slate-600 font-medium appearance-none focus:outline-none focus:border-teal-400 cursor-pointer"
-                        >
-                            <option value="">Company</option>
-                            {companies.map((c: any) => <option key={c.id} value={String(c.id)}>{displayBilingual(c.name)}</option>)}
-                        </select>
-                        <ChevronDown className="absolute right-2 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" size={14} />
-                    </div>
+                    <Select value={filterCompany} onValueChange={(val: string | null) => { setFilterCompany(val ?? 'all'); setPage(1); }}>
+                        <SelectTrigger className="h-9 w-fit min-w-[130px] bg-white border-slate-200 text-slate-600 font-medium px-3">
+                            <SelectValue placeholder="Company" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectItem value="all">All Companies</SelectItem>
+                            {companies.map((c: any) => (
+                                <SelectItem key={c.id} value={String(c.id)}>
+                                    {displayBilingual(c.name)}
+                                </SelectItem>
+                            ))}
+                        </SelectContent>
+                    </Select>
 
-                    {/* Date placeholder */}
-                    <button className="h-9 px-3 flex items-center gap-1.5 bg-white border border-slate-200 rounded-lg text-sm text-slate-500 hover:border-slate-300 transition-colors">
-                        <Calendar size={14} />
-                        <span>Date</span>
-                    </button>
+
 
                     {/* Refresh */}
-                    <button onClick={fetchData} title="Refresh" className="h-9 w-9 flex items-center justify-center bg-white border border-slate-200 rounded-lg text-slate-400 hover:text-teal-600 hover:border-teal-200 transition-colors">
+                    <button onClick={resetFilters} title="Reset Filters & Refresh" className="h-9 w-9 flex items-center justify-center bg-white border border-slate-200 rounded-lg text-slate-400 hover:text-teal-600 hover:border-teal-200 transition-colors">
                         <RotateCcw size={15} />
                     </button>
 
@@ -561,7 +648,7 @@ const Products = () => {
                                                 <Button
                                                     variant="ghost"
                                                     size="icon-sm"
-                                                    onClick={() => handleDelete(p.id)}
+                                                    onClick={() => setDeleteProductId(p.id)}
                                                     className="text-slate-400 hover:text-rose-600 hover:bg-rose-50"
                                                 >
                                                     <Trash2 size={15} />
@@ -681,85 +768,201 @@ const Products = () => {
                 </div>
             </div >
 
-            {/* Edit Modal */}
-            < Dialog open={isModalOpen} onOpenChange={setIsModalOpen} >
-                <DialogContent className="max-w-2xl p-0 gap-0 overflow-hidden rounded-3xl border-none shadow-2xl">
-                    <DialogHeader className="px-8 py-6 bg-slate-50/80 backdrop-blur-md border-b">
-                        <DialogTitle className="text-xl font-bold text-slate-900 font-outfit">
-                            {editingId ? 'Refine Product' : 'List New Product'}
-                        </DialogTitle>
-                    </DialogHeader>
+            {/* Edit / Create Sheet (side panel) */}
+            <Sheet open={isModalOpen} onOpenChange={setIsModalOpen} > 
+                <SheetContent side="right" className="p-0 !max-w-4xl w-full max-h-screen overflow-y-auto border-none shadow-2xl flex flex-col">
+                    <div className="px-8 py-6 bg-slate-50/80 backdrop-blur-md border-b">
+                        <SheetHeader>
+                            <SheetTitle className="text-xl font-bold text-slate-900 font-outfit">
+                                {editingId ? 'Refine Product' : 'List New Product'}
+                            </SheetTitle>
+                            <div className="mt-4 flex items-center gap-4 text-[11px] font-semibold text-slate-400 uppercase tracking-widest">
+                                <div className="flex items-center gap-2">
+                                    <span className="w-5 h-5 rounded-full bg-teal-600 text-white flex items-center justify-center text-[10px]">
+                                        1
+                                    </span>
+                                    <span>Basic Information</span>
+                                </div>
+                                <div className="h-px w-6 bg-slate-200" />
+                                <div className="flex items-center gap-2">
+                                    <span className="w-5 h-5 rounded-full bg-slate-200 text-slate-500 flex items-center justify-center text-[10px]">
+                                        2
+                                    </span>
+                                    <span>Technical Data</span>
+                                </div>
+                                <div className="h-px w-6 bg-slate-200" />
+                                <div className="flex items-center gap-2">
+                                    <span className="w-5 h-5 rounded-full bg-slate-200 text-slate-500 flex items-center justify-center text-[10px]">
+                                        3
+                                    </span>
+                                    <span>Governance &amp; Approval</span>
+                                </div>
+                            </div>
+                        </SheetHeader>
+                    </div>
 
-                    <form onSubmit={handleSubmit} className="flex flex-col">
-                        <div className="p-8 space-y-6 max-h-[70vh] overflow-y-auto premium-scrollbar">
-                            <div className="grid grid-cols-2 gap-6">
-                                <div className="space-y-2">
-                                    <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest">English Name</label>
-                                    <input required className="w-full h-12 bg-slate-50 border border-slate-200 rounded-xl px-4 text-sm font-bold focus:bg-white focus:border-teal-500 transition-all outline-none" value={formData.name.en} onChange={e => updateBilingual('name', 'en', e.target.value)} />
-                                </div>
-                                <div className="space-y-2">
-                                    <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest text-right block">الإسم بالعربية</label>
-                                    <input dir="rtl" className="w-full h-12 bg-slate-50 border border-slate-200 rounded-xl px-4 text-sm font-bold focus:bg-white focus:border-teal-500 transition-all outline-none text-right" value={formData.name.ar} onChange={e => updateBilingual('name', 'ar', e.target.value)} />
-                                </div>
-                            </div>
-                            <div className="grid grid-cols-2 gap-6">
-                                <div className="space-y-2">
-                                    <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest">Category</label>
-                                    <div className="relative">
-                                        <select className="w-full h-12 bg-slate-50 border border-slate-200 rounded-xl px-4 text-sm font-bold appearance-none outline-none focus:border-teal-500 transition-all cursor-pointer" value={formData.category_id} onChange={e => setFormData({ ...formData, category_id: e.target.value })}>
-                                            <option value="">Select Category...</option>
-                                            {categories.map((c: any) => <option key={c.id} value={String(c.id)}>{displayBilingual(c.name)}</option>)}
-                                        </select>
-                                        <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" size={16} />
+                    <form onSubmit={handleSubmit} className="flex flex-col flex-1">
+                        <div className="p-8 space-y-10 flex-1 overflow-y-auto premium-scrollbar">
+                            {/* Basic Information Section */}
+                            <div className="space-y-6">
+                                <h3 className="text-xs font-black text-teal-600 uppercase tracking-widest border-b border-teal-100 pb-2">Basic Information</h3>
+                                <div className="grid grid-cols-2 gap-6">
+                                    <div className="space-y-2">
+                                        <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest">Product Name (EN) <span className="text-rose-500">*</span></label>
+                                        <input required className="w-full h-12 bg-white border border-slate-200 rounded-xl px-4 text-sm font-bold focus:border-teal-500 transition-all outline-none" placeholder="e.g. Pro Drill" value={formData.name.en} onChange={e => updateBilingual('name', 'en', e.target.value)} />
+                                    </div>
+                                    <div className="space-y-2">
+                                        <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest text-right block">الإسم (بالعربية) <span className="text-rose-500">*</span></label>
+                                        <input dir="rtl" className="w-full h-12 bg-white border border-slate-200 rounded-xl px-4 text-sm font-bold focus:border-teal-500 transition-all outline-none text-right" placeholder="اسم المنتج..." value={formData.name.ar} onChange={e => updateBilingual('name', 'ar', e.target.value)} />
                                     </div>
                                 </div>
-                                <div className="space-y-2">
-                                    <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest">Company</label>
-                                    <div className="relative">
-                                        <select className="w-full h-12 bg-slate-50 border border-slate-200 rounded-xl px-4 text-sm font-bold appearance-none outline-none focus:border-teal-500 transition-all cursor-pointer" value={formData.company_id} onChange={e => setFormData({ ...formData, company_id: e.target.value })}>
-                                            <option value="">Select Company...</option>
-                                            {companies.map((c: any) => <option key={c.id} value={String(c.id)}>{displayBilingual(c.name)}</option>)}
-                                        </select>
-                                        <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" size={16} />
+                                <div className="grid grid-cols-2 gap-6">
+                                    <div className="space-y-2">
+                                        <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest">Description (EN)</label>
+                                        <textarea rows={4} className="w-full bg-white border border-slate-200 rounded-xl px-4 py-3 text-sm font-medium focus:border-teal-500 transition-all outline-none resize-none" placeholder="Product details in English..." value={formData.description.en} onChange={e => updateBilingual('description', 'en', e.target.value)} />
+                                    </div>
+                                    <div className="space-y-2">
+                                        <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest text-right block">الوصف (بالعربية)</label>
+                                        <textarea rows={4} dir="rtl" className="w-full bg-white border border-slate-200 rounded-xl px-4 py-3 text-sm font-medium focus:border-teal-500 transition-all outline-none resize-none text-right" placeholder="تفاصيل المنتج بالعربية..." value={formData.description.ar} onChange={e => updateBilingual('description', 'ar', e.target.value)} />
                                     </div>
                                 </div>
                             </div>
-                            <div className="grid grid-cols-2 gap-6">
-                                <div className="space-y-2">
-                                    <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest">Price (USD)</label>
-                                    <input type="number" step="0.01" min="0" className="w-full h-12 bg-slate-50 border border-slate-200 rounded-xl px-4 text-sm font-bold focus:bg-white focus:border-teal-500 transition-all outline-none" value={formData.price} onChange={e => setFormData({ ...formData, price: e.target.value })} />
-                                </div>
-                                <div className="space-y-2">
-                                    <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest">SKU</label>
-                                    <input className="w-full h-12 bg-slate-50 border border-slate-200 rounded-xl px-4 text-sm font-bold focus:bg-white focus:border-teal-500 transition-all outline-none" value={formData.sku} onChange={e => setFormData({ ...formData, sku: e.target.value })} />
-                                </div>
-                            </div>
-                            {editingId && (
-                                <div className="flex items-center gap-4 p-5 bg-teal-50/50 rounded-2xl border border-teal-100/50">
-                                    <div className="relative inline-flex items-center cursor-pointer">
-                                        <input type="checkbox" checked={formData.active} onChange={e => setFormData({ ...formData, active: e.target.checked })} className="sr-only peer" id="active-toggle" />
-                                        <div className="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-teal-600"></div>
-                                        <label htmlFor="active-toggle" className="ml-3 text-sm font-bold text-slate-700 select-none">Mark as Active & Approved</label>
+
+                            <Separator />
+
+                            {/* Product Data Section */}
+                            <div className="space-y-6">
+                                <h3 className="text-xs font-black text-teal-600 uppercase tracking-widest border-b border-teal-100 pb-2">Technical Data</h3>
+                                <div className="grid grid-cols-2 gap-6">
+                                    <div className="space-y-2">
+                                        <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest">Category <span className="text-rose-500">*</span></label>
+                                        <Select value={formData.category_id} onValueChange={(val: string | null) => setFormData({ ...formData, category_id: val ?? '' })}>
+                                            <SelectTrigger className="w-full h-12 bg-white border-slate-200 rounded-xl px-4 text-sm font-bold">
+                                                <SelectValue placeholder="Categorize item..." />
+                                            </SelectTrigger>
+                                            <SelectContent className="rounded-xl shadow-xl border-slate-200">
+                                                {categories.map((c: any) => (
+                                                    <SelectItem key={c.id} value={String(c.id)} className="text-sm border-b border-slate-50 last:border-0">{displayBilingual(c.name)}</SelectItem>
+                                                ))}
+                                            </SelectContent>
+                                        </Select>
+                                    </div>
+                                    <div className="space-y-2">
+                                        <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest">Company <span className="text-rose-500">*</span></label>
+                                        <Select value={formData.company_id} onValueChange={(val: string | null) => setFormData({ ...formData, company_id: val ?? '' })}>
+                                            <SelectTrigger className="w-full h-12 bg-white border-slate-200 rounded-xl px-4 text-sm font-bold">
+                                                <SelectValue placeholder="Assign proprietor..." />
+                                            </SelectTrigger>
+                                            <SelectContent className="rounded-xl shadow-xl border-slate-200">
+                                                {companies.map((c: any) => (
+                                                    <SelectItem key={c.id} value={String(c.id)} className="text-sm border-b border-slate-50 last:border-0">{displayBilingual(c.name)}</SelectItem>
+                                                ))}
+                                            </SelectContent>
+                                        </Select>
                                     </div>
                                 </div>
-                            )}
+
+                                <div className="grid grid-cols-2 gap-6">
+                                    <div className="space-y-2">
+                                        <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest">Base Price (USD)</label>
+                                        <div className="relative">
+                                            <input type="number" step="0.01" min="0" className="w-full h-12 bg-white border border-slate-200 rounded-xl px-4 text-sm font-bold focus:border-teal-500 transition-all outline-none" placeholder="0.00" value={formData.price} onChange={e => setFormData({ ...formData, price: e.target.value })} />
+                                            <div className="absolute right-4 top-1/2 -translate-y-1/2 text-[10px] font-black text-slate-300 uppercase">EGP</div>
+                                        </div>
+                                    </div>
+                                    <div className="space-y-2">
+                                        <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest">SKU Ledger ID</label>
+                                        <input className="w-full h-12 bg-white border border-slate-200 rounded-xl px-4 text-sm font-bold focus:border-teal-500 transition-all outline-none uppercase placeholder:lowercase" placeholder="e.g. PRO-123" value={formData.sku} onChange={e => setFormData({ ...formData, sku: e.target.value })} />
+                                    </div>
+                                </div>
+
+                                <div className="space-y-3">
+                                    <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest">Market Tags <span className="text-slate-300 font-bold ml-1">({formData.tags.length}/5)</span></label>
+                                    <div className="flex flex-wrap gap-2 p-4 bg-slate-50 border border-slate-200 rounded-2xl min-h-[100px]">
+                                        {allTags.map(tag => {
+                                            const id = String(tag.id);
+                                            const isSelected = formData.tags.includes(id);
+                                            const isDisabled = !isSelected && formData.tags.length >= 5;
+                                            return (
+                                                <button
+                                                    key={id}
+                                                    type="button"
+                                                    onClick={() => toggleTagSelection(id)}
+                                                    disabled={isDisabled}
+                                                    className={`px-3 py-1.5 rounded-full text-[11px] font-bold border transition-all ${isSelected
+                                                        ? 'bg-teal-600 border-teal-600 text-white shadow-md shadow-teal-600/10'
+                                                        : 'bg-white border-slate-200 text-slate-600 hover:border-teal-400 hover:text-teal-600'
+                                                        } ${isDisabled ? 'opacity-30 grayscale cursor-not-allowed' : ''}`}
+                                                >
+                                                    {displayBilingual(tag.name)}
+                                                </button>
+                                            );
+                                        })}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <Separator />
+
+                            {/* Governance Section */}
+                            <div className="space-y-6">
+                                <h3 className="text-xs font-black text-teal-600 uppercase tracking-widest border-b border-teal-100 pb-2">Governance & Approval</h3>
+                                <div className="space-y-4">
+                                    <div className="flex items-center justify-between p-4 bg-white border border-slate-100 rounded-2xl shadow-sm">
+                                        <div className="flex items-center gap-4">
+                                            <div className="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center">
+                                                <CheckCircle size={18} />
+                                            </div>
+                                            <div className="space-y-0.5 text-left">
+                                                <p className="text-sm font-bold text-slate-800">Active Listing</p>
+                                                <p className="text-[11px] text-slate-400 font-medium">Mark as approved and ready for transactions.</p>
+                                            </div>
+                                        </div>
+                                        <div className="relative inline-flex items-center cursor-pointer scale-90">
+                                            <input type="checkbox" checked={formData.active} onChange={e => setFormData({ ...formData, active: e.target.checked })} className="sr-only peer" id="active-toggle" />
+                                            <div className="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-teal-600"></div>
+                                        </div>
+                                    </div>
+
+                                    <div className="flex items-center justify-between p-4 bg-white border border-slate-100 rounded-2xl shadow-sm">
+                                        <div className="flex items-center gap-4">
+                                            <div className="w-10 h-10 rounded-xl bg-sky-50 text-sky-600 flex items-center justify-center">
+                                                <Eye size={18} />
+                                            </div>
+                                            <div className="space-y-0.5 text-left">
+                                                <p className="text-sm font-bold text-slate-800">Public Visibility</p>
+                                                <p className="text-[11px] text-slate-400 font-medium">Toggle whether this item is indexed in search.</p>
+                                            </div>
+                                        </div>
+                                        <div className="relative inline-flex items-center cursor-pointer scale-90">
+                                            <input type="checkbox" checked={formData.published} onChange={e => setFormData({ ...formData, published: e.target.checked })} className="sr-only peer" id="pub-toggle" />
+                                            <div className="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-teal-600"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <DialogFooter className="px-8 py-6 bg-slate-50/80 backdrop-blur-md border-t flex items-center justify-between sm:justify-between">
-                            <Button type="button" variant="ghost" onClick={() => setIsModalOpen(false)} className="px-6 rounded-xl font-bold text-slate-500 hover:bg-slate-200/50">
+
+                        <div className="px-8 py-6 bg-slate-50/80 backdrop-blur-md border-t flex items-center justify-between">
+                            <Button type="button" variant="ghost" onClick={() => setIsModalOpen(false)} className="px-6 rounded-xl font-bold text-slate-500 hover:bg-slate-200/50 transition-all">
                                 Discard
                             </Button>
-                            <Button type="submit" disabled={formSaving} className="px-10 bg-teal-600 hover:bg-teal-700 rounded-xl font-black text-white shadow-lg shadow-teal-600/20">
+                            <Button
+                                type="submit"
+                                disabled={formSaving}
+                                className="h-12 px-10 bg-teal-600 hover:bg-teal-700 rounded-xl font-black text-white shadow-lg shadow-teal-600/20 transition-all active:scale-95"
+                            >
                                 {formSaving && <Loader2 className="animate-spin mr-2" size={16} />}
                                 {editingId ? 'Update Listing' : 'Publish Product'}
                             </Button>
-                        </DialogFooter>
+                        </div>
                     </form>
-                </DialogContent>
-            </Dialog >
+                </SheetContent>
+            </Sheet>
 
             {/* ────── Detail Drawer ────── */}
             < Sheet open={!!detailProduct} onOpenChange={(open) => !open && setDetailProduct(null)}>
-                <SheetContent side="right" className="p-0 sm:max-w-md w-full border-none shadow-2xl flex flex-col">
+                <SheetContent side="right" className="p-0 sm:max-w-md w-full max-h-screen overflow-y-auto border-none shadow-2xl flex flex-col">
                     {detailProduct && (() => {
                         const d = getProductData(detailProduct);
                         const status = getStatus(d);
@@ -786,11 +989,19 @@ const Products = () => {
                                         </div>
                                     </div>
 
-                                    <div className="absolute bottom-6 left-6 right-6">
-                                        <h2 className="text-2xl font-black text-white leading-tight font-outfit drop-shadow-lg">
-                                            {displayBilingual(d.name)}
-                                        </h2>
-                                        {d.name?.ar && <p className="text-white/70 text-sm mt-1 font-medium drop-shadow-md" dir="rtl">{d.name.ar}</p>}
+                                    <div className="absolute bottom-6 left-6 right-6 flex items-end justify-between">
+                                        <div className="flex-1">
+                                            <h2 className="text-2xl font-black text-white leading-tight font-outfit drop-shadow-lg">
+                                                {displayBilingual(d.name)}
+                                            </h2>
+                                            {d.name?.ar && <p className="text-white/70 text-sm mt-1 font-medium drop-shadow-md" dir="rtl">{d.name.ar}</p>}
+                                        </div>
+                                        {d.price !== null && d.price !== undefined && (
+                                            <div className="bg-teal-500 text-white px-4 py-2 rounded-2xl shadow-xl border border-teal-400/50 backdrop-blur-md">
+                                                <p className="text-[10px] font-black uppercase tracking-widest opacity-80">Price</p>
+                                                <p className="text-xl font-black leading-none mt-1">{formatCurrency(d.price)}</p>
+                                            </div>
+                                        )}
                                     </div>
                                 </div>
 
@@ -801,9 +1012,21 @@ const Products = () => {
                                             <p className="text-sm text-slate-600 leading-relaxed font-medium">
                                                 {displayBilingual(d.description) || <span className="italic text-slate-300">No narrative provided for this item.</span>}
                                             </p>
+
+                                            {/* Tags if any */}
+                                            {d.tags && d.tags.length > 0 && (
+                                                <div className="flex flex-wrap gap-1.5 pt-1">
+                                                    {d.tags.map((tag: any) => (
+                                                        <Badge key={tag.id} variant="secondary" className="bg-slate-100 text-slate-600 hover:bg-slate-200 border-none px-2 py-0.5 text-[10px] font-bold">
+                                                            {displayBilingual(tag.name)}
+                                                        </Badge>
+                                                    ))}
+                                                </div>
+                                            )}
+
                                             <div className="flex flex-wrap gap-2">
                                                 <div className="flex items-center gap-1.5 px-3 py-1.5 bg-slate-50 rounded-lg text-slate-500 border border-slate-100">
-                                                    <Tag size={12} className="text-slate-400" />
+                                                    <TagIcon size={12} className="text-slate-400" />
                                                     <span className="text-[11px] font-bold">{displayBilingual(d.categoryName)}</span>
                                                 </div>
                                                 {d.sku && (
@@ -875,7 +1098,7 @@ const Products = () => {
                                         )}
 
                                         {/* Internal Section */}
-                                        <div className="pt-4">
+                                        <div className="pt-4 space-y-4">
                                             <div className="bg-slate-50 rounded-2xl p-6 border border-slate-200/60 shadow-inner">
                                                 <div className="flex items-center gap-2 mb-4">
                                                     <AlertTriangle size={14} className="text-amber-500" />
@@ -887,6 +1110,17 @@ const Products = () => {
                                                     className="w-full bg-white border border-slate-200 rounded-xl px-4 py-3 text-sm text-slate-700 resize-none focus:outline-none focus:border-teal-400 focus:shadow-[0_0_0_4px_rgba(20,184,166,0.1)] transition-all font-medium"
                                                 />
                                             </div>
+
+                                            <div className="grid grid-cols-2 gap-4 px-2">
+                                                <div className="text-[10px] font-bold text-slate-400 uppercase tracking-widest leading-tight">
+                                                    Listed: <br />
+                                                    <span className="text-slate-600">{new Date(d.createdAt).toLocaleString('en-GB')}</span>
+                                                </div>
+                                                <div className="text-[10px] font-bold text-slate-400 uppercase tracking-widest leading-tight text-right">
+                                                    Last Update: <br />
+                                                    <span className="text-slate-600">{new Date(d.updatedAt).toLocaleString('en-GB')}</span>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -895,7 +1129,7 @@ const Products = () => {
                                 <div className="p-6 border-t bg-slate-50/80 backdrop-blur-md flex items-center gap-3">
                                     <Button
                                         variant="outline"
-                                        onClick={() => { handleDelete(d.id); setDetailProduct(null); }}
+                                        onClick={() => setDeleteProductId(d.id)}
                                         className="flex-1 h-12 rounded-xl border-rose-200 text-rose-600 font-bold hover:bg-rose-50 hover:text-rose-700 hover:border-rose-300 transition-all"
                                     >
                                         <Trash2 size={16} className="mr-2" /> Scrap
@@ -927,6 +1161,35 @@ const Products = () => {
                     })()}
                 </SheetContent>
             </Sheet>
+
+            <Dialog open={deleteProductId !== null} onOpenChange={(open) => !open && setDeleteProductId(null)}>
+                <DialogContent>
+                    <DialogHeader>
+                        <DialogTitle>Delete product?</DialogTitle>
+                    </DialogHeader>
+                    <p className="text-sm text-slate-500 mt-2">
+                        This action cannot be undone. The product will be removed from the catalog.
+                    </p>
+                    <DialogFooter className="mt-4">
+                        <Button
+                            type="button"
+                            variant="outline"
+                            onClick={() => setDeleteProductId(null)}
+                            className="font-semibold"
+                        >
+                            Cancel
+                        </Button>
+                        <Button
+                            type="button"
+                            variant="destructive"
+                            onClick={handleConfirmDeleteProduct}
+                            className="font-semibold"
+                        >
+                            Delete
+                        </Button>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
         </div>
     );
 };

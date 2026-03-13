@@ -3,7 +3,7 @@ import { Tag, ApiResponse } from '../types/api';
 
 export const tagService = {
   getTags: async (params?: any) => {
-    const response = await apiClient.get<ApiResponse<Tag>>('/tag', { params });
+    const response = await apiClient.get<ApiResponse<Tag>>('/tags/index', { params });
     return response.data;
   },
 

@@ -10,6 +10,8 @@ import {
 import { tagService } from '../services/tagService';
 import { Tag } from '../types/api';
 import { displayBilingual } from '../utils/ui';
+import { toast } from "sonner";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 
 const Tags = () => {
     const [loading, setLoading] = React.useState(true);
@@ -23,6 +25,7 @@ const Tags = () => {
     const [formData, setFormData] = React.useState({
         name: { en: '', ar: '' }
     });
+    const [deleteTagId, setDeleteTagId] = React.useState<string | number | null>(null);
 
     const fetchTags = async () => {
         setLoading(true);
@@ -58,14 +61,22 @@ const Tags = () => {
         setIsModalOpen(true);
     };
 
-    const handleDelete = async (id: string | number) => {
-        if (!window.confirm('Are you sure you want to delete this tag?')) return;
+    /**
+     * Confirms tag deletion from the server and updates local state.
+     */
+    const handleConfirmDeleteTag = async () => {
+        if (!deleteTagId) return;
+        const id = deleteTagId;
         try {
             await tagService.deleteTag(String(id));
             setTagList(prev => prev.filter(t => t.id !== id));
-            setTotalTags(prev => prev - 1);
+            setTotalTags(prev => Math.max(0, prev - 1));
+            toast.success('Tag deleted');
         } catch (error) {
             console.error('Delete failed', error);
+            toast.error('Failed to delete tag');
+        } finally {
+            setDeleteTagId(null);
         }
     };
 
@@ -82,7 +93,9 @@ const Tags = () => {
             setIsModalOpen(false);
         } catch (error) {
             console.error('Save failed', error);
-            alert('Failed to save tag');
+            toast.error('Failed to save tag', {
+                description: 'Please review the tag fields and try again.',
+            });
         } finally {
             setFormSaving(false);
         }
@@ -146,7 +159,7 @@ const Tags = () => {
                             <button onClick={() => handleOpenModal(tag)} className="p-1.5 text-slate-400 hover:text-teal-600 hover:bg-teal-50 rounded-lg transition-colors border border-transparent hover:border-teal-100">
                                 <Edit3 size={14} />
                             </button>
-                            <button onClick={() => handleDelete(tag.id)} className="p-1.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors border border-transparent hover:border-rose-100">
+                            <button onClick={() => setDeleteTagId(tag.id)} className="p-1.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors border border-transparent hover:border-rose-100">
                                 <Trash2 size={14} />
                             </button>
                         </div>
@@ -199,6 +212,33 @@ const Tags = () => {
                     </div>
                 </div>
             )}
+
+            <Dialog open={deleteTagId !== null} onOpenChange={(open) => !open && setDeleteTagId(null)}>
+                <DialogContent>
+                    <DialogHeader>
+                        <DialogTitle>Delete tag?</DialogTitle>
+                    </DialogHeader>
+                    <p className="text-sm text-slate-500 mt-2">
+                        This action cannot be undone. The tag will be removed from the system taxonomy.
+                    </p>
+                    <DialogFooter className="mt-4">
+                        <button
+                            type="button"
+                            className="px-6 py-2.5 rounded-xl text-sm font-bold text-slate-500 hover:bg-slate-200 transition-all"
+                            onClick={() => setDeleteTagId(null)}
+                        >
+                            Cancel
+                        </button>
+                        <button
+                            type="button"
+                            className="px-8 py-2.5 bg-rose-600 rounded-xl text-sm font-black text-white hover:bg-rose-700 transition-all"
+                            onClick={handleConfirmDeleteTag}
+                        >
+                            Delete
+                        </button>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
         </div>
     );
 };
