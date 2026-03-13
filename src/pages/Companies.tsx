@@ -11,10 +11,12 @@ import {
     Clock,
     AlertCircle,
     X,
-    Loader2
+    Loader2,
+    Tag as TagIcon
 } from 'lucide-react';
 import { companyService } from '../services/companyService';
-import { Company } from '../types/api';
+import { tagService } from '../services/tagService';
+import { Company, Tag } from '../types/api';
 import { displayBilingual, getStatusStyles, formatDate } from '../utils/ui';
 
 /**
@@ -38,14 +40,18 @@ const getCompanyData = (item: any) => {
         profilePhoto: attrs.profilePhoto || attrs.profile_photo || c.profilePhoto || '',
         active: attrs.active !== undefined ? attrs.active : (c.active !== undefined ? c.active : true),
         published: attrs.published !== undefined ? attrs.published : (c.published !== undefined ? c.published : true),
+        searchable: attrs.searchable !== undefined ? attrs.searchable : (c.searchable !== undefined ? c.searchable : true),
         verified: attrs.verified !== undefined ? attrs.verified : (c.verified !== undefined ? c.verified : false),
         createdAt: attrs.createdAt || attrs.created_at || c.created_at || '',
         location: rels.primaryCountry?.name || c.location || '',
+        industryId: rels.industry?.id || c.industry_id || '',
         industryName: rels.industry?.name || '',
+        ownerId: rels.owner?.id || c.owner_id || '',
         ownerName: rels.owner?.name || '',
         ownerEmail: rels.owner?.email || '',
         ranking: attrs.ranking ?? c.ranking ?? null,
         established: attrs.established ?? c.established ?? null,
+        expertiseIds: Array.isArray(rels.expertises) ? rels.expertises.map((e: any) => String(e.id)) : (c.expertise_ids || []),
     };
 };
 
@@ -60,9 +66,19 @@ const Companies = () => {
     const [formSaving, setFormSaving] = React.useState(false);
     const [formData, setFormData] = React.useState({
         name: { en: '', ar: '' },
+        slogan: { en: '', ar: '' },
         location: '',
-        acronym: ''
+        acronym: '',
+        handle: '',
+        owner_id: '',
+        industry_id: '',
+        expertise_ids: [] as string[],
+        established: '',
+        searchable: true,
+        active: true,
+        published: true,
     });
+    const [allExpertises, setAllExpertises] = React.useState<Tag[]>([]);
 
     const fetchCompanies = async () => {
         setLoading(true);
@@ -84,24 +100,54 @@ const Companies = () => {
         }
     };
 
+    const fetchExpertises = async () => {
+        try {
+            const tagsRes = await tagService.getTags({ per_page: 200 });
+            if (tagsRes && tagsRes.data) setAllExpertises(tagsRes.data as Tag[]);
+            else if (Array.isArray(tagsRes)) setAllExpertises(tagsRes as Tag[]);
+        } catch (error) {
+            console.error('Error fetching expertises:', error);
+        }
+    };
+
     React.useEffect(() => {
         fetchCompanies();
+        fetchExpertises();
     }, []);
 
     const handleOpenModal = (company?: Company) => {
         if (company) {
-            setEditingId(company.id);
+            const d = getCompanyData(company);
+            setEditingId(d.id);
             setFormData({
-                name: typeof company.name === 'string' ? { en: company.name, ar: '' } : company.name,
-                location: company.location || '',
-                acronym: company.acronym || ''
+                name: { en: d.name.en || '', ar: d.name.ar || '' },
+                slogan: { en: d.slogan?.en || '', ar: d.slogan?.ar || '' },
+                location: displayBilingual(d.location) || '',
+                acronym: d.acronym || '',
+                handle: d.handle || '',
+                owner_id: d.ownerId || '',
+                industry_id: d.industryId || '',
+                expertise_ids: d.expertiseIds || [],
+                established: d.established ? String(d.established) : '',
+                searchable: d.searchable,
+                active: d.active,
+                published: d.published,
             });
         } else {
             setEditingId(null);
             setFormData({
                 name: { en: '', ar: '' },
+                slogan: { en: '', ar: '' },
                 location: '',
-                acronym: ''
+                acronym: '',
+                handle: '',
+                owner_id: '',
+                industry_id: '',
+                expertise_ids: [],
+                established: '',
+                searchable: true,
+                active: true,
+                published: true,
             });
         }
         setIsModalOpen(true);
@@ -131,10 +177,27 @@ const Companies = () => {
         e.preventDefault();
         setFormSaving(true);
         try {
+            const basePayload: any = {
+                owner_id: formData.owner_id,
+                name: formData.name,
+                slogan: formData.slogan,
+                acronym: formData.acronym,
+                handle: formData.handle,
+                industry_id: formData.industry_id,
+                expertise_ids: formData.expertise_ids,
+                searchable: formData.searchable,
+                active: formData.active,
+                published: formData.published,
+            };
+
+            if (formData.established) {
+                basePayload.established = Number(formData.established);
+            }
+
             if (editingId) {
-                await companyService.updateCompany(String(editingId), formData);
+                await companyService.updateCompany(String(editingId), basePayload);
             } else {
-                await companyService.updateCompany('', formData);
+                await companyService.createCompany(basePayload);
             }
             await fetchCompanies();
             setIsModalOpen(false);
@@ -327,28 +390,218 @@ const Companies = () => {
                         </div>
 
                         <form onSubmit={handleSubmit} className="flex flex-col max-h-[70vh]">
-                            <div className="p-8 space-y-6 overflow-y-auto premium-scrollbar flex-1">
-                                <div className="grid grid-cols-2 gap-6">
-                                    <div className="space-y-2">
-                                        <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest">English Name</label>
-                                        <input required className="w-full h-12 bg-slate-50 border border-slate-200 rounded-xl px-4 text-sm font-bold focus:bg-white focus:border-teal-500 transition-all outline-none" value={formData.name.en} onChange={e => updateBilingual('name', 'en', e.target.value)} />
-                                    </div>
-                                    <div className="space-y-2">
-                                        <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest text-right block">الإسم بالعربية</label>
-                                        <input required dir="rtl" className="w-full h-12 bg-slate-50 border border-slate-200 rounded-xl px-4 text-sm font-bold focus:bg-white focus:border-teal-500 transition-all outline-none text-right" value={formData.name.ar} onChange={e => updateBilingual('name', 'ar', e.target.value)} />
-                                    </div>
-                                </div>
-                                <div className="grid grid-cols-2 gap-6">
-                                    <div className="space-y-2">
-                                        <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest">Location</label>
-                                        <div className="relative">
-                                            <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={16} />
-                                            <input required className="w-full h-12 pl-10 pr-4 bg-slate-50 border border-slate-200 rounded-xl text-sm font-bold focus:bg-white focus:border-teal-500 transition-all outline-none" value={formData.location} onChange={e => setFormData({ ...formData, location: e.target.value })} />
+                            <div className="p-8 space-y-8 overflow-y-auto premium-scrollbar flex-1">
+                                {/* Identity */}
+                                <div className="space-y-6">
+                                    <div className="grid grid-cols-2 gap-6">
+                                        <div className="space-y-2">
+                                            <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest">
+                                                English Name
+                                            </label>
+                                            <input
+                                                required
+                                                className="w-full h-12 bg-slate-50 border border-slate-200 rounded-xl px-4 text-sm font-bold focus:bg-white focus:border-teal-500 transition-all outline-none"
+                                                value={formData.name.en}
+                                                onChange={e => updateBilingual('name', 'en', e.target.value)}
+                                            />
+                                        </div>
+                                        <div className="space-y-2">
+                                            <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest text-right block">
+                                                الإسم بالعربية
+                                            </label>
+                                            <input
+                                                required
+                                                dir="rtl"
+                                                className="w-full h-12 bg-slate-50 border border-slate-200 rounded-xl px-4 text-sm font-bold focus:bg-white focus:border-teal-500 transition-all outline-none text-right"
+                                                value={formData.name.ar}
+                                                onChange={e => updateBilingual('name', 'ar', e.target.value)}
+                                            />
                                         </div>
                                     </div>
-                                    <div className="space-y-2">
-                                        <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest">Acronym</label>
-                                        <input className="w-full h-12 bg-slate-50 border border-slate-200 rounded-xl px-4 text-sm font-bold focus:bg-white focus:border-teal-500 transition-all outline-none" value={formData.acronym} onChange={e => setFormData({ ...formData, acronym: e.target.value })} />
+
+                                    <div className="grid grid-cols-2 gap-6">
+                                        <div className="space-y-2">
+                                            <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest">
+                                                Slogan (EN)
+                                            </label>
+                                            <input
+                                                className="w-full h-11 bg-slate-50 border border-slate-200 rounded-xl px-4 text-sm font-medium focus:bg-white focus:border-teal-500 transition-all outline-none"
+                                                value={formData.slogan.en}
+                                                onChange={e => setFormData(prev => ({ ...prev, slogan: { ...prev.slogan, en: e.target.value } }))}
+                                            />
+                                        </div>
+                                        <div className="space-y-2">
+                                            <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest text-right block">
+                                                الشعار (بالعربية)
+                                            </label>
+                                            <input
+                                                dir="rtl"
+                                                className="w-full h-11 bg-slate-50 border border-slate-200 rounded-xl px-4 text-sm font-medium focus:bg-white focus:border-teal-500 transition-all outline-none text-right"
+                                                value={formData.slogan.ar}
+                                                onChange={e => setFormData(prev => ({ ...prev, slogan: { ...prev.slogan, ar: e.target.value } }))}
+                                            />
+                                        </div>
+                                    </div>
+
+                                    <div className="grid grid-cols-3 gap-6">
+                                        <div className="space-y-2">
+                                            <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest">
+                                                Acronym
+                                            </label>
+                                            <input
+                                                className="w-full h-11 bg-slate-50 border border-slate-200 rounded-xl px-4 text-sm font-bold focus:bg-white focus:border-teal-500 transition-all outline-none uppercase placeholder:lowercase"
+                                                value={formData.acronym}
+                                                onChange={e => setFormData({ ...formData, acronym: e.target.value })}
+                                            />
+                                        </div>
+                                        <div className="space-y-2">
+                                            <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest">
+                                                Handle
+                                            </label>
+                                            <input
+                                                className="w-full h-11 bg-slate-50 border border-slate-200 rounded-xl px-4 text-sm font-medium focus:bg-white focus:border-teal-500 transition-all outline-none"
+                                                placeholder="@handle"
+                                                value={formData.handle}
+                                                onChange={e => setFormData({ ...formData, handle: e.target.value })}
+                                            />
+                                        </div>
+                                        <div className="space-y-2">
+                                            <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest">
+                                                Established Year
+                                            </label>
+                                            <input
+                                                type="number"
+                                                min="1800"
+                                                max={new Date().getFullYear()}
+                                                className="w-full h-11 bg-slate-50 border border-slate-200 rounded-xl px-4 text-sm font-bold focus:bg-white focus:border-teal-500 transition-all outline-none"
+                                                value={formData.established}
+                                                onChange={e => setFormData({ ...formData, established: e.target.value })}
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* Meta & taxonomy */}
+                                <div className="space-y-6">
+                                    <div className="grid grid-cols-2 gap-6">
+                                        <div className="space-y-2">
+                                            <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest">
+                                                Owner ULID
+                                            </label>
+                                            <input
+                                                className="w-full h-11 bg-slate-50 border border-slate-200 rounded-xl px-4 text-sm font-mono focus:bg-white focus:border-teal-500 transition-all outline-none"
+                                                value={formData.owner_id}
+                                                onChange={e => setFormData({ ...formData, owner_id: e.target.value })}
+                                            />
+                                        </div>
+                                        <div className="space-y-2">
+                                            <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest">
+                                                Industry ULID
+                                            </label>
+                                            <input
+                                                className="w-full h-11 bg-slate-50 border border-slate-200 rounded-xl px-4 text-sm font-mono focus:bg-white focus:border-teal-500 transition-all outline-none"
+                                                value={formData.industry_id}
+                                                onChange={e => setFormData({ ...formData, industry_id: e.target.value })}
+                                            />
+                                        </div>
+                                    </div>
+
+                                    <div className="space-y-3">
+                                        <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest flex items-center gap-1">
+                                            Expertises
+                                            <span className="text-slate-300 font-bold ml-1">
+                                                ({formData.expertise_ids.length})
+                                            </span>
+                                        </label>
+                                        <div className="flex flex-wrap gap-2 p-4 bg-slate-50 border border-slate-200 rounded-2xl min-h-[90px]">
+                                            {allExpertises.map(tag => {
+                                                const id = String(tag.id);
+                                                const isSelected = formData.expertise_ids.includes(id);
+                                                return (
+                                                    <button
+                                                        key={id}
+                                                        type="button"
+                                                        onClick={() =>
+                                                            setFormData(prev => ({
+                                                                ...prev,
+                                                                expertise_ids: prev.expertise_ids.includes(id)
+                                                                    ? prev.expertise_ids.filter(tid => tid !== id)
+                                                                    : [...prev.expertise_ids, id],
+                                                            }))
+                                                        }
+                                                        className={`px-3 py-1.5 rounded-full text-[11px] font-bold border transition-all ${
+                                                            isSelected
+                                                                ? 'bg-teal-600 border-teal-600 text-white shadow-md shadow-teal-600/10'
+                                                                : 'bg-white border-slate-200 text-slate-600 hover:border-teal-400 hover:text-teal-600'
+                                                        }`}
+                                                    >
+                                                        <span className="inline-flex items-center gap-1">
+                                                            <TagIcon size={11} className="opacity-60" />
+                                                            {displayBilingual(tag.name)}
+                                                        </span>
+                                                    </button>
+                                                );
+                                            })}
+                                            {allExpertises.length === 0 && (
+                                                <p className="text-xs text-slate-400 italic">
+                                                    No expertises loaded from API.
+                                                </p>
+                                            )}
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* Governance */}
+                                <div className="space-y-4">
+                                    <h4 className="text-[11px] font-black text-teal-600 uppercase tracking-widest">
+                                        Governance &amp; Visibility
+                                    </h4>
+                                    <div className="grid grid-cols-3 gap-4">
+                                        <div className="flex items-center justify-between p-3 bg-white border border-slate-100 rounded-2xl shadow-sm">
+                                            <div className="space-y-0.5">
+                                                <p className="text-xs font-bold text-slate-800">Searchable</p>
+                                                <p className="text-[10px] text-slate-400 font-medium">Include in internal search.</p>
+                                            </div>
+                                            <div className="relative inline-flex items-center cursor-pointer scale-90">
+                                                <input
+                                                    type="checkbox"
+                                                    checked={formData.searchable}
+                                                    onChange={e => setFormData({ ...formData, searchable: e.target.checked })}
+                                                    className="sr-only peer"
+                                                />
+                                                <div className="w-10 h-5 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-teal-600" />
+                                            </div>
+                                        </div>
+                                        <div className="flex items-center justify-between p-3 bg-white border border-slate-100 rounded-2xl shadow-sm">
+                                            <div className="space-y-0.5">
+                                                <p className="text-xs font-bold text-slate-800">Active</p>
+                                                <p className="text-[10px] text-slate-400 font-medium">Eligible for operations.</p>
+                                            </div>
+                                            <div className="relative inline-flex items-center cursor-pointer scale-90">
+                                                <input
+                                                    type="checkbox"
+                                                    checked={formData.active}
+                                                    onChange={e => setFormData({ ...formData, active: e.target.checked })}
+                                                    className="sr-only peer"
+                                                />
+                                                <div className="w-10 h-5 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-teal-600" />
+                                            </div>
+                                        </div>
+                                        <div className="flex items-center justify-between p-3 bg-white border border-slate-100 rounded-2xl shadow-sm">
+                                            <div className="space-y-0.5">
+                                                <p className="text-xs font-bold text-slate-800">Published</p>
+                                                <p className="text-[10px] text-slate-400 font-medium">Visible to marketplace.</p>
+                                            </div>
+                                            <div className="relative inline-flex items-center cursor-pointer scale-90">
+                                                <input
+                                                    type="checkbox"
+                                                    checked={formData.published}
+                                                    onChange={e => setFormData({ ...formData, published: e.target.checked })}
+                                                    className="sr-only peer"
+                                                />
+                                                <div className="w-10 h-5 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-teal-600" />
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>

@@ -94,7 +94,7 @@ const Sidebar = () => {
     };
 
     return (
-        <aside className="fixed left-0 top-0 h-screen w-64 bg-[#0a2525] text-slate-300 border-r border-[#0e3131] flex flex-col z-50">
+        <aside className="fixed left-0 top-0 h-screen w-64 bg-white text-black border-r border-[#0e3131] flex flex-col z-50">
             <div className="p-6 flex items-center gap-3">
                 <div className="w-10 h-10 bg-[#008080] rounded-xl flex items-center justify-center">
                     <ShieldCheck className="text-white" size={24} />
@@ -109,7 +109,7 @@ const Sidebar = () => {
                 {navItems.map((item: any, idx) => {
                     if (item.type === 'label') {
                         return (
-                            <div key={idx} className="mt-6 mb-2 px-2 text-[10px] font-bold text-slate-500 uppercase tracking-widest">
+                            <div key={idx} className="mt-6 mb-2 px-2 text-[10px] font-bold text-black uppercase tracking-widest">
                                 {item.label}
                             </div>
                         );

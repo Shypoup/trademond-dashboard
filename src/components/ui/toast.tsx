@@ -1,9 +1,5 @@
 import * as React from "react"
-import {
-  Toast as ToastPrimitive,
-  ToastTitle as ToastPrimitiveTitle,
-  ToastDescription as ToastPrimitiveDescription,
-} from "@base-ui/react-toast"
+import { Toast as ToastPrimitive } from "@base-ui/react/toast"
 
 import { cn } from "@/lib/utils"
 
@@ -44,28 +40,28 @@ const ToastRoot = React.forwardRef<
 ToastRoot.displayName = ToastPrimitive.Root.displayName
 
 const ToastTitle = React.forwardRef<
-  React.ElementRef<typeof ToastPrimitiveTitle>,
-  React.ComponentPropsWithoutRef<typeof ToastPrimitiveTitle>
+  React.ElementRef<typeof ToastPrimitive.Title>,
+  React.ComponentPropsWithoutRef<typeof ToastPrimitive.Title>
 >(({ className, ...props }, ref) => (
-  <ToastPrimitiveTitle
+  <ToastPrimitive.Title
     ref={ref}
     className={cn("font-semibold text-sm", className)}
     {...props}
   />
 ))
-ToastTitle.displayName = ToastPrimitiveTitle.displayName
+ToastTitle.displayName = ToastPrimitive.Title.displayName
 
 const ToastDescription = React.forwardRef<
-  React.ElementRef<typeof ToastPrimitiveDescription>,
-  React.ComponentPropsWithoutRef<typeof ToastPrimitiveDescription>
+  React.ElementRef<typeof ToastPrimitive.Description>,
+  React.ComponentPropsWithoutRef<typeof ToastPrimitive.Description>
 >(({ className, ...props }, ref) => (
-  <ToastPrimitiveDescription
+  <ToastPrimitive.Description
     ref={ref}
     className={cn("mt-1 text-xs text-slate-100/80", className)}
     {...props}
   />
 ))
-ToastDescription.displayName = ToastPrimitiveDescription.displayName
+ToastDescription.displayName = ToastPrimitive.Description.displayName
 
 export { ToastRoot as Toast, ToastTitle, ToastDescription, ToastViewport }
 
