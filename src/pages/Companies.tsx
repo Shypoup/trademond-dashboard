@@ -17,6 +17,38 @@ import { companyService } from '../services/companyService';
 import { Company } from '../types/api';
 import { displayBilingual, getStatusStyles, formatDate } from '../utils/ui';
 
+/**
+ * Normalizes a company record coming from either a flat or json:api-style payload.
+ *
+ * Supports:
+ * - Legacy flat `Company` objects.
+ * - New payloads where data lives under `attributes` and related info under `relationships`.
+ */
+const getCompanyData = (item: any) => {
+    const c = item as any;
+    const attrs = c.attributes || c;
+    const rels = c.relationships || {};
+
+    return {
+        id: c.id,
+        name: attrs.name || c.name || { en: '', ar: '' },
+        handle: attrs.handle || c.handle || '',
+        acronym: attrs.acronym || c.acronym || '',
+        slogan: attrs.slogan || c.slogan || { en: '', ar: '' },
+        profilePhoto: attrs.profilePhoto || attrs.profile_photo || c.profilePhoto || '',
+        active: attrs.active !== undefined ? attrs.active : (c.active !== undefined ? c.active : true),
+        published: attrs.published !== undefined ? attrs.published : (c.published !== undefined ? c.published : true),
+        verified: attrs.verified !== undefined ? attrs.verified : (c.verified !== undefined ? c.verified : false),
+        createdAt: attrs.createdAt || attrs.created_at || c.created_at || '',
+        location: rels.primaryCountry?.name || c.location || '',
+        industryName: rels.industry?.name || '',
+        ownerName: rels.owner?.name || '',
+        ownerEmail: rels.owner?.email || '',
+        ranking: attrs.ranking ?? c.ranking ?? null,
+        established: attrs.established ?? c.established ?? null,
+    };
+};
+
 const Companies = () => {
     const [loading, setLoading] = React.useState(true);
     const [companyList, setCompanyList] = React.useState<Company[]>([]);
@@ -36,9 +68,14 @@ const Companies = () => {
         setLoading(true);
         try {
             const response = await companyService.getCompanies();
-            if (response.data) {
-                setCompanyList(response.data);
-                setTotalCompanies(response.meta?.total || response.data.length);
+
+            if (response && response.data) {
+                const dataArr = (Array.isArray(response.data) ? response.data : Object.values(response.data)) as Company[];
+                setCompanyList(dataArr);
+                setTotalCompanies(response.meta?.total || dataArr.length);
+            } else if (Array.isArray(response)) {
+                setCompanyList(response as Company[]);
+                setTotalCompanies(response.length);
             }
         } catch (error) {
             console.error('Error fetching companies:', error);
@@ -167,49 +204,79 @@ const Companies = () => {
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-slate-50">
-                            {companyList.map((c) => (
-                                <tr key={c.id} className="hover:bg-slate-50/50 transition-colors group">
-                                    <td className="px-6 py-5">
-                                        <div className="flex items-center gap-4">
-                                            <div className="w-12 h-12 rounded-xl border border-slate-100 overflow-hidden bg-slate-50">
-                                                <img src={c.profilePhoto || `https://ui-avatars.com/api/?name=${displayBilingual(c.name)}&background=008080&color=fff`} alt={displayBilingual(c.name)} className="w-full h-full object-cover" />
+                            {companyList.map((c) => {
+                                const d = getCompanyData(c);
+                                return (
+                                    <tr key={d.id} className="hover:bg-slate-50/50 transition-colors group">
+                                        <td className="px-6 py-5">
+                                            <div className="flex items-center gap-4">
+                                                <div className="w-12 h-12 rounded-xl border border-slate-100 overflow-hidden bg-slate-50">
+                                                    <img
+                                                        src={d.profilePhoto || `https://ui-avatars.com/api/?name=${encodeURIComponent(displayBilingual(d.name))}&background=008080&color=fff`}
+                                                        alt={displayBilingual(d.name)}
+                                                        className="w-full h-full object-cover"
+                                                    />
+                                                </div>
+                                                <div>
+                                                    <h5 className="text-[14px] font-bold text-slate-800">
+                                                        {displayBilingual(d.name)}
+                                                    </h5>
+                                                    <p className="text-xs text-slate-400 uppercase tracking-wider font-bold text-[10px]">
+                                                        {d.acronym || 'No Acronym'}
+                                                    </p>
+                                                    {d.handle && (
+                                                        <p className="text-[11px] text-slate-400 mt-0.5">
+                                                            {d.handle}
+                                                        </p>
+                                                    )}
+                                                </div>
                                             </div>
-                                            <div>
-                                                <h5 className="text-[14px] font-bold text-slate-800">{displayBilingual(c.name)}</h5>
-                                                <p className="text-xs text-slate-400 uppercase tracking-wider font-bold text-[10px]">{c.acronym || 'No Acronym'}</p>
+                                        </td>
+                                        <td className="px-6 py-5">
+                                            <div className="flex flex-col gap-1 text-xs text-slate-600 font-medium">
+                                                <div className="flex items-center gap-1.5">
+                                                    <MapPin size={14} className="text-slate-400" />
+                                                    <span>{displayBilingual(d.location) || 'Distributed'}</span>
+                                                </div>
+                                                {d.industryName && (
+                                                    <div className="flex items-center gap-1.5 text-[11px] text-slate-400">
+                                                        <Globe size={13} className="text-slate-300" />
+                                                        <span>{displayBilingual(d.industryName)}</span>
+                                                    </div>
+                                                )}
                                             </div>
-                                        </div>
-                                    </td>
-                                    <td className="px-6 py-5">
-                                        <div className="flex items-center gap-1.5 text-xs text-slate-600 font-medium">
-                                            <MapPin size={14} className="text-slate-400" />
-                                            <span>{c.location || 'Distributed'}</span>
-                                        </div>
-                                    </td>
-                                    <td className="px-6 py-5">
-                                        <button
-                                            onClick={() => handleToggleStatus(c.id)}
-                                            className={`text-[10px] font-bold px-2 py-0.5 rounded-full border transition-colors hover:opacity-80 ${getStatusStyles(c.active ? 'active' : 'inactive')}`}
-                                            title="Click to toggle status"
-                                        >
-                                            {c.active ? 'Active' : 'Inactive'}
-                                        </button>
-                                    </td>
-                                    <td className="px-6 py-5 text-xs text-slate-500 font-medium">
-                                        {formatDate(c.created_at)}
-                                    </td>
-                                    <td className="px-6 py-5 text-right">
-                                        <div className="flex items-center justify-end gap-1">
-                                            <button onClick={() => handleOpenModal(c)} className="text-slate-400 hover:text-blue-600 p-2 hover:bg-slate-100 rounded-lg border border-transparent hover:border-slate-200 transition-all">
-                                                <Edit size={16} />
+                                        </td>
+                                        <td className="px-6 py-5">
+                                            <button
+                                                onClick={() => handleToggleStatus(d.id)}
+                                                className={`text-[10px] font-bold px-2 py-0.5 rounded-full border transition-colors hover:opacity-80 ${getStatusStyles(d.active ? 'active' : 'inactive')}`}
+                                                title="Click to toggle status"
+                                            >
+                                                {d.active ? 'Active' : 'Inactive'}
                                             </button>
-                                            <button onClick={() => handleDelete(c.id)} className="text-slate-400 hover:text-rose-600 p-2 hover:bg-slate-100 rounded-lg border border-transparent hover:border-slate-200 transition-all">
-                                                <Trash2 size={16} />
-                                            </button>
-                                        </div>
-                                    </td>
-                                </tr>
-                            ))}
+                                        </td>
+                                        <td className="px-6 py-5 text-xs text-slate-500 font-medium">
+                                            {formatDate(d.createdAt)}
+                                        </td>
+                                        <td className="px-6 py-5 text-right">
+                                            <div className="flex items-center justify-end gap-1">
+                                                <button
+                                                    onClick={() => handleOpenModal(c)}
+                                                    className="text-slate-400 hover:text-blue-600 p-2 hover:bg-slate-100 rounded-lg border border-transparent hover:border-slate-200 transition-all"
+                                                >
+                                                    <Edit size={16} />
+                                                </button>
+                                                <button
+                                                    onClick={() => handleDelete(d.id)}
+                                                    className="text-slate-400 hover:text-rose-600 p-2 hover:bg-slate-100 rounded-lg border border-transparent hover:border-slate-200 transition-all"
+                                                >
+                                                    <Trash2 size={16} />
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                );
+                            })}
                             {companyList.length === 0 && (
                                 <tr>
                                     <td colSpan={5} className="px-6 py-12 text-center text-slate-400">No companies found.</td>
@@ -230,14 +297,33 @@ const Companies = () => {
             {isModalOpen && (
                 <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 animate-in fade-in duration-200">
                     <div className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm" onClick={() => setIsModalOpen(false)}></div>
-                    <div className="relative w-full max-w-2xl bg-white rounded-3xl shadow-2xl overflow-hidden animate-in zoom-in-95 duration-200 flex flex-col">
-                        <div className="p-6 border-b flex items-center justify-between bg-slate-50">
-                            <div>
-                                <h3 className="text-xl font-bold font-outfit text-slate-900">{editingId ? 'Edit Company' : 'Register Company'}</h3>
+                    <div className="relative w-full max-w-3xl bg-white rounded-3xl shadow-2xl overflow-hidden animate-in zoom-in-95 duration-200 flex flex-col">
+                        <div className="p-6 border-b bg-slate-50">
+                            <div className="flex items-center justify-between">
+                                <div>
+                                    <h3 className="text-xl font-bold font-outfit text-slate-900">
+                                        {editingId ? 'Edit Company' : 'Register Company'}
+                                    </h3>
+                                </div>
+                                <button onClick={() => setIsModalOpen(false)} className="p-2 hover:bg-slate-200 rounded-full transition-colors text-slate-400">
+                                    <X size={20} />
+                                </button>
                             </div>
-                            <button onClick={() => setIsModalOpen(false)} className="p-2 hover:bg-slate-200 rounded-full transition-colors text-slate-400">
-                                <X size={20} />
-                            </button>
+                            <div className="mt-4 flex items-center gap-4 text-[11px] font-semibold text-slate-400 uppercase tracking-widest">
+                                <div className="flex items-center gap-2">
+                                    <span className="w-5 h-5 rounded-full bg-teal-600 text-white flex items-center justify-center text-[10px]">
+                                        1
+                                    </span>
+                                    <span>Identity</span>
+                                </div>
+                                <div className="h-px w-6 bg-slate-200" />
+                                <div className="flex items-center gap-2">
+                                    <span className="w-5 h-5 rounded-full bg-slate-200 text-slate-500 flex items-center justify-center text-[10px]">
+                                        2
+                                    </span>
+                                    <span>Location &amp; Meta</span>
+                                </div>
+                            </div>
                         </div>
 
                         <form onSubmit={handleSubmit} className="flex flex-col max-h-[70vh]">
