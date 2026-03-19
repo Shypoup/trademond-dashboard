@@ -21,9 +21,16 @@
     "jsx": "react-jsx",
     "baseUrl": ".",
     "paths": {
-      "@/*": [
-        "./src/*"
-      ]
+      "@/*": ["./src/*"],
+      "@utils/*": ["./src/utils/*"],
+      "@services/*": ["./src/services/*"],
+      "@api/*": ["./src/services/api/*"],
+      "@components/*": ["./src/components/*"],
+      "@pages/*": ["./src/pages/*"],
+      "@contexts/*": ["./src/contexts/*"],
+      "@data-types/*": ["./src/types/*"],
+      "@schemas/*": ["./src/utils/schemas/*"],
+      "@hooks/*": ["./src/utils/hooks/*"]
     }
   },
   "include": [

@@ -1,0 +1,33 @@
+---
+alwaysApply: true
+---
+
+# Trademond Dashboard — Admin UI
+
+**Purpose**: Web admin dashboard for the Trademond platform — manages products, services, companies, users, plans, features, subscriptions, sponsorships, experiments, and related workflows.
+
+- **Package name**: `trademond-dashboard`
+- **Base URL**: derived from `VITE_API_BASE_URL` (default `https://trademond.net/api/v1`)
+
+## Tech Stack
+| Layer | Technology |
+|---|---|
+| Framework | React 19 + TypeScript (strict mode) |
+| Bundler | Vite (with `@tailwindcss/vite` plugin) |
+| Styling | Tailwind CSS v4 + shadcn/ui |
+| Routing | react-router-dom v7 |
+| Server State | TanStack React Query v5 |
+| Forms | react-hook-form + yup validation |
+| HTTP Client | Axios (custom `axiosClient` with JWT interceptor) |
+| i18n | react-i18next (Arabic RTL + English LTR) |
+| Notifications | sonner |
+| Icons | lucide-react |
+| Charts | recharts |
+| Utilities | clsx + tailwind-merge via `cn()` helper |
+
+## Key Conventions
+- All user-facing text must use `react-i18next` — call `t()` for every visible string.
+- The app supports **RTL** (Arabic) and **LTR** (English) — use logical CSS properties (`ms-`, `me-`, `ps-`, `pe-`, `start-`, `end-`) instead of physical (`ml-`, `mr-`, `left-`, `right-`).
+- Authentication uses **JWT tokens** stored in `localStorage`. The Axios interceptor attaches the token automatically.
+- API bilingual data uses `BilingualText` type — render it with `displayBilingual()` from `@utils/ui`.
+- Environment variables are prefixed with `VITE_` and accessed via `import.meta.env`.

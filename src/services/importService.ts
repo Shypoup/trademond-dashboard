@@ -1,4 +1,4 @@
-import apiClient, { API_ROOT } from './api';
+import axiosClient, { API_ROOT } from '@api/axiosClient';
 
 /**
  * Import endpoints use {{auth_url}}/imports (i.e., /api/imports),
@@ -8,7 +8,7 @@ export const importService = {
     importIndustries: async (file: File) => {
         const formData = new FormData();
         formData.append('file', file);
-        const response = await apiClient.post(`${API_ROOT}/imports/industries`, formData, {
+        const response = await axiosClient.post(`${API_ROOT}/imports/industries`, formData, {
             headers: { 'Content-Type': 'multipart/form-data' },
         });
         return response.data;
@@ -17,7 +17,7 @@ export const importService = {
     importIsicCodes: async (file: File) => {
         const formData = new FormData();
         formData.append('file', file);
-        const response = await apiClient.post(`${API_ROOT}/imports/isic`, formData, {
+        const response = await axiosClient.post(`${API_ROOT}/imports/isic`, formData, {
             headers: { 'Content-Type': 'multipart/form-data' },
         });
         return response.data;

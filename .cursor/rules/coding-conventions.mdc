@@ -1,0 +1,83 @@
+---
+alwaysApply: true
+---
+
+# Coding Conventions & Best Practices
+
+## TypeScript
+- Use **strict TypeScript** — no `any` unless absolutely necessary (prefer `unknown` + type guards).
+- Define interfaces/types for all API request/response payloads.
+- Use `ApiResponse<T>` generic wrapper for typed API responses.
+- Export types from `src/types/` directory.
+- Prefer `interface` for object shapes and `type` for unions/intersections.
+
+## React Components
+- Use **functional components** with React 19 hooks.
+- Prefer **named exports** for components; use `export default` only for page-level components.
+- Keep components small and focused — extract logic into custom hooks in `@hooks/`.
+- Use `React.memo()` for expensive pure components when needed.
+
+## Styling
+- Use **Tailwind CSS v4** utility classes as the primary styling approach.
+- Use **shadcn/ui** components for complex UI elements (dialogs, sheets, selects, etc.).
+- Combine Tailwind + shadcn by wrapping shadcn components with Tailwind utility classes.
+- Use the `cn()` utility from `@utils/core/cn` for conditional class merging:
+  ```typescript
+  import { cn } from "@utils/core/cn";
+  <div className={cn("base-class", isActive && "active-class", className)} />
+  ```
+- **Never use inline styles** unless required for dynamic values not achievable with Tailwind.
+- Support **RTL layout** — use logical properties (`ms-`, `me-`, `ps-`, `pe-`, `start-`, `end-`) instead of physical (`ml-`, `mr-`, `pl-`, `pr-`, `left-`, `right-`).
+- **Never hardcode colors** — centralize them in `@utils/core/colors.ts` or `src/index.css` theme vars.
+
+## Internationalization (i18n)
+- **All user-facing strings** must use `react-i18next` translation function:
+  ```typescript
+  const { t, i18n } = useTranslation();
+  <span>{t("section.key")}</span>
+  ```
+- Translation files are in `src/locales/en.json` and `src/locales/ar.json`.
+- Any translation key added in a component **must** be added to both translation files.
+- For bilingual API fields, use `displayBilingual()` from `@utils/ui`.
+- RTL direction is set automatically on `<html>` element via `i18n.on("languageChanged")`.
+
+## API & Data Fetching
+- Use **TanStack React Query v5** for all server state management.
+- Use `useQuery` for reads, `useMutation` for writes.
+- Invalidate relevant queries on successful mutations.
+- All HTTP calls go through `axiosClient` from `@api/axiosClient` — it attaches `Authorization` headers automatically.
+
+## Form Handling
+- Use **react-hook-form** with **yup** resolver for form validation.
+- Define Yup schemas in `@schemas/` organized by feature.
+- Pattern:
+  ```typescript
+  import { useForm } from "react-hook-form";
+  import { yupResolver } from "@hookform/resolvers/yup";
+  import { schema } from "@schemas/feature/schemaName";
+
+  const { register, handleSubmit, formState: { errors } } = useForm({
+    resolver: yupResolver(schema),
+  });
+  ```
+
+## Error Handling
+- Use `parseError()` from `@utils/errorParser` to categorize errors.
+- Use `getUserFriendlyErrorMessage()` to display localized error messages via sonner toasts.
+- Handle error categories: network, server (5xx), unauthorized (401), forbidden (403), notFound (404).
+
+## JSDoc
+- Write JSDoc for all exported functions, hooks, and non-trivial helpers.
+
+## File & Folder Naming
+- **Pages**: PascalCase files (e.g., `Products.tsx`, `CuratedLists.tsx`)
+- **Components**: PascalCase files or folders with `index.tsx`
+- **Services**: camelCase files (e.g., `productService.ts`)
+- **Utils/Hooks**: camelCase files (e.g., `useHome.ts`, `errorParser.ts`)
+- **Schemas**: camelCase files (e.g., `loginSchema.ts`)
+
+## Build Scripts
+- `npm run dev` — Development server
+- `npm run build` — TypeScript check + production build
+- `npm run lint` — ESLint
+- `npm run preview` — Preview production build

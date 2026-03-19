@@ -1,0 +1,141 @@
+---
+alwaysApply: true
+---
+
+# Trademond Dashboard — Project Structure
+
+```
+src/
+├── App.tsx                       # Router setup (BrowserRouter, routes)
+├── main.tsx                      # Entry point (QueryProvider → I18next → App)
+├── index.css                     # Tailwind import + theme variables + global styles
+├── components/
+│   ├── Header/                  # Top navigation bar
+│   │   ├── index.tsx
+│   │   ├── components/
+│   │   └── utils/
+│   ├── Sidebar/                 # Side navigation
+│   │   ├── index.tsx
+│   │   ├── components/
+│   │   └── utils/
+│   ├── Layout/                  # Legacy layout (AuthLayout preferred)
+│   │   └── index.tsx
+│   └── ui/                      # shadcn/ui wrappers (Button, Dialog, Sheet, etc.)
+├── pages/                       # Route-level page components — EACH is a FOLDER
+│   ├── Products/
+│   │   ├── index.tsx            # Main page (state, handlers, orchestration, max 400 lines)
+│   │   ├── components/          # Extracted UI sub-components
+│   │   │   ├── ProductTable.tsx
+│   │   │   ├── ProductToolbar.tsx
+│   │   │   ├── ProductFormSheet.tsx
+│   │   │   ├── ProductDetailSheet.tsx
+│   │   │   ├── ProductStatsCards.tsx
+│   │   │   └── DeleteProductDialog.tsx
+│   │   └── utils/               # Page-specific helpers
+│   │       └── productHelpers.ts
+│   ├── Companies/
+│   │   ├── index.tsx
+│   │   ├── components/
+│   │   └── utils/
+│   ├── Profile/
+│   │   ├── index.tsx
+│   │   ├── components/
+│   │   └── utils/
+│   ├── Dashboard/               # (same pattern for all pages)
+│   ├── Users/
+│   ├── Services/
+│   ├── ... (all other pages follow the same folder pattern)
+│   └── Login/
+├── services/
+│   ├── api/
+│   │   ├── axiosClient.ts       # Axios instance with JWT interceptor
+│   │   └── QueryClient.ts       # TanStack QueryClient singleton
+│   ├── authService.ts
+│   ├── productService.ts
+│   ├── companyService.ts
+│   ├── ... (feature service modules)
+│   └── api.ts                   # Legacy re-export → use @api/axiosClient
+├── layouts/
+│   └── AuthLayout.tsx           # Authenticated shell (Sidebar + Header + Content + Footer)
+├── routes/
+│   ├── PrivateRoute.tsx         # Auth guard (redirects to /login)
+│   └── PublicRoute.tsx          # Guest guard (redirects to / if logged in)
+├── contexts/                    # React Context providers
+├── utils/
+│   ├── core/
+│   │   ├── cn.ts                # clsx + tailwind-merge utility
+│   │   ├── colors.ts            # Centralized color constants
+│   │   └── queryConfig.ts       # Default React Query options
+│   ├── hooks/                   # Custom hooks
+│   ├── schemas/                 # Yup validation schemas
+│   ├── types/                   # Re-exports (optional)
+│   ├── lib/
+│   │   ├── i18n.ts              # i18next configuration
+│   │   └── queryClient.tsx      # QueryClientProvider wrapper
+│   ├── errorParser.ts           # Centralized error parsing
+│   └── ui.ts                    # UI helpers (displayBilingual, formatDate, etc.)
+├── types/
+│   └── api.ts                   # Shared API types (BilingualText, Product, ApiResponse, etc.)
+├── lib/
+│   └── utils.ts                 # Re-exports cn() for shadcn/ui compatibility
+└── locales/
+    ├── en.json                  # English translations
+    └── ar.json                  # Arabic translations
+```
+
+## Page & Component Folder Convention
+
+Every page and shared component is a **folder**, not a file:
+
+```
+PageName/
+  index.tsx        # Main component (max 400 lines) — state, handlers, orchestration
+  components/      # Extracted sub-components with props interfaces
+  utils/           # Page-specific helper functions and types
+```
+
+- `index.tsx` is the entry point — use `export default` here only.
+- Sub-components in `components/` use **named exports** with JSDoc + typed props.
+- Helper functions, types, and constants go in `utils/`.
+- No single file should exceed **400 lines**.
+
+## Path Aliases (use these in imports)
+
+| Alias | Path |
+|---|---|
+| `@/*` | `./src/*` |
+| `@utils/*` | `./src/utils/*` |
+| `@services/*` | `./src/services/*` |
+| `@api/*` | `./src/services/api/*` |
+| `@components/*` | `./src/components/*` |
+| `@pages/*` | `./src/pages/*` |
+| `@contexts/*` | `./src/contexts/*` |
+| `@data-types/*` | `./src/types/*` |
+| `@schemas/*` | `./src/utils/schemas/*` |
+| `@hooks/*` | `./src/utils/hooks/*` |
+
+## Service Layer Pattern
+
+Services export named objects with async methods that call `axiosClient`:
+
+```typescript
+import axiosClient from '@api/axiosClient';
+import { Product, ApiResponse } from '@data-types/api';
+
+export const productService = {
+  getProducts: async (params?: Record<string, unknown>) => {
+    const response = await axiosClient.get<ApiResponse<Product>>('/admin/products', { params });
+    return response.data;
+  },
+};
+```
+
+## Key Rules
+1. **Always use `axiosClient`** from `@api/axiosClient` — never raw `axios`.
+2. **Type API responses** with `ApiResponse<T>` from `@data-types/api`.
+3. **Use `parseError()` + `getUserFriendlyErrorMessage()`** from `@utils/errorParser` for error handling.
+4. **Use `cn()`** from `@utils/core/cn` for conditional class merging.
+5. **Page components** are registered in `App.tsx` routes.
+6. **Reusable components** go in `src/components/` (each as a folder).
+7. **All user-facing strings** go through `t()` and must be added to `src/locales/en.json` + `src/locales/ar.json`.
+8. **Max 400 lines** per file — split into `components/` and `utils/` subfolders.

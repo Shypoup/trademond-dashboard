@@ -1,13 +1,13 @@
-import apiClient from './api';
-import { PlatformStats } from '../types/api';
+import axiosClient from '@api/axiosClient';
+import { PlatformStats } from '@data-types/api';
 
 export const platformService = {
   getOverviewStats: async (): Promise<PlatformStats> => {
     // In a real scenario, this might be a single endpoint or multiple calls
     // For now, we structure it for the dashboard
     try {
-      const usersRes = await apiClient.get('/users/counts').catch(() => ({ data: { total: 12840, active: 11200 } }));
-      const productsRes = await apiClient.get('/product/counts').catch(() => ({ data: { total: 45200, pending: 128 } }));
+      const usersRes = await axiosClient.get('/users/counts').catch(() => ({ data: { total: 12840, active: 11200 } }));
+      const productsRes = await axiosClient.get('/product/counts').catch(() => ({ data: { total: 45200, pending: 128 } }));
       
       return {
         total_users: usersRes.data.total,

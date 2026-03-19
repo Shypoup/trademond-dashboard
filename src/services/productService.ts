@@ -1,14 +1,14 @@
-import apiClient from './api';
-import { Product, ApiResponse } from '../types/api';
+import axiosClient from '@api/axiosClient';
+import { Product, ApiResponse } from '@data-types/api';
 
 export const productService = {
   getProducts: async (params?: any) => {
-    const response = await apiClient.get<ApiResponse<Product>>('/admin/products', { params });
+    const response = await axiosClient.get<ApiResponse<Product>>('/admin/products', { params });
     return response.data;
   },
 
   getProduct: async (id: string) => {
-    const response = await apiClient.get<Product>(`/admin/products/${id}`);
+    const response = await axiosClient.get<Product>(`/admin/products/${id}`);
     return response.data;
   },
 
@@ -28,37 +28,37 @@ export const productService = {
    * - published?: boolean
    */
   createProduct: async (data: any) => {
-    const response = await apiClient.post('/admin/products', data);
+    const response = await axiosClient.post('/admin/products', data);
     return response.data;
   },
 
   updateProduct: async (id: string, data: any) => {
-    const response = await apiClient.patch(`/admin/products/${id}`, data);
+    const response = await axiosClient.patch(`/admin/products/${id}`, data);
     return response.data;
   },
 
   deleteProduct: async (id: string) => {
-    const response = await apiClient.delete(`/admin/products/${id}`);
+    const response = await axiosClient.delete(`/admin/products/${id}`);
     return response.data;
   },
 
   restoreProduct: async (id: string) => {
-    const response = await apiClient.post(`/admin/products/${id}/restore`);
+    const response = await axiosClient.post(`/admin/products/${id}/restore`);
     return response.data;
   },
 
   toggleActive: async (id: string) => {
-    const response = await apiClient.post(`/admin/products/${id}/toggle-active`);
+    const response = await axiosClient.post(`/admin/products/${id}/toggle-active`);
     return response.data;
   },
 
   togglePublished: async (id: string) => {
-    const response = await apiClient.post(`/admin/products/${id}/toggle-published`);
+    const response = await axiosClient.post(`/admin/products/${id}/toggle-published`);
     return response.data;
   },
 
   getProductData: async (id: string) => {
-    const response = await apiClient.get(`/admin/products/${id}/data`);
+    const response = await axiosClient.get(`/admin/products/${id}/data`);
     return response.data;
   },
 };
