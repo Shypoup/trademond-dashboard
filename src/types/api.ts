@@ -255,16 +255,28 @@ export interface Experiment {
 }
 
 export interface Media {
-  id: string; // UUID
-  model_type?: string;
-  model_id?: string;
-  collection_name?: string;
-  name?: string;
-  file_name?: string;
-  mime_type?: string;
+  id: string;
+  /** camelCase keys returned by the API after JSON:API normalisation */
+  collectionName?: string;
+  fileName?: string;
+  mimeType?: string;
   disk?: string;
   size?: number;
   url?: string;
+  createdAt?: string;
+  updatedAt?: string;
+  /** Normalised relationship – owner entity the media belongs to */
+  owner?: {
+    data?: { type: string; id: string };
+    meta?: { name: string };
+  };
+  /** Legacy snake_case fallbacks (pre-normalisation compat) */
+  collection_name?: string;
+  file_name?: string;
+  mime_type?: string;
+  model_type?: string;
+  model_id?: string;
+  name?: string;
   created_at?: string;
   updated_at?: string;
 }
@@ -353,4 +365,88 @@ export interface SearchIndex {
   name: string;
   count?: number;
   last_indexed_at?: string;
+}
+
+// ─── Social Platforms ────────────────────────────────────────
+
+export interface SocialPlatform {
+  id: string;
+  name: BilingualText;
+  input_type: 'username' | 'url' | 'phone' | 'email';
+  base_url?: string;
+  placeholder?: BilingualText;
+  validation_pattern?: string;
+  allow_multiple?: boolean;
+  active: boolean;
+  icon?: string;
+  position?: number;
+  created_at?: string;
+  updated_at?: string;
+}
+
+// ─── Sponsored Ads ───────────────────────────────────────────
+
+export interface SponsoredAd {
+  id: string;
+  placement: string;
+  headline?: BilingualText;
+  description?: BilingualText;
+  cta_label?: BilingualText;
+  cta_url?: string;
+  company_id?: string;
+  external_brand?: string;
+  priority?: number;
+  is_active: boolean;
+  starts_at?: string;
+  ends_at?: string;
+  impressions?: number;
+  clicks?: number;
+  stats?: Array<{ value: string; label: BilingualText }>;
+  media?: Media[];
+  created_at?: string;
+  updated_at?: string;
+}
+
+// ─── Quote Requests / Responses ──────────────────────────────
+
+export interface QuoteRequest {
+  id: string;
+  requester_id?: string;
+  company_id?: string;
+  quotable_type?: 'product' | 'service';
+  quotable_id?: string;
+  subject?: string;
+  message?: string;
+  status:
+    | 'pending'
+    | 'viewed'
+    | 'in_progress'
+    | 'quoted'
+    | 'accepted'
+    | 'declined'
+    | 'expired'
+    | 'closed'
+    | 'cancelled';
+  lead_status?: 'new' | 'qualified' | 'unqualified' | 'converted' | 'lost';
+  is_read?: boolean;
+  admin_notes?: string;
+  closed_at?: string;
+  read_at?: string;
+  created_at?: string;
+  updated_at?: string;
+  deleted_at?: string | null;
+}
+
+export interface QuoteResponse {
+  id: string;
+  quote_request_id: string;
+  company_id?: string;
+  message?: string;
+  price?: number;
+  currency?: string;
+  valid_until?: string;
+  admin_notes?: string;
+  created_at?: string;
+  updated_at?: string;
+  deleted_at?: string | null;
 }

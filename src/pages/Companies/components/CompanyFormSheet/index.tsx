@@ -1,7 +1,7 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { X, Loader2, Tag as TagIcon } from 'lucide-react';
-import { Tag } from '@data-types/api';
+import { X, Loader2, Tag as TagIcon, ChevronDown, Search } from 'lucide-react';
+import { Tag, User } from '@data-types/api';
 import { displayBilingual } from '@utils/ui';
 import {
     Sheet,
@@ -29,6 +29,8 @@ export interface CompanyFormSheetProps {
     formSaving: boolean;
     /** Available expertise tags to display in the picker. */
     allExpertises: Tag[];
+    /** Available users to pick from as company owner. */
+    allUsers: User[];
     /** The logged-in user's id, used as default owner for new companies. */
     loginOwnerId: string;
 }
@@ -46,9 +48,44 @@ export const CompanyFormSheet: React.FC<CompanyFormSheetProps> = ({
     onSubmit,
     formSaving,
     allExpertises,
+    allUsers,
     loginOwnerId,
 }) => {
     const { t } = useTranslation();
+    const [ownerSearch, setOwnerSearch] = React.useState('');
+    const [ownerDropdownOpen, setOwnerDropdownOpen] = React.useState(false);
+    const ownerRef = React.useRef<HTMLDivElement>(null);
+
+    React.useEffect(() => {
+        setOwnerSearch('');
+        setOwnerDropdownOpen(false);
+    }, [isOpen]);
+
+    React.useEffect(() => {
+        const handleClickOutside = (e: MouseEvent) => {
+            if (ownerRef.current && !ownerRef.current.contains(e.target as Node)) {
+                setOwnerDropdownOpen(false);
+            }
+        };
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => document.removeEventListener('mousedown', handleClickOutside);
+    }, []);
+
+    const filteredUsers = React.useMemo(() => {
+        if (!ownerSearch.trim()) return allUsers;
+        const q = ownerSearch.toLowerCase();
+        return allUsers.filter(
+            (u) =>
+                u.name?.toLowerCase().includes(q) ||
+                u.email?.toLowerCase().includes(q) ||
+                u.id?.toLowerCase().includes(q),
+        );
+    }, [allUsers, ownerSearch]);
+
+    const selectedUser = React.useMemo(
+        () => allUsers.find((u) => String(u.id) === formData.owner_id),
+        [allUsers, formData.owner_id],
+    );
 
     /** Updates a single language key inside a bilingual field. */
     const updateBilingual = (field: keyof Pick<CompanyFormData, 'name' | 'slogan'>, lang: 'en' | 'ar', val: string) => {
@@ -199,16 +236,73 @@ export const CompanyFormSheet: React.FC<CompanyFormSheetProps> = ({
                         {/* Meta & taxonomy */}
                         <div className="space-y-6">
                             <div className="grid grid-cols-2 gap-6">
-                                <div className="space-y-2">
+                                <div className="space-y-2" ref={ownerRef}>
                                     <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest">
-                                        {t('companies.ownerUlid')}
+                                        {t('companies.owner')}
                                     </label>
-                                    <input
-                                        className="w-full h-11 bg-slate-50 border border-slate-200 rounded-xl px-4 text-sm font-mono focus:bg-white focus:border-teal-500 transition-all outline-none"
-                                        value={formData.owner_id}
-                                        readOnly={Boolean(loginOwnerId) && editingId === null}
-                                        onChange={e => setFormData(prev => ({ ...prev, owner_id: e.target.value }))}
-                                    />
+                                    <div className="relative">
+                                        <button
+                                            type="button"
+                                            onClick={() => setOwnerDropdownOpen((prev) => !prev)}
+                                            className="w-full h-11 bg-slate-50 border border-slate-200 rounded-xl px-4 text-sm font-medium text-start flex items-center justify-between gap-2 focus:bg-white focus:border-teal-500 transition-all outline-none"
+                                        >
+                                            <span className={selectedUser ? 'text-slate-800 font-bold' : 'text-slate-400'}>
+                                                {selectedUser
+                                                    ? `${selectedUser.name} (${selectedUser.email})`
+                                                    : t('companies.selectOwner')}
+                                            </span>
+                                            <ChevronDown size={14} className="text-slate-400 shrink-0" />
+                                        </button>
+                                        {ownerDropdownOpen && (
+                                            <div className="absolute z-50 mt-1 w-full bg-white border border-slate-200 rounded-xl shadow-xl max-h-64 flex flex-col overflow-hidden">
+                                                <div className="p-2 border-b border-slate-100">
+                                                    <div className="relative">
+                                                        <Search size={14} className="absolute start-3 top-1/2 -translate-y-1/2 text-slate-400" />
+                                                        <input
+                                                            type="text"
+                                                            value={ownerSearch}
+                                                            onChange={(e) => setOwnerSearch(e.target.value)}
+                                                            placeholder={t('companies.searchUsers')}
+                                                            className="w-full h-8 ps-8 pe-3 bg-slate-50 border border-slate-100 rounded-lg text-xs outline-none focus:border-teal-400 transition-all placeholder:text-slate-400"
+                                                            autoFocus
+                                                        />
+                                                    </div>
+                                                </div>
+                                                <div className="overflow-y-auto flex-1">
+                                                    {filteredUsers.map((u) => (
+                                                        <button
+                                                            key={u.id}
+                                                            type="button"
+                                                            onClick={() => {
+                                                                setFormData((prev) => ({ ...prev, owner_id: String(u.id) }));
+                                                                setOwnerDropdownOpen(false);
+                                                                setOwnerSearch('');
+                                                            }}
+                                                            className={`w-full text-start px-4 py-2.5 flex items-center gap-3 hover:bg-teal-50 transition-colors ${
+                                                                String(u.id) === formData.owner_id ? 'bg-teal-50' : ''
+                                                            }`}
+                                                        >
+                                                            <div className="w-7 h-7 rounded-full bg-slate-100 border border-slate-200 flex items-center justify-center text-[10px] font-bold text-slate-500 shrink-0 uppercase">
+                                                                {u.name?.charAt(0) || '?'}
+                                                            </div>
+                                                            <div className="min-w-0 flex-1">
+                                                                <p className="text-xs font-bold text-slate-800 truncate">{u.name}</p>
+                                                                <p className="text-[10px] text-slate-400 truncate">{u.email}</p>
+                                                            </div>
+                                                            {String(u.id) === formData.owner_id && (
+                                                                <span className="text-teal-600 text-[10px] font-bold shrink-0">&#10003;</span>
+                                                            )}
+                                                        </button>
+                                                    ))}
+                                                    {filteredUsers.length === 0 && (
+                                                        <p className="px-4 py-3 text-xs text-slate-400 text-center">
+                                                            {t('companies.noUsersFound')}
+                                                        </p>
+                                                    )}
+                                                </div>
+                                            </div>
+                                        )}
+                                    </div>
                                 </div>
                                 <div className="space-y-2">
                                     <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest">

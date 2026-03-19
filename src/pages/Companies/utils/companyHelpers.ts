@@ -95,16 +95,18 @@ export const getCompanyData = (item: unknown): NormalizedCompany => {
         searchable: attrs.searchable !== undefined ? attrs.searchable : (c.searchable !== undefined ? c.searchable : true),
         verified: attrs.verified !== undefined ? attrs.verified : (c.verified !== undefined ? c.verified : false),
         createdAt: attrs.createdAt || attrs.created_at || c.created_at || '',
-        location: rels.primaryCountry?.name || c.location || '',
-        industryId: rels.industry?.id || c.industry_id || '',
-        industryName: rels.industry?.name || '',
-        ownerId: rels.owner?.id || c.owner_id || '',
-        ownerName: rels.owner?.name || '',
-        ownerEmail: rels.owner?.email || '',
+        location: rels.primaryCountry?.name || c.primaryCountry?.name || c.location || '',
+        industryId: rels.industry?.id || c.industry?.id || c.industry_id || '',
+        industryName: rels.industry?.name || c.industry?.name || '',
+        ownerId: rels.owner?.id || c.owner?.id || c.owner_id || '',
+        ownerName: rels.owner?.name || c.owner?.name || '',
+        ownerEmail: rels.owner?.email || c.owner?.email || '',
         ranking: attrs.ranking ?? c.ranking ?? null,
         established: attrs.established ?? c.established ?? null,
         expertiseIds: Array.isArray(rels.expertises)
             ? rels.expertises.map((e: Record<string, unknown>) => String(e.id))
-            : (c.expertise_ids || []),
+            : Array.isArray(c.expertises)
+                ? c.expertises.map((e: Record<string, unknown>) => String(e.id))
+                : (c.expertise_ids || []),
     };
 };

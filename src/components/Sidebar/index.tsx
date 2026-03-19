@@ -83,8 +83,8 @@ const Sidebar = () => {
         fetchProfile();
     }, []);
 
-    const handleLogout = () => {
-        authService.logout();
+    const handleLogout = async () => {
+        await authService.logout();
         navigate('/login');
     };
 
