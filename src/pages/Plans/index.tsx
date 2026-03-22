@@ -3,6 +3,7 @@ import { Search, Plus, MoreHorizontal, DollarSign, X, Edit, Trash2, Loader2, Che
 import { planService } from '@services/planService';
 import { Plan } from '@data-types/api';
 import { displayBilingual, getStatusStyles, formatDate, formatCurrency } from '@utils/ui';
+import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 
 const Plans = () => {
     const [loading, setLoading] = React.useState(true);
@@ -176,22 +177,31 @@ const Plans = () => {
                 </table>
             </div>
 
-            {/* Modal */}
-            {isModalOpen && (
-                <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 animate-in fade-in duration-200">
-                    <div className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm" onClick={() => setIsModalOpen(false)}></div>
-                    <div className="relative w-full max-w-xl bg-white rounded-3xl shadow-2xl overflow-hidden animate-in zoom-in-95 duration-200 flex flex-col">
-                        <div className="p-6 border-b flex items-center justify-between bg-slate-50">
-                            <div>
-                                <h3 className="text-xl font-bold font-outfit text-slate-900">{editingId ? 'Edit Plan' : 'Create New Plan'}</h3>
-                            </div>
-                            <button onClick={() => setIsModalOpen(false)} className="p-2 hover:bg-slate-200 rounded-full transition-colors text-slate-400">
+            <Sheet open={isModalOpen} onOpenChange={setIsModalOpen}>
+                <SheetContent
+                    side="right"
+                    showCloseButton={false}
+                    className="p-0 !max-w-xl w-full max-h-screen overflow-y-auto border-none shadow-2xl flex flex-col gap-0 sm:!max-w-xl"
+                >
+                    <div className="p-6 border-b shrink-0 bg-slate-50">
+                        <div className="flex items-center justify-between">
+                            <SheetHeader className="!p-0 !m-0">
+                                <SheetTitle className="text-xl font-bold font-outfit text-slate-900">
+                                    {editingId ? 'Edit Plan' : 'Create New Plan'}
+                                </SheetTitle>
+                            </SheetHeader>
+                            <button
+                                type="button"
+                                onClick={() => setIsModalOpen(false)}
+                                className="p-2 hover:bg-slate-200 rounded-full transition-colors text-slate-400"
+                            >
                                 <X size={20} />
                             </button>
                         </div>
+                    </div>
 
-                        <form onSubmit={handleSubmit} className="flex flex-col max-h-[70vh]">
-                            <div className="p-8 space-y-6 overflow-y-auto premium-scrollbar flex-1">
+                    <form onSubmit={handleSubmit} className="flex flex-col flex-1 min-h-0">
+                        <div className="p-8 space-y-6 overflow-y-auto premium-scrollbar flex-1">
                                 <div className="grid grid-cols-2 gap-6">
                                     <div className="space-y-2">
                                         <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest">English Name</label>
@@ -231,17 +241,16 @@ const Plans = () => {
                                         <span className="text-sm font-bold text-slate-700">Plan is Active & Visible</span>
                                     </label>
                                 </div>
-                            </div>
-                            <div className="p-6 border-t border-slate-100 flex justify-end gap-4 bg-slate-50">
-                                <button type="button" className="px-6 py-2.5 rounded-xl text-sm font-bold text-slate-500 hover:bg-slate-200 transition-all" onClick={() => setIsModalOpen(false)}>Cancel</button>
-                                <button type="submit" disabled={formSaving} className="px-10 py-2.5 bg-teal-600 rounded-xl text-sm font-black text-white hover:bg-teal-700 transition-all flex items-center gap-2">
-                                    {formSaving && <Loader2 className="animate-spin" size={16} />} Save Plan
-                                </button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            )}
+                        </div>
+                        <div className="p-6 border-t border-slate-100 flex justify-end gap-4 bg-slate-50 shrink-0">
+                            <button type="button" className="px-6 py-2.5 rounded-xl text-sm font-bold text-slate-500 hover:bg-slate-200 transition-all" onClick={() => setIsModalOpen(false)}>Cancel</button>
+                            <button type="submit" disabled={formSaving} className="px-10 py-2.5 bg-teal-600 rounded-xl text-sm font-black text-white hover:bg-teal-700 transition-all flex items-center gap-2">
+                                {formSaving && <Loader2 className="animate-spin" size={16} />} Save Plan
+                            </button>
+                        </div>
+                    </form>
+                </SheetContent>
+            </Sheet>
         </div>
     );
 };

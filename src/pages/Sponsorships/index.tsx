@@ -3,6 +3,7 @@ import { Search, Plus, MoreHorizontal, Star, Edit, Trash2, X, Loader2, ChevronDo
 import { sponsorshipService } from '@services/sponsorshipService';
 import { Sponsorship } from '@data-types/api';
 import { getStatusStyles, formatDate, formatCurrency } from '@utils/ui';
+import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 
 const Sponsorships = () => {
     const [loading, setLoading] = React.useState(true);
@@ -177,22 +178,31 @@ const Sponsorships = () => {
                 </table>
             </div>
 
-            {/* Modal */}
-            {isModalOpen && (
-                <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 animate-in fade-in duration-200">
-                    <div className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm" onClick={() => setIsModalOpen(false)}></div>
-                    <div className="relative w-full max-w-xl bg-white rounded-3xl shadow-2xl overflow-hidden animate-in zoom-in-95 duration-200 flex flex-col">
-                        <div className="p-6 border-b flex items-center justify-between bg-amber-50">
-                            <div>
-                                <h3 className="text-xl font-bold font-outfit text-slate-900">{editingId ? 'Edit Sponsorship' : 'Create Sponsorship Campaign'}</h3>
-                            </div>
-                            <button onClick={() => setIsModalOpen(false)} className="p-2 hover:bg-amber-100 rounded-full transition-colors text-amber-900/50">
+            <Sheet open={isModalOpen} onOpenChange={setIsModalOpen}>
+                <SheetContent
+                    side="right"
+                    showCloseButton={false}
+                    className="p-0 !max-w-xl w-full max-h-screen overflow-y-auto border-none shadow-2xl flex flex-col gap-0 sm:!max-w-xl"
+                >
+                    <div className="p-6 border-b shrink-0 bg-amber-50">
+                        <div className="flex items-center justify-between">
+                            <SheetHeader className="!p-0 !m-0">
+                                <SheetTitle className="text-xl font-bold font-outfit text-slate-900">
+                                    {editingId ? 'Edit Sponsorship' : 'Create Sponsorship Campaign'}
+                                </SheetTitle>
+                            </SheetHeader>
+                            <button
+                                type="button"
+                                onClick={() => setIsModalOpen(false)}
+                                className="p-2 hover:bg-amber-100 rounded-full transition-colors text-amber-900/50"
+                            >
                                 <X size={20} />
                             </button>
                         </div>
+                    </div>
 
-                        <form onSubmit={handleSubmit} className="flex flex-col">
-                            <div className="p-8 space-y-6 flex-1 max-h-[70vh] overflow-y-auto premium-scrollbar">
+                    <form onSubmit={handleSubmit} className="flex flex-col flex-1 min-h-0">
+                        <div className="p-8 space-y-6 flex-1 overflow-y-auto premium-scrollbar">
                                 <div className="space-y-2">
                                     <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest pl-2">Target Keyword Phrase</label>
                                     <input required className="w-full h-12 bg-slate-50 border border-slate-200 rounded-xl px-4 text-sm font-bold focus:bg-white focus:border-amber-400 transition-all outline-none" value={formData.keyword} onChange={e => setFormData({ ...formData, keyword: e.target.value })} placeholder="e.g. machinery" />
@@ -235,17 +245,16 @@ const Sponsorships = () => {
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div className="p-6 border-t border-slate-100 flex justify-end gap-3 bg-slate-50">
-                                <button type="button" className="px-6 py-2.5 rounded-xl text-sm font-bold text-slate-500 hover:bg-slate-200 transition-all" onClick={() => setIsModalOpen(false)}>Cancel</button>
-                                <button type="submit" disabled={formSaving} className="px-10 py-2.5 bg-amber-500 rounded-xl text-sm font-black text-white hover:bg-amber-600 transition-all flex items-center gap-2 shadow-lg shadow-amber-500/20">
-                                    {formSaving && <Loader2 className="animate-spin" size={16} />} Save Campaign
-                                </button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            )}
+                        </div>
+                        <div className="p-6 border-t border-slate-100 flex justify-end gap-3 bg-slate-50 shrink-0">
+                            <button type="button" className="px-6 py-2.5 rounded-xl text-sm font-bold text-slate-500 hover:bg-slate-200 transition-all" onClick={() => setIsModalOpen(false)}>Cancel</button>
+                            <button type="submit" disabled={formSaving} className="px-10 py-2.5 bg-amber-500 rounded-xl text-sm font-black text-white hover:bg-amber-600 transition-all flex items-center gap-2 shadow-lg shadow-amber-500/20">
+                                {formSaving && <Loader2 className="animate-spin" size={16} />} Save Campaign
+                            </button>
+                        </div>
+                    </form>
+                </SheetContent>
+            </Sheet>
         </div>
     );
 };

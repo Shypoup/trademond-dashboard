@@ -12,6 +12,7 @@ import { Tag } from '@data-types/api';
 import { displayBilingual } from '@utils/ui';
 import { toast } from "sonner";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
+import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 
 const Tags = () => {
     const [loading, setLoading] = React.useState(true);
@@ -177,41 +178,49 @@ const Tags = () => {
                 </div>
             )}
 
-            {/* Modal */}
-            {isModalOpen && (
-                <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 animate-in fade-in duration-200">
-                    <div className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm" onClick={() => setIsModalOpen(false)}></div>
-                    <div className="relative w-full max-w-sm bg-white rounded-3xl shadow-2xl overflow-hidden animate-in zoom-in-95 duration-200 flex flex-col">
-                        <div className="p-6 border-b flex items-center justify-between bg-slate-50">
-                            <div>
-                                <h3 className="text-xl font-bold font-outfit text-slate-900">{editingId ? 'Edit Tag' : 'Create Tag'}</h3>
-                            </div>
-                            <button onClick={() => setIsModalOpen(false)} className="p-2 hover:bg-slate-200 rounded-full transition-colors text-slate-400">
+            <Sheet open={isModalOpen} onOpenChange={setIsModalOpen}>
+                <SheetContent
+                    side="right"
+                    showCloseButton={false}
+                    className="p-0 !max-w-md w-full max-h-screen overflow-y-auto border-none shadow-2xl flex flex-col gap-0 sm:!max-w-md"
+                >
+                    <div className="p-6 border-b shrink-0 bg-slate-50">
+                        <div className="flex items-center justify-between">
+                            <SheetHeader className="!p-0 !m-0">
+                                <SheetTitle className="text-xl font-bold font-outfit text-slate-900">
+                                    {editingId ? 'Edit Tag' : 'Create Tag'}
+                                </SheetTitle>
+                            </SheetHeader>
+                            <button
+                                type="button"
+                                onClick={() => setIsModalOpen(false)}
+                                className="p-2 hover:bg-slate-200 rounded-full transition-colors text-slate-400"
+                            >
                                 <X size={20} />
                             </button>
                         </div>
-
-                        <form onSubmit={handleSubmit} className="flex flex-col">
-                            <div className="p-6 space-y-6 flex-1">
-                                <div className="space-y-2">
-                                    <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest pl-2">English Name</label>
-                                    <input required className="w-full h-12 bg-slate-50 border border-slate-200 rounded-2xl px-4 text-sm font-bold focus:bg-white focus:border-teal-500 transition-all outline-none" value={formData.name.en} onChange={e => updateBilingual('name', 'en', e.target.value)} placeholder="Summer Sale" />
-                                </div>
-                                <div className="space-y-2">
-                                    <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest text-right block pr-2">الإسم بالعربية</label>
-                                    <input required dir="rtl" className="w-full h-12 bg-slate-50 border border-slate-200 rounded-2xl px-4 text-sm font-bold focus:bg-white focus:border-teal-500 transition-all outline-none text-right" value={formData.name.ar} onChange={e => updateBilingual('name', 'ar', e.target.value)} placeholder="تخفيضات الصيف" />
-                                </div>
-                            </div>
-                            <div className="p-6 border-t border-slate-100 flex justify-end gap-3 bg-slate-50">
-                                <button type="button" className="px-6 py-2.5 rounded-xl text-sm font-bold text-slate-500 hover:bg-slate-200 transition-all" onClick={() => setIsModalOpen(false)}>Cancel</button>
-                                <button type="submit" disabled={formSaving} className="px-8 py-2.5 bg-teal-600 rounded-xl text-sm font-black text-white hover:bg-teal-700 transition-all flex items-center gap-2 shadow-lg shadow-teal-500/20">
-                                    {formSaving && <Loader2 className="animate-spin" size={16} />} Save Tag
-                                </button>
-                            </div>
-                        </form>
                     </div>
-                </div>
-            )}
+
+                    <form onSubmit={handleSubmit} className="flex flex-col flex-1 min-h-0">
+                        <div className="p-6 space-y-6 flex-1 overflow-y-auto premium-scrollbar">
+                            <div className="space-y-2">
+                                <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest ps-2">English Name</label>
+                                <input required className="w-full h-12 bg-slate-50 border border-slate-200 rounded-2xl px-4 text-sm font-bold focus:bg-white focus:border-teal-500 transition-all outline-none" value={formData.name.en} onChange={e => updateBilingual('name', 'en', e.target.value)} placeholder="Summer Sale" />
+                            </div>
+                            <div className="space-y-2">
+                                <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest text-end block pe-2">الإسم بالعربية</label>
+                                <input required dir="rtl" className="w-full h-12 bg-slate-50 border border-slate-200 rounded-2xl px-4 text-sm font-bold focus:bg-white focus:border-teal-500 transition-all outline-none text-right" value={formData.name.ar} onChange={e => updateBilingual('name', 'ar', e.target.value)} placeholder="تخفيضات الصيف" />
+                            </div>
+                        </div>
+                        <div className="p-6 border-t border-slate-100 flex justify-end gap-3 bg-slate-50 shrink-0">
+                            <button type="button" className="px-6 py-2.5 rounded-xl text-sm font-bold text-slate-500 hover:bg-slate-200 transition-all" onClick={() => setIsModalOpen(false)}>Cancel</button>
+                            <button type="submit" disabled={formSaving} className="px-8 py-2.5 bg-teal-600 rounded-xl text-sm font-black text-white hover:bg-teal-700 transition-all flex items-center gap-2 shadow-lg shadow-teal-500/20">
+                                {formSaving && <Loader2 className="animate-spin" size={16} />} Save Tag
+                            </button>
+                        </div>
+                    </form>
+                </SheetContent>
+            </Sheet>
 
             <Dialog open={deleteTagId !== null} onOpenChange={(open) => !open && setDeleteTagId(null)}>
                 <DialogContent>

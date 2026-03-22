@@ -3,6 +3,7 @@ import { Check, X, Merge, MoreHorizontal, FileCheck, Loader2 } from 'lucide-reac
 import { tagProposalService } from '@services/tagProposalService';
 import { TagProposal } from '@data-types/api';
 import { displayBilingual, formatDate, getStatusStyles } from '@utils/ui';
+import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 
 const TagProposals = () => {
     const [loading, setLoading] = React.useState(true);
@@ -144,23 +145,36 @@ const TagProposals = () => {
                 </table>
             </div>
 
-            {/* Merge Modal */}
-            {isMergeOpen && selectedProposal && (
-                <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 animate-in fade-in duration-200">
-                    <div className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm" onClick={() => setIsMergeOpen(false)}></div>
-                    <div className="relative w-full max-w-lg bg-white rounded-3xl shadow-2xl overflow-hidden animate-in zoom-in-95 duration-200 flex flex-col">
-                        <div className="p-6 border-b flex items-center justify-between bg-indigo-50/50">
-                            <div>
-                                <h3 className="text-xl font-bold font-outfit text-indigo-900">Merge Proposal</h3>
-                                <p className="text-xs text-indigo-600 font-medium">Map this proposal `{displayBilingual(selectedProposal.name)}` to an existing Tag ID.</p>
-                            </div>
-                            <button onClick={() => setIsMergeOpen(false)} className="p-2 hover:bg-indigo-100 rounded-full transition-colors text-indigo-900/50">
+            <Sheet open={isMergeOpen && !!selectedProposal} onOpenChange={(open) => { if (!open) setIsMergeOpen(false); }}>
+                <SheetContent
+                    side="right"
+                    showCloseButton={false}
+                    className="p-0 !max-w-lg w-full max-h-screen overflow-y-auto border-none shadow-2xl flex flex-col gap-0 sm:!max-w-lg"
+                >
+                    <div className="p-6 border-b shrink-0 bg-indigo-50/50">
+                        <div className="flex items-center justify-between gap-4">
+                            <SheetHeader className="!p-0 !m-0 flex-1 min-w-0">
+                                <SheetTitle className="text-xl font-bold font-outfit text-indigo-900">
+                                    Merge Proposal
+                                </SheetTitle>
+                                {selectedProposal && (
+                                    <p className="text-xs text-indigo-600 font-medium mt-1">
+                                        Map this proposal `{displayBilingual(selectedProposal.name)}` to an existing Tag ID.
+                                    </p>
+                                )}
+                            </SheetHeader>
+                            <button
+                                type="button"
+                                onClick={() => setIsMergeOpen(false)}
+                                className="p-2 hover:bg-indigo-100 rounded-full transition-colors text-indigo-900/50 shrink-0"
+                            >
                                 <X size={20} />
                             </button>
                         </div>
+                    </div>
 
-                        <form onSubmit={submitMerge} className="flex flex-col">
-                            <div className="p-8 space-y-6 flex-1 max-h-[70vh] overflow-y-auto premium-scrollbar">
+                    <form onSubmit={submitMerge} className="flex flex-col flex-1 min-h-0">
+                        <div className="p-8 space-y-6 flex-1 overflow-y-auto premium-scrollbar">
                                 <div className="space-y-2">
                                     <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest pl-2">Canonical Tag ID</label>
                                     <input required className="w-full h-12 bg-slate-50 border border-slate-200 rounded-xl px-4 text-sm font-mono focus:bg-white focus:border-indigo-400 transition-all outline-none" value={canonicalTagId} onChange={e => setCanonicalTagId(e.target.value)} placeholder="01H..." />
@@ -177,17 +191,16 @@ const TagProposals = () => {
                                         </div>
                                     </div>
                                 )}
-                            </div>
-                            <div className="p-6 border-t border-slate-100 flex justify-end gap-3 bg-slate-50">
-                                <button type="button" className="px-6 py-2.5 rounded-xl text-sm font-bold text-slate-500 hover:bg-slate-200 transition-all" onClick={() => setIsMergeOpen(false)}>Cancel</button>
-                                <button type="submit" disabled={!canonicalTagId} className="px-8 py-2.5 bg-indigo-600 disabled:bg-slate-300 disabled:text-white/50 rounded-xl text-sm font-black text-white hover:bg-indigo-700 transition-all flex items-center gap-2 shadow-lg shadow-indigo-600/20 disabled:shadow-none">
-                                    Merge Content
-                                </button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            )}
+                        </div>
+                        <div className="p-6 border-t border-slate-100 flex justify-end gap-3 bg-slate-50 shrink-0">
+                            <button type="button" className="px-6 py-2.5 rounded-xl text-sm font-bold text-slate-500 hover:bg-slate-200 transition-all" onClick={() => setIsMergeOpen(false)}>Cancel</button>
+                            <button type="submit" disabled={!canonicalTagId} className="px-8 py-2.5 bg-indigo-600 disabled:bg-slate-300 disabled:text-white/50 rounded-xl text-sm font-black text-white hover:bg-indigo-700 transition-all flex items-center gap-2 shadow-lg shadow-indigo-600/20 disabled:shadow-none">
+                                Merge Content
+                            </button>
+                        </div>
+                    </form>
+                </SheetContent>
+            </Sheet>
         </div>
     );
 };
