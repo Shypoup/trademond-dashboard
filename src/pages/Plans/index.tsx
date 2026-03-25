@@ -115,11 +115,12 @@ const Plans = () => {
                     <p className="text-slate-500 text-sm mt-1">Manage subscription tiers ({plans.length} total)</p>
                 </div>
                 <button
+                    type="button"
                     onClick={() => handleOpenModal()}
-                    className="flex items-center gap-2 px-6 py-2.5 bg-[#008080] rounded-xl text-sm font-bold text-white shadow-lg relative group overflow-hidden"
+                    className="group relative flex items-center gap-2 overflow-hidden rounded-xl bg-primary px-6 py-2.5 text-sm font-bold text-primary-foreground shadow-lg"
                 >
                     <span className="relative z-10 flex items-center gap-2"><Plus size={18} /> New Plan</span>
-                    <div className="absolute inset-0 bg-[#006666] -translate-x-full group-hover:translate-x-0 transition-transform duration-300"></div>
+                    <div className="absolute inset-0 bg-brand-teal -translate-x-full transition-transform duration-300 group-hover:translate-x-0" />
                 </button>
             </div>
 

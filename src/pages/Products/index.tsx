@@ -308,7 +308,7 @@ const Products = () => {
                 </div>
                 <button
                     onClick={() => handleOpenModal()}
-                    className="flex items-center gap-2 px-5 py-2.5 bg-[#008080] rounded-xl text-sm font-semibold text-white hover:bg-[#006666] transition-all shadow-sm"
+                    className="flex items-center gap-2 rounded-xl bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground shadow-sm transition-all hover:bg-primary/90"
                 >
                     <Plus size={16} />
                     <span>Add Product</span>

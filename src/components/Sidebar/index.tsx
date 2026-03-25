@@ -129,7 +129,7 @@ const Sidebar = () => {
         <button
           type="button"
           onClick={() => void handleLogout()}
-          className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-muted-foreground transition-colors hover:bg-destructive/10 hover:text-destructive dark:text-slate-400 dark:hover:bg-rose-500/10 dark:hover:text-rose-300"
+          className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-muted-foreground transition-colors hover:bg-destructive/10 hover:text-destructive"
         >
           <LogOut size={18} aria-hidden />
           <span>{t('sidebar.logout')}</span>
@@ -142,10 +142,8 @@ const Sidebar = () => {
           cn(
             'mx-3 mb-4 mt-1 flex items-center gap-3 rounded-2xl border p-3 transition-colors',
             isActive
-              ? 'border-teal-600/35 bg-teal-600/10 dark:border-teal-500/40 dark:bg-teal-500/15'
-              : cn(
-                  'border-sidebar-border bg-muted/40 hover:bg-sidebar-accent dark:bg-black/20 dark:hover:border-white/15 dark:hover:bg-black/30',
-                ),
+              ? 'border-primary/30 bg-primary/15'
+              : 'border-sidebar-border bg-muted/40 hover:bg-sidebar-accent',
           )
         }
       >

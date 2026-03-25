@@ -13,6 +13,7 @@ import {
     Building2,
 } from 'lucide-react';
 import { Company } from '@data-types/api';
+import { BRAND_PRIMARY_HEX_PARAM } from '@utils/core/colors';
 import { displayBilingual, formatDate } from '@utils/ui';
 import { getCompanyData } from '../../utils/companyHelpers';
 
@@ -118,7 +119,7 @@ export const CompanyTable: React.FC<CompanyTableProps> = ({
                                         <div className="flex items-center gap-3.5">
                                             <div className="h-11 w-11 shrink-0 overflow-hidden rounded-xl border border-border bg-muted">
                                                 <img
-                                                    src={d.profilePhoto || `https://ui-avatars.com/api/?name=${encodeURIComponent(displayBilingual(d.name))}&background=008080&color=fff&size=44`}
+                                                    src={d.profilePhoto || `https://ui-avatars.com/api/?name=${encodeURIComponent(displayBilingual(d.name))}&background=${BRAND_PRIMARY_HEX_PARAM}&color=fff&size=44`}
                                                     alt={displayBilingual(d.name)}
                                                     className="w-full h-full object-cover"
                                                 />

@@ -108,8 +108,9 @@ const Entitlements = () => {
                     <p className="text-slate-500 text-sm mt-1">Review allocations and slots active globally</p>
                 </div>
                 <button
+                    type="button"
                     onClick={() => handleOpenModal()}
-                    className="flex items-center gap-2 px-6 py-2.5 bg-[#008080] rounded-xl text-sm font-bold text-white shadow-lg overflow-hidden transition-all hover:bg-[#006666]"
+                    className="flex items-center gap-2 overflow-hidden rounded-xl bg-primary px-6 py-2.5 text-sm font-bold text-primary-foreground shadow-lg transition-all hover:bg-primary/90"
                 >
                     <Plus size={18} /> Provision Capacity
                 </button>
@@ -240,7 +241,7 @@ const Entitlements = () => {
                         </div>
                         <div className="p-6 border-t border-slate-100 flex justify-end gap-3 bg-slate-50 shrink-0">
                             <button type="button" className="px-6 py-2.5 rounded-xl text-sm font-bold text-slate-500 hover:bg-slate-200 transition-all" onClick={() => setIsModalOpen(false)}>Cancel</button>
-                            <button type="submit" disabled={formSaving} className="px-8 py-2.5 bg-[#008080] rounded-xl text-sm font-black text-white hover:bg-teal-700 transition-all flex items-center gap-2 shadow-lg shadow-teal-700/20">
+                            <button type="submit" disabled={formSaving} className="flex items-center gap-2 rounded-xl bg-primary px-8 py-2.5 text-sm font-black text-primary-foreground shadow-lg shadow-primary/20 transition-all hover:bg-primary/90 disabled:opacity-50">
                                 {formSaving && <Loader2 className="animate-spin" size={16} />} Deploy Grant
                             </button>
                         </div>

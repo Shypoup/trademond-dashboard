@@ -12,6 +12,7 @@ import { serviceService } from '@services/serviceService';
 import { companyService } from '@services/companyService';
 import { categoryService } from '@services/categoryService';
 import { Service, Company, Category } from '@data-types/api';
+import { BRAND_PRIMARY_HEX_PARAM } from '@utils/core/colors';
 import { displayBilingual, getStatusStyles } from '@utils/ui';
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 
@@ -145,13 +146,13 @@ const Services = () => {
             </div>
 
             <div className="premium-card overflow-hidden">
-                <div className="p-4 border-b border-slate-50 flex flex-wrap items-center gap-4 bg-slate-50/30">
-                    <div className="flex-1 min-w-[300px] relative">
-                        <Search className="absolute inset-y-0 left-4 flex items-center mt-3 text-slate-400" size={18} />
+                <div className="flex flex-wrap items-center gap-4 border-b border-border bg-muted/40 p-4">
+                    <div className="relative min-w-[300px] flex-1">
+                        <Search className="absolute start-4 top-1/2 size-[18px] -translate-y-1/2 text-muted-foreground" aria-hidden />
                         <input
-                            type="text"
+                            type="search"
                             placeholder="Filter by service name, company..."
-                            className="w-full h-11 pl-12 pr-4 bg-white border border-slate-200 focus:border-teal-400 rounded-xl text-sm outline-none transition-all"
+                            className="h-11 w-full rounded-xl border border-border bg-background ps-12 pe-4 text-sm text-foreground outline-none transition-all placeholder:text-muted-foreground focus:border-primary focus:ring-2 focus:ring-ring/20"
                         />
                     </div>
                 </div>
@@ -173,7 +174,7 @@ const Services = () => {
                                     <td className="px-6 py-5">
                                         <div className="flex items-center gap-4">
                                             <div className="h-12 w-12 overflow-hidden rounded-xl border border-border bg-muted">
-                                                <img src={s.profilePhoto || `https://ui-avatars.com/api/?name=${displayBilingual(s.name)}&background=008080&color=fff`} alt={displayBilingual(s.name)} className="h-full w-full object-cover" />
+                                                <img src={s.profilePhoto || `https://ui-avatars.com/api/?name=${displayBilingual(s.name)}&background=${BRAND_PRIMARY_HEX_PARAM}&color=fff`} alt={displayBilingual(s.name)} className="h-full w-full object-cover" />
                                             </div>
                                             <div>
                                                 <h5 className="text-[14px] font-bold text-foreground">{displayBilingual(s.name)}</h5>

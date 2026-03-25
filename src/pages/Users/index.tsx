@@ -13,6 +13,7 @@ import {
 } from 'lucide-react';
 import { userService } from '@services/userService';
 import { User } from '@data-types/api';
+import { BRAND_PRIMARY_HEX_PARAM } from '@utils/core/colors';
 import { getStatusStyles, formatDate } from '@utils/ui';
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 
@@ -190,7 +191,7 @@ const Users = () => {
                                     <td className="px-8 py-6">
                                         <div className="flex items-center gap-4">
                                             <div className="h-12 w-12 overflow-hidden rounded-2xl border-2 border-border transition-transform duration-300 group-hover:scale-110">
-                                                <img src={user.image || user.avatar || `https://ui-avatars.com/api/?name=${user.name}&background=008080&color=fff`} alt={user.name} />
+                                                <img src={user.image || user.avatar || `https://ui-avatars.com/api/?name=${user.name}&background=${BRAND_PRIMARY_HEX_PARAM}&color=fff`} alt={user.name} />
                                             </div>
                                             <div>
                                                 <h5 className="text-[14px] font-bold text-foreground">{user.name}</h5>

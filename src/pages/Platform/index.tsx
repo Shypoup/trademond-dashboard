@@ -28,6 +28,7 @@ import {
     Pie,
     Cell
 } from 'recharts';
+import { COLORS } from '@utils/core/colors';
 
 const mainStats = [
     { label: 'Total Users', value: '1,248,392', change: '+12.4%', color: 'text-teal-600', bg: 'bg-teal-50' },
@@ -61,7 +62,7 @@ const signupHistory = [
 ];
 
 const roleData = [
-    { name: 'Buyers', value: 873874, color: '#008080' },
+    { name: 'Buyers', value: 873874, color: COLORS.brandCyan },
     { name: 'Sellers', value: 374518, color: '#e2e8f0' },
     { name: 'Admins', value: 2410, color: '#0f172a' },
 ];
@@ -125,7 +126,7 @@ const Platform = () => {
                         <div className="w-1.5 h-1.5 bg-teal-500 rounded-full animate-pulse"></div>
                         <span className="text-[11px] font-bold text-slate-600 uppercase">Production Environment</span>
                     </div>
-                    <button className="flex items-center gap-2 px-6 py-2.5 bg-[#008080] rounded-xl text-sm font-bold text-white hover:bg-[#005f5f] transition-all shadow-lg">
+                    <button type="button" className="flex items-center gap-2 rounded-xl bg-primary px-6 py-2.5 text-sm font-bold text-primary-foreground shadow-lg transition-all hover:bg-primary/90">
                         <Plus size={18} />
                         <span>Create Announcement</span>
                     </button>
@@ -196,7 +197,7 @@ const Platform = () => {
                                 <BarChart data={signupHistory}>
                                     <Bar dataKey="value" radius={[4, 4, 0, 0]}>
                                         {signupHistory.map((entry, index) => (
-                                            <Cell key={`cell-${index}`} fill={index === 4 ? '#008080' : '#e2e8f0'} />
+                                            <Cell key={`cell-${index}`} fill={index === 4 ? COLORS.brandCyan : '#e2e8f0'} />
                                         ))}
                                     </Bar>
                                 </BarChart>
@@ -212,7 +213,7 @@ const Platform = () => {
                         <div className="h-48 -mx-6 -mb-6">
                             <ResponsiveContainer width="100%" height="100%">
                                 <AreaChart data={signupHistory}>
-                                    <Area type="monotone" dataKey="value" stroke="#008080" strokeWidth={3} fill="#0d948810" />
+                                    <Area type="monotone" dataKey="value" stroke={COLORS.brandCyan} strokeWidth={3} fill="#0d948810" />
                                 </AreaChart>
                             </ResponsiveContainer>
                         </div>
@@ -272,7 +273,7 @@ const Platform = () => {
                         <div className="h-full flex items-end gap-4 px-4 overflow-hidden relative">
                             {revenueForecast.map((item, idx) => (
                                 <div key={idx} className="flex-1 flex items-end gap-1 h-full">
-                                    <div className="w-full bg-[#00808015] rounded-t-lg transition-all hover:bg-[#00808025]" style={{ height: `${(item.actual / 7500) * 100}%` }}></div>
+                                    <div className="w-full rounded-t-lg bg-primary/10 transition-all hover:bg-primary/20" style={{ height: `${(item.actual / 7500) * 100}%` }}></div>
                                     <div className="w-full bg-[#e2e8f080] rounded-t-lg border-t border-x border-slate-200 border-dashed" style={{ height: `${(item.predicted / 7500) * 100}%` }}></div>
                                 </div>
                             ))}

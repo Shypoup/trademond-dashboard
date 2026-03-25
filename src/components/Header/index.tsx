@@ -18,6 +18,7 @@ import {
 import { authService } from '@services/authService';
 import { useTheme, type ThemePreference } from '@contexts/ThemeContext';
 import { useAuthProfile, AUTH_PROFILE_QUERY_KEY } from '@hooks/useAuthProfile';
+import { BRAND_PRIMARY_HEX_PARAM } from '@utils/core/colors';
 import { cn } from '@utils/core/cn';
 import {
   DropdownMenu,
@@ -46,7 +47,7 @@ const Header = () => {
   const avatarSrc =
     profile?.avatar && typeof profile.avatar === 'string' && profile.avatar.length > 0
       ? profile.avatar
-      : `https://ui-avatars.com/api/?name=${encodeURIComponent(displayName)}&background=008080&color=fff`;
+      : `https://ui-avatars.com/api/?name=${encodeURIComponent(displayName)}&background=${BRAND_PRIMARY_HEX_PARAM}&color=fff`;
 
   const handleLogout = async () => {
     await authService.logout();

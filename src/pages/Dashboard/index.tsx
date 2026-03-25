@@ -118,7 +118,7 @@ const Dashboard = () => {
                         <Clock size={16} />
                         <span>Last 30 Days</span>
                     </button>
-                    <button className="flex items-center gap-2 px-4 py-2 bg-[#008080] rounded-xl text-sm font-bold text-white hover:bg-[#005f5f] transition-all shadow-md">
+                    <button type="button" className="flex items-center gap-2 rounded-xl bg-primary px-4 py-2 text-sm font-bold text-primary-foreground shadow-md transition-all hover:bg-primary/90">
                         <ExternalLink size={16} />
                         <span>Export Report</span>
                     </button>
@@ -170,8 +170,8 @@ const Dashboard = () => {
                             <AreaChart data={signupData}>
                                 <defs>
                                     <linearGradient id="colorValue" x1="0" y1="0" x2="0" y2="1">
-                                        <stop offset="5%" stopColor="#008080" stopOpacity={0.1} />
-                                        <stop offset="95%" stopColor="#008080" stopOpacity={0} />
+                                        <stop offset="5%" stopColor={COLORS.brandCyan} stopOpacity={0.1} />
+                                        <stop offset="95%" stopColor={COLORS.brandCyan} stopOpacity={0} />
                                     </linearGradient>
                                 </defs>
                                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="var(--color-border)" />
@@ -181,7 +181,7 @@ const Dashboard = () => {
                                     contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)' }}
                                     itemStyle={{ fontWeight: 'bold' }}
                                 />
-                                <Area type="monotone" dataKey="value" stroke="#008080" strokeWidth={3} fillOpacity={1} fill="url(#colorValue)" />
+                                <Area type="monotone" dataKey="value" stroke={COLORS.brandCyan} strokeWidth={3} fillOpacity={1} fill="url(#colorValue)" />
                             </AreaChart>
                         </ResponsiveContainer>
                     </div>

@@ -1,6 +1,7 @@
 import React from 'react';
 import { Camera, Shield, Loader2 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import { BRAND_PRIMARY_HEX_PARAM } from '@utils/core/colors';
 import type { ProfileSidebarProps } from '../../utils/types';
 
 /**
@@ -24,7 +25,7 @@ export const ProfileSidebar: React.FC<ProfileSidebarProps> = ({
                 <div className="relative mb-6">
                     <div className="w-24 h-24 rounded-3xl border-4 border-white shadow-2xl overflow-hidden bg-slate-100 relative group-hover:rotate-2 transition-transform duration-500">
                         <img
-                            src={user.avatar || `https://ui-avatars.com/api/?name=${user.name}&background=008080&color=fff&size=128`}
+                            src={user.avatar || `https://ui-avatars.com/api/?name=${user.name}&background=${BRAND_PRIMARY_HEX_PARAM}&color=fff&size=128`}
                             className="w-full h-full object-cover transition-transform group-hover:scale-110"
                             alt={t('profile.avatarAlt')}
                         />

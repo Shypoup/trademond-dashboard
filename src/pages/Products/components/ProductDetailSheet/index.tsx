@@ -238,8 +238,8 @@ export const ProductDetailSheet: React.FC<ProductDetailSheetProps> = ({
                                 <Button
                                     onClick={() => onTogglePublished(d.id)}
                                     disabled={togglingId === `pub-${d.id}`}
-                                    className={`flex-1 h-12 rounded-xl font-black transition-all shadow-lg ${d.published ? 'bg-slate-800 hover:bg-slate-700' : 'bg-[#008080] hover:bg-[#006666]'
-                                        } text-white`}
+                                    className={`flex-1 h-12 rounded-xl font-black transition-all shadow-lg ${d.published ? 'bg-slate-800 hover:bg-slate-700' : 'bg-primary hover:bg-primary/90'
+                                        } text-primary-foreground`}
                                 >
                                     {togglingId === `pub-${d.id}` ? <Loader2 size={16} className="animate-spin" /> : d.published ? <EyeOff size={16} className="mr-2" /> : <Eye size={16} className="mr-2" />}
                                     {d.published ? 'Retract' : 'Broadcast'}
