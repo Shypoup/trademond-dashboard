@@ -151,6 +151,8 @@ export interface PlatformStats {
   total_companies: number;
   pending_approvals: number;
   total_products: number;
+  /** Total services count when provided by `GET /admin/dashboard`. */
+  total_services?: number;
   revenue: number;
   growth: {
     users: number;

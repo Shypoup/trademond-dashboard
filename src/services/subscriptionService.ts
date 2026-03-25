@@ -11,9 +11,10 @@ interface SubscriptionListParams {
   sort?: string;
 }
 
-/** Body for creating a new subscription */
+/** Body for creating a new subscription (see Postman: Create Subscription). */
 interface CreateSubscriptionPayload {
-  user_ulid: string;
+  user_ulid?: string;
+  company_ulid?: string;
   plan_ulid: string;
   billing_cycle: 'monthly' | 'yearly';
 }
@@ -96,15 +97,6 @@ export const subscriptionService = {
    */
   extendSubscription: async (id: string) => {
     const response = await axiosClient.post<SingleResponse<Subscription>>(`/admin/subscriptions/${id}/extend`);
-    return response.data;
-  },
-
-  /**
-   * Delete (cancel + remove) a subscription.
-   * @param id - Subscription ULID
-   */
-  deleteSubscription: async (id: string) => {
-    const response = await axiosClient.delete<SingleResponse<Subscription>>(`/admin/subscriptions/${id}`);
     return response.data;
   },
 

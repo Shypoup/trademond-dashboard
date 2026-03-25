@@ -90,7 +90,7 @@ const Dashboard = () => {
         { label: 'Pending Approvals', value: platformData?.pending_approvals.toLocaleString() || '42', icon: Clock, color: 'text-amber-500', bg: 'bg-amber-50', urgent: true },
         { label: 'Total Products', value: platformData?.total_products.toLocaleString() || '45,200', icon: Package, color: 'text-purple-500', bg: 'bg-purple-50' },
         { label: 'Pending Products', value: '128', icon: Clock, color: 'text-orange-500', bg: 'bg-orange-50' },
-        { label: 'Total Services', value: '12,400', icon: Wrench, color: 'text-pink-500', bg: 'bg-pink-50' },
+        { label: 'Total Services', value: platformData?.total_services != null ? platformData.total_services.toLocaleString() : '12,400', icon: Wrench, color: 'text-pink-500', bg: 'bg-pink-50' },
         { label: 'Revenue', value: platformData ? `$${platformData.revenue.toLocaleString()}` : '$245,000', change: `+${platformData?.growth.revenue}%`, icon: DollarSign, color: 'text-emerald-500', bg: 'bg-emerald-50' },
     ];
 

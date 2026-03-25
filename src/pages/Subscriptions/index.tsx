@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { Plus, MoreHorizontal, ClipboardList, X, Edit, Trash2, Loader2, ChevronDown } from 'lucide-react';
 import { subscriptionService } from '@services/subscriptionService';
 import { planService } from '@services/planService';
@@ -9,6 +10,7 @@ import { getStatusStyles, formatDate, formatCurrency, displayBilingual } from '@
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 
 const Subscriptions = () => {
+    const { t } = useTranslation();
     const [loading, setLoading] = React.useState(true);
     const [subs, setSubs] = React.useState<Subscription[]>([]);
 
@@ -79,13 +81,13 @@ const Subscriptions = () => {
         setIsModalOpen(true);
     };
 
-    const handleDelete = async (id: string) => {
-        if (!window.confirm('WARNING: Deleting a subscription may instantly cut off service access for the entity. Proceed?')) return;
+    const handleCancel = async (id: string) => {
+        if (!window.confirm(t('subscriptionManagement.cancelConfirm'))) return;
         try {
-            await subscriptionService.deleteSubscription(id);
-            setSubs(prev => prev.filter(s => s.id !== id));
+            await subscriptionService.cancelSubscription(id);
+            await fetchData();
         } catch (error) {
-            console.error('Delete failed', error);
+            console.error('Cancel failed', error);
         }
     };
 
@@ -180,7 +182,12 @@ const Subscriptions = () => {
                                             <button onClick={() => handleOpenModal(s)} className="text-slate-400 hover:text-blue-600 p-2 hover:bg-slate-100 rounded-lg border border-transparent hover:border-slate-200 transition-all">
                                                 <Edit size={16} />
                                             </button>
-                                            <button onClick={() => handleDelete(s.id)} className="text-slate-400 hover:text-rose-600 p-2 hover:bg-slate-100 rounded-lg border border-transparent hover:border-slate-200 transition-all">
+                                            <button
+                                                type="button"
+                                                title={t('subscriptionManagement.cancelActionTitle')}
+                                                onClick={() => handleCancel(s.id)}
+                                                className="text-slate-400 hover:text-rose-600 p-2 hover:bg-slate-100 rounded-lg border border-transparent hover:border-slate-200 transition-all"
+                                            >
                                                 <Trash2 size={16} />
                                             </button>
                                         </div>

@@ -3,6 +3,7 @@ import axiosClient, { API_ROOT, ACCESS_TOKEN_KEY, REFRESH_TOKEN_KEY } from '@api
 import {
   parseLoginOrRegisterResponse,
   parseMeResponse,
+  parseRefreshResponse,
 } from '@/lib/api-auth-payload';
 
 interface LoginCredentials {
@@ -82,6 +83,50 @@ export const authService = {
   },
 
   /**
+   * General (legacy) login: `POST /api/login`. Same token storage as {@link login}; does not use `/api/admin/login`.
+   * Prefer {@link login} for Trademond admin dashboard staff.
+   */
+  generalLogin: async (credentials: LoginCredentials): Promise<LoginResult> => {
+    localStorage.removeItem(ACCESS_TOKEN_KEY);
+    localStorage.removeItem(REFRESH_TOKEN_KEY);
+    delete axiosClient.defaults.headers.common.Authorization;
+
+    try {
+      const { data } = await axios.post<unknown>(
+        `${API_ROOT}/login`,
+        { ...credentials, platform: 'web' },
+        {
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+          },
+        },
+      );
+
+      const parsed = parseLoginOrRegisterResponse(data);
+      if (!parsed) {
+        return { success: false, message: 'Invalid response from server' };
+      }
+
+      localStorage.setItem(ACCESS_TOKEN_KEY, parsed.accessToken);
+      if (parsed.refreshToken) {
+        localStorage.setItem(REFRESH_TOKEN_KEY, parsed.refreshToken);
+      }
+      axiosClient.defaults.headers.common.Authorization = `Bearer ${parsed.accessToken}`;
+      return { success: true };
+    } catch (e) {
+      if (axios.isAxiosError(e)) {
+        const msg = (e.response?.data as { message?: string } | undefined)?.message;
+        return {
+          success: false,
+          message: msg || e.message || 'Authentication failed',
+        };
+      }
+      return { success: false, message: 'Network error' };
+    }
+  },
+
+  /**
    * Registers a new user (public API). Not used by the admin login UI by default.
    *
    * @param data - Registration payload
@@ -95,7 +140,7 @@ export const authService = {
   },
 
   /**
-   * Revokes the token family via `POST /api/admin/logout` and clears local tokens.
+   * Admin logout: `POST /api/admin/logout` and clear local session.
    */
   logout: async () => {
     const token = localStorage.getItem(ACCESS_TOKEN_KEY);
@@ -118,6 +163,75 @@ export const authService = {
       localStorage.removeItem(ACCESS_TOKEN_KEY);
       localStorage.removeItem(REFRESH_TOKEN_KEY);
       delete axiosClient.defaults.headers.common.Authorization;
+    }
+  },
+
+  /**
+   * General logout: `POST /api/logout` (Postman "Logout") with the current access token, then clears storage.
+   */
+  generalLogout: async () => {
+    const token = localStorage.getItem(ACCESS_TOKEN_KEY);
+    try {
+      if (token) {
+        await axios.post(
+          `${API_ROOT}/logout`,
+          {},
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              Accept: 'application/json',
+            },
+          },
+        );
+      }
+    } catch {
+      /* still clear client session */
+    } finally {
+      localStorage.removeItem(ACCESS_TOKEN_KEY);
+      localStorage.removeItem(REFRESH_TOKEN_KEY);
+      delete axiosClient.defaults.headers.common.Authorization;
+    }
+  },
+
+  /**
+   * Exchanges the refresh token for new access (and optional refresh) tokens.
+   * Uses `POST /api/refresh` with Bearer refresh token — same contract as the Axios 401 handler.
+   *
+   * @returns Whether tokens were rotated and stored
+   */
+  refreshAccessToken: async (): Promise<
+    { success: true } | { success: false; message: string }
+  > => {
+    const refresh = localStorage.getItem(REFRESH_TOKEN_KEY);
+    if (!refresh) {
+      return { success: false, message: 'No refresh token stored' };
+    }
+    try {
+      const { data } = await axios.post<unknown>(`${API_ROOT}/refresh`, null, {
+        headers: {
+          Accept: 'application/json',
+          Authorization: `Bearer ${refresh}`,
+        },
+      });
+      const tokens = parseRefreshResponse(data);
+      if (!tokens?.accessToken) {
+        return { success: false, message: 'Invalid refresh response' };
+      }
+      localStorage.setItem(ACCESS_TOKEN_KEY, tokens.accessToken);
+      if (tokens.refreshToken) {
+        localStorage.setItem(REFRESH_TOKEN_KEY, tokens.refreshToken);
+      }
+      axiosClient.defaults.headers.common.Authorization = `Bearer ${tokens.accessToken}`;
+      return { success: true };
+    } catch (e) {
+      if (axios.isAxiosError(e)) {
+        const msg =
+          (e.response?.data as { message?: string } | undefined)?.message ||
+          e.message ||
+          'Refresh failed';
+        return { success: false, message: msg };
+      }
+      return { success: false, message: 'Network error' };
     }
   },
 

@@ -74,4 +74,40 @@ export const serviceService = {
     const response = await axiosClient.post(`/admin/services/${id}/toggle-published`);
     return response.data;
   },
+
+  /**
+   * Uploads or replaces the service main photo (`image`, max 3 MB).
+   */
+  uploadServicePhoto: async (serviceId: string, image: File) => {
+    const formData = new FormData();
+    formData.append('image', image);
+    const response = await axiosClient.post(`/admin/services/${serviceId}/photo`, formData, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+    });
+    return response.data;
+  },
+
+  /**
+   * Uploads gallery images (`gallery[]`, up to 5 files).
+   */
+  uploadServiceGallery: async (serviceId: string, files: File[]) => {
+    const formData = new FormData();
+    files.forEach((f) => formData.append('gallery[]', f));
+    const response = await axiosClient.post(`/admin/services/${serviceId}/gallery`, formData, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+    });
+    return response.data;
+  },
+
+  /**
+   * Uploads PDF documents (`document[]`, up to 5 files).
+   */
+  uploadServiceDocuments: async (serviceId: string, files: File[]) => {
+    const formData = new FormData();
+    files.forEach((f) => formData.append('document[]', f));
+    const response = await axiosClient.post(`/admin/services/${serviceId}/documents`, formData, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+    });
+    return response.data;
+  },
 };

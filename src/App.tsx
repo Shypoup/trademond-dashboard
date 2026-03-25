@@ -28,6 +28,19 @@ import MediaManagement from '@pages/Media';
 import SearchManagement from '@pages/SearchManagement';
 import AdminSettings from '@pages/AdminSettings';
 import Imports from '@pages/Imports';
+import Analytics from '@pages/Analytics';
+import AnalyticsExport from '@pages/AnalyticsExport';
+import Industries from '@pages/Industries';
+import Categories from '@pages/Categories';
+import Expertises from '@pages/Expertises';
+import GooglePlaces from '@pages/GooglePlaces';
+import Places from '@pages/Places';
+import SponsoredAds from '@pages/SponsoredAds';
+import GlobalNotifications from '@pages/GlobalNotifications';
+import Roles from '@pages/Roles';
+import SocialPlatforms from '@pages/SocialPlatforms';
+import QuoteRequests from '@pages/QuoteRequests';
+import QuoteResponses from '@pages/QuoteResponses';
 import { Toaster } from '@/components/ui/sonner-toaster';
 
 function App() {
@@ -46,7 +59,6 @@ function App() {
             <Route path="profile" element={<Profile />} />
             <Route path="platform" element={<Platform />} />
             <Route path="tags" element={<Tags />} />
-            <Route path="listings" element={<Products />} />
             <Route path="plans" element={<Plans />} />
             <Route path="features" element={<Features />} />
             <Route path="subscriptions" element={<Subscriptions />} />
@@ -63,6 +75,19 @@ function App() {
             <Route path="search" element={<SearchManagement />} />
             <Route path="settings" element={<AdminSettings />} />
             <Route path="imports" element={<Imports />} />
+            <Route path="analytics" element={<Analytics />} />
+            <Route path="analytics-export" element={<AnalyticsExport />} />
+            <Route path="industries" element={<Industries />} />
+            <Route path="categories" element={<Categories />} />
+            <Route path="expertises" element={<Expertises />} />
+            <Route path="google-places" element={<GooglePlaces />} />
+            <Route path="places" element={<Places />} />
+            <Route path="sponsored-ads" element={<SponsoredAds />} />
+            <Route path="global-notifications" element={<GlobalNotifications />} />
+            <Route path="roles" element={<Roles />} />
+            <Route path="social-platforms" element={<SocialPlatforms />} />
+            <Route path="quote-requests" element={<QuoteRequests />} />
+            <Route path="quote-responses" element={<QuoteResponses />} />
             <Route path="*" element={<Dashboard />} />
           </Route>
         </Routes>

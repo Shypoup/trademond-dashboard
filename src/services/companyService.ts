@@ -175,4 +175,34 @@ export const companyService = {
     const response = await axiosClient.get(`/admin/companies/${companyId}/subscription`);
     return response.data;
   },
+
+  // ─── Media uploads (Postman: Upload Company Photo / Cover) ───
+
+  /**
+   * Uploads or replaces the company logo (`image` field, max 3 MB).
+   * @param companyId - Company ULID
+   * @param image - Image file (jpeg, png, webp)
+   */
+  uploadCompanyPhoto: async (companyId: string, image: File) => {
+    const formData = new FormData();
+    formData.append('image', image);
+    const response = await axiosClient.post(`/admin/companies/${companyId}/photo`, formData, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+    });
+    return response.data;
+  },
+
+  /**
+   * Uploads or replaces the company cover image (`image` field, max 4 MB).
+   * @param companyId - Company ULID
+   * @param image - Image file
+   */
+  uploadCompanyCover: async (companyId: string, image: File) => {
+    const formData = new FormData();
+    formData.append('image', image);
+    const response = await axiosClient.post(`/admin/companies/${companyId}/cover`, formData, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+    });
+    return response.data;
+  },
 };

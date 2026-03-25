@@ -114,4 +114,90 @@ export const productService = {
     const response = await axiosClient.delete(`/admin/products/${id}/data`);
     return response.data;
   },
+
+  // ─── Bulk import (Postman: Product import template & jobs) ───
+
+  /**
+   * Downloads the Excel template for bulk product import.
+   * @returns XLSX blob
+   */
+  downloadImportTemplate: async (): Promise<Blob> => {
+    const response = await axiosClient.get('/admin/products/import/template', {
+      responseType: 'blob',
+      headers: {
+        Accept: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+      },
+    });
+    return response.data as Blob;
+  },
+
+  /**
+   * Uploads an Excel file for bulk product import (202 Accepted).
+   * @param companyId - Target company ULID
+   * @param file - `.xlsx` or `.xls` (max 5 MB, ≤500 rows)
+   */
+  uploadProductImport: async (companyId: string, file: File) => {
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('company_id', companyId);
+    const response = await axiosClient.post('/admin/products/import', formData, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+    });
+    return response.data;
+  },
+
+  /**
+   * Lists product import jobs across companies.
+   */
+  listProductImports: async () => {
+    const response = await axiosClient.get('/admin/products/imports');
+    return response.data;
+  },
+
+  /**
+   * Polls status for a single product import job.
+   * @param importId - Product import ULID
+   */
+  getProductImportStatus: async (importId: string) => {
+    const response = await axiosClient.get(`/admin/products/imports/${importId}`);
+    return response.data;
+  },
+
+  // ─── Media uploads (Postman: photo / gallery / documents) ───
+
+  /**
+   * Uploads or replaces the product main photo (`image`, max 3 MB).
+   */
+  uploadProductPhoto: async (productId: string, image: File) => {
+    const formData = new FormData();
+    formData.append('image', image);
+    const response = await axiosClient.post(`/admin/products/${productId}/photo`, formData, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+    });
+    return response.data;
+  },
+
+  /**
+   * Uploads gallery images (`gallery[]`, up to 5 files, max 10 MB each).
+   */
+  uploadProductGallery: async (productId: string, files: File[]) => {
+    const formData = new FormData();
+    files.forEach((f) => formData.append('gallery[]', f));
+    const response = await axiosClient.post(`/admin/products/${productId}/gallery`, formData, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+    });
+    return response.data;
+  },
+
+  /**
+   * Uploads PDF documents (`document[]`, up to 5 files, max 10 MB each).
+   */
+  uploadProductDocuments: async (productId: string, files: File[]) => {
+    const formData = new FormData();
+    files.forEach((f) => formData.append('document[]', f));
+    const response = await axiosClient.post(`/admin/products/${productId}/documents`, formData, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+    });
+    return response.data;
+  },
 };

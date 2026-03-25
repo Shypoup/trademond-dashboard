@@ -7,6 +7,8 @@ interface UpdateSocialPlatformPayload {
   active?: boolean;
   base_url?: string;
   placeholder?: { en: string; ar: string };
+  /** When the API allows changing input mode after create. */
+  input_type?: 'username' | 'url' | 'phone' | 'email';
 }
 
 /**

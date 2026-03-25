@@ -19,13 +19,11 @@ const AuthLayout = () => {
         <main className="flex-1 p-8">
           <Outlet />
         </main>
-        <footer className="p-8 border-t border-slate-100/50 flex flex-wrap items-center justify-between text-xs font-semibold text-slate-400 gap-4 mt-auto">
+        <footer className="mt-auto flex flex-wrap items-center justify-between gap-4 border-t border-slate-100/50 p-8 text-xs font-semibold text-slate-400">
           <div>{t('footer.copyright')}</div>
-          <div className="flex gap-6">
-            <a href="#" className="hover:text-teal-600 transition-colors">{t('footer.privacyPolicy')}</a>
-            <a href="#" className="hover:text-teal-600 transition-colors">{t('footer.termsOfService')}</a>
-            <a href="#" className="hover:text-teal-600 transition-colors">{t('footer.helpCenter')}</a>
-          </div>
+          <p className="max-w-md text-end text-[11px] font-medium leading-relaxed text-slate-400">
+            {t('footer.supportNote')}
+          </p>
         </footer>
       </div>
     </div>
