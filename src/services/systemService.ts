@@ -1,4 +1,4 @@
-import axiosClient from '@api/axiosClient';
+import axiosClient, { API_ROOT } from '@api/axiosClient';
 import { Media, Follow, Like, ApiResponse } from '@data-types/api';
 
 export const systemService = {
@@ -25,7 +25,17 @@ export const systemService = {
     getLikes: async (params?: any) => { const r = await axiosClient.get<ApiResponse<Like>>('/admin/likes', { params }); return r.data; },
     deleteLike: async (id: string) => { const r = await axiosClient.delete(`/admin/likes/${id}`); return r.data; },
 
-    // Imports
-    importIndustries: async (formData: FormData) => { const r = await axiosClient.post('/imports/industries', formData); return r.data; },
-    importISIC: async (formData: FormData) => { const r = await axiosClient.post('/imports/isic', formData); return r.data; },
+    // Imports — `POST /api/imports/*` (not under `/api/v1`); requires admin token per API policy
+    importIndustries: async (formData: FormData) => {
+        const r = await axiosClient.post(`${API_ROOT}/imports/industries`, formData, {
+            headers: { 'Content-Type': 'multipart/form-data' },
+        });
+        return r.data;
+    },
+    importISIC: async (formData: FormData) => {
+        const r = await axiosClient.post(`${API_ROOT}/imports/isic`, formData, {
+            headers: { 'Content-Type': 'multipart/form-data' },
+        });
+        return r.data;
+    },
 };

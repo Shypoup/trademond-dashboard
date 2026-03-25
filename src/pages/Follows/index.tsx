@@ -61,7 +61,7 @@ const Follows = () => {
                                 <td className="px-6 py-5 text-xs font-bold font-mono text-slate-500">{rel.followable_id}</td>
                                 <td className="px-6 py-5 text-xs text-slate-500">{formatDate(rel.created_at)}</td>
                                 <td className="px-6 py-5 pr-4 text-right flex justify-end">
-                                    <button onClick={() => handleDelete(rel.id)} className="text-slate-400 hover:text-rose-600 p-2 hover:bg-slate-100 rounded-lg border border-transparent hover:border-slate-200 transition-all"><Trash2 size={16} /></button>
+                                    <button onClick={() => handleDelete(String(rel.id))} className="text-slate-400 hover:text-rose-600 p-2 hover:bg-slate-100 rounded-lg border border-transparent hover:border-slate-200 transition-all"><Trash2 size={16} /></button>
                                 </td>
                             </tr>
                         ))}

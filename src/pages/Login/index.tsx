@@ -16,14 +16,18 @@ const Login = () => {
         setError(null);
 
         try {
-            const data = await authService.login({ email, password });
-            if (data.status === 'success') {
+            const result = await authService.login({ email, password });
+            if (result.success) {
                 navigate('/');
             } else {
-                setError((data as any).message || 'Authentication failed. Please check your credentials.');
+                setError(result.message || 'Authentication failed. Please check your credentials.');
             }
-        } catch (err: any) {
-            setError(err.response?.data?.message || 'A network error occurred. Please try again.');
+        } catch (err: unknown) {
+            const message =
+                err && typeof err === 'object' && 'message' in err
+                    ? String((err as { message: unknown }).message)
+                    : 'A network error occurred. Please try again.';
+            setError(message);
         } finally {
             setLoading(false);
         }

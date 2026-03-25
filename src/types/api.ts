@@ -94,17 +94,31 @@ export interface User {
   jobTitle?: string;
 }
 
+/** Legacy login envelope; new flows use access/refresh tokens (see `authService.login`). */
 export interface LoginResponse {
-  status: string;
-  data: {
-    token: string;
+  status?: string;
+  data?: {
+    token?: string;
+    access_token?: string;
+    refresh_token?: string;
+    expires_in?: number;
+    user?: unknown;
   };
+  access_token?: string;
+  refresh_token?: string;
 }
 
+/** Legacy JSON:API `/me` shape; new API uses `data.user` (see `parseMeResponse`). */
 export interface UserProfileResponse {
   data: {
-    id: string;
-    attributes: {
+    id?: string;
+    user?: {
+      id: string;
+      name?: string;
+      email?: string;
+      roles?: string[];
+    };
+    attributes?: {
       name: string;
       email: string;
       profilePhoto: string | null;

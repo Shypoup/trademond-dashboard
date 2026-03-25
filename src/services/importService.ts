@@ -3,8 +3,7 @@ import axiosClient, { API_ROOT } from '@api/axiosClient';
 /**
  * Import service for bulk-uploading industry and ISIC code data.
  *
- * These endpoints use `{API_ROOT}/imports` (no `/v1` prefix)
- * because they sit outside the versioned admin API.
+ * Uses `API_ROOT` + `/imports/*` (no `/v1` segment). These routes require an admin-scoped token.
  */
 export const importService = {
   /**
