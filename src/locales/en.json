@@ -99,7 +99,16 @@
   },
   "header": {
     "searchPlaceholder": "Search for products, companies, or users... (CMD+K)",
-    "productionEnv": "Production Env"
+    "productionEnv": "Production Env",
+    "notifications": "Notifications",
+    "themeMenu": "Appearance",
+    "appearance": "Appearance",
+    "themeLight": "Light",
+    "themeDark": "Dark",
+    "themeSystem": "System",
+    "userFallbackName": "Admin",
+    "userFallbackRole": "Administrator",
+    "profileUnavailable": "Profile unavailable"
   },
   "dashboard": {
     "title": "Dashboard"

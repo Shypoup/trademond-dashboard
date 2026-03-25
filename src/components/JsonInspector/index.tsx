@@ -20,7 +20,7 @@ export function JsonInspector({ data, className }: JsonInspectorProps) {
   return (
     <pre
       className={cn(
-        'max-h-[480px] overflow-auto rounded-xl border border-slate-200 bg-slate-50 p-4 text-left text-xs leading-relaxed text-slate-700',
+        'max-h-[480px] overflow-auto rounded-xl border border-border bg-muted/40 p-4 text-left text-xs leading-relaxed text-card-foreground',
         className,
       )}
     >

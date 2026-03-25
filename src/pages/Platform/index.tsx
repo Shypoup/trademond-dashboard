@@ -117,7 +117,7 @@ const Platform = () => {
         <div className="space-y-8 animate-in fade-in duration-700">
             <div className="flex items-center justify-between">
                 <div>
-                    <h2 className="text-2xl font-bold text-slate-900 font-outfit">Platform Overview</h2>
+                    <h2 className="text-2xl font-bold text-foreground font-outfit">Platform Overview</h2>
                     <p className="text-slate-500 text-sm mt-1">Enterprise marketplace status and global system performance monitor.</p>
                 </div>
                 <div className="flex gap-4">
@@ -176,7 +176,7 @@ const Platform = () => {
                                 {stat.change}
                             </span>
                         </div>
-                        <h3 className="text-2xl font-bold text-slate-900 mt-3 font-outfit">{stat.value}</h3>
+                        <h3 className="text-2xl font-bold text-foreground mt-3 font-outfit">{stat.value}</h3>
                         <div className="mt-4 pt-4 border-t border-slate-50">
                             <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">{stat.target}</p>
                         </div>

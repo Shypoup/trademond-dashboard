@@ -3,7 +3,6 @@ import {
     Users as UsersIcon,
     UserPlus,
     Search,
-    MoreVertical,
     ShieldCheck,
     AlertCircle,
     Loader2,
@@ -111,7 +110,7 @@ const Users = () => {
             <div className="flex items-center justify-center min-h-[60vh]">
                 <div className="flex flex-col items-center gap-4">
                     <div className="w-12 h-12 border-4 border-teal-500/20 border-t-teal-500 rounded-full animate-spin"></div>
-                    <p className="text-slate-400 font-bold animate-pulse text-sm">Synchronizing Governance Node...</p>
+                    <p className="text-sm font-bold text-muted-foreground animate-pulse">Synchronizing Governance Node...</p>
                 </div>
             </div>
         );
@@ -121,98 +120,100 @@ const Users = () => {
         <div className="space-y-8 animate-in zoom-in-95 duration-500 pb-12">
             <div className="flex items-center justify-between">
                 <div>
-                    <h2 className="text-2xl font-bold text-slate-900 font-outfit">User Management</h2>
-                    <p className="text-slate-500 text-sm mt-1">Configure user roles, permissions and monitor access levels.</p>
+                    <h2 className="text-2xl font-bold text-foreground font-outfit">User Management</h2>
+                    <p className="mt-1 text-sm text-muted-foreground">Configure user roles, permissions and monitor access levels.</p>
                 </div>
                 <button
                     onClick={() => handleOpenModal()}
-                    className="flex items-center gap-2 px-6 py-2.5 bg-[#008080] rounded-xl text-sm font-bold text-white hover:bg-[#005f5f] transition-all shadow-lg"
+                    className="flex items-center gap-2 rounded-xl bg-primary px-6 py-2.5 text-sm font-bold text-primary-foreground shadow-lg transition-all hover:bg-primary/90"
                 >
                     <UserPlus size={18} />
                     <span>Invite New User</span>
                 </button>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
                 {[
-                    { label: 'Total Users', value: totalUsers.toLocaleString(), change: '+0.0%', icon: UsersIcon, color: 'text-teal-400' },
-                    { label: 'Active Users', value: userList.filter(u => u.status === 'Active').length.toLocaleString(), change: '+0.0%', icon: ShieldCheck, color: 'text-teal-400' },
-                    { label: 'System Health', value: '100%', change: 'Stable', icon: AlertCircle, color: 'text-teal-400' },
+                    { label: 'Total Users', value: totalUsers.toLocaleString(), change: '+0.0%', icon: UsersIcon },
+                    { label: 'Active Users', value: userList.filter(u => u.status === 'Active').length.toLocaleString(), change: '+0.0%', icon: ShieldCheck },
+                    { label: 'System Health', value: '100%', change: 'Stable', icon: AlertCircle },
                 ].map((stat, idx) => (
-                    <div key={idx} className="bg-[#0a2525] p-6 rounded-3xl border border-white/5 relative group hover:border-[#008080]/30 transition-all">
-                        <div className="flex justify-between items-start">
-                            <div className="p-2.5 bg-white/5 rounded-xl text-teal-400"><stat.icon size={22} /></div>
-                            <div className={`text-[11px] font-bold px-2 py-0.5 rounded-full text-teal-400 bg-teal-400/10`}>
+                    <div key={idx} className="premium-card group relative p-6 transition-all hover:border-primary/30">
+                        <div className="flex items-start justify-between">
+                            <div className="rounded-xl bg-primary/10 p-2.5 text-primary">
+                                <stat.icon size={22} />
+                            </div>
+                            <div className="rounded-full bg-primary/10 px-2 py-0.5 text-[11px] font-bold text-primary">
                                 {stat.change}
                             </div>
                         </div>
                         <div className="mt-4">
-                            <p className="text-slate-500 text-[13px] font-medium uppercase tracking-widest">{stat.label}</p>
-                            <h3 className="text-3xl font-bold text-white mt-1 font-outfit">{stat.value}</h3>
+                            <p className="text-[13px] font-medium uppercase tracking-widest text-muted-foreground">{stat.label}</p>
+                            <h3 className="mt-1 font-outfit text-3xl font-bold text-foreground">{stat.value}</h3>
                         </div>
                     </div>
                 ))}
             </div>
 
-            <div className="bg-[#0a2525] rounded-[32px] border border-white/5 overflow-hidden shadow-2xl">
-                <div className="p-8 border-b border-white/5 flex flex-wrap items-center justify-between gap-6">
-                    <div className="flex bg-[#0d2e2e] p-1.5 rounded-2xl border border-white/5">
-                        <button className="px-6 py-2 rounded-xl text-sm font-bold bg-[#008080] text-white shadow-lg">All Users</button>
+            <div className="premium-card overflow-hidden shadow-lg">
+                <div className="flex flex-wrap items-center justify-between gap-6 border-b border-border bg-muted/40 p-6 md:p-8">
+                    <div className="flex rounded-2xl border border-border bg-muted/50 p-1.5">
+                        <button type="button" className="rounded-xl bg-primary px-6 py-2 text-sm font-bold text-primary-foreground shadow-md">All Users</button>
                     </div>
 
                     <div className="flex items-center gap-3">
-                        <div className="relative group">
-                            <Search className="absolute inset-y-0 left-4 mt-3.5 flex items-center text-slate-500 group-focus-within:text-teal-400" size={18} />
+                        <div className="relative">
+                            <Search className="absolute start-4 top-1/2 size-[18px] -translate-y-1/2 text-muted-foreground" />
                             <input
                                 type="text"
                                 placeholder="Quick search..."
-                                className="w-64 h-12 pl-12 pr-4 bg-[#0d2e2e] border border-slate-800 focus:border-teal-400 rounded-2xl text-sm text-white placeholder-slate-600 outline-none transition-all"
+                                className="h-12 w-64 rounded-2xl border border-border bg-background ps-12 pe-4 text-sm text-foreground outline-none transition-all placeholder:text-muted-foreground focus:border-primary focus:ring-2 focus:ring-ring/20"
                             />
                         </div>
                     </div>
                 </div>
 
                 <div className="overflow-x-auto">
-                    <table className="w-full text-left border-collapse">
+                    <table className="w-full border-collapse text-left">
                         <thead>
-                            <tr className="border-b border-white/5">
-                                <th className="px-8 py-5 text-[11px] font-bold text-slate-500 uppercase tracking-[0.2em]">User Details</th>
-                                <th className="px-8 py-5 text-[11px] font-bold text-slate-500 uppercase tracking-[0.2em]">Role</th>
-                                <th className="px-8 py-5 text-[11px] font-bold text-slate-500 uppercase tracking-[0.2em]">Status</th>
-                                <th className="px-8 py-5 text-[11px] font-bold text-slate-500 uppercase tracking-[0.2em]">Last Connection</th>
-                                <th className="px-8 py-5 text-[11px] font-bold text-slate-500 uppercase tracking-[0.2em] text-right">Actions</th>
+                            <tr className="border-b border-border bg-muted/30">
+                                <th className="px-8 py-5 text-[11px] font-bold uppercase tracking-[0.2em] text-muted-foreground">User Details</th>
+                                <th className="px-8 py-5 text-[11px] font-bold uppercase tracking-[0.2em] text-muted-foreground">Role</th>
+                                <th className="px-8 py-5 text-[11px] font-bold uppercase tracking-[0.2em] text-muted-foreground">Status</th>
+                                <th className="px-8 py-5 text-[11px] font-bold uppercase tracking-[0.2em] text-muted-foreground">Last Connection</th>
+                                <th className="px-8 py-5 text-end text-[11px] font-bold uppercase tracking-[0.2em] text-muted-foreground">Actions</th>
                             </tr>
                         </thead>
-                        <tbody className="divide-y divide-white/5">
+                        <tbody className="divide-y divide-border">
                             {userList.map((user) => (
-                                <tr key={user.id} className="hover:bg-white/[0.02] transition-colors group">
+                                <tr key={user.id} className="group transition-colors hover:bg-muted/50">
                                     <td className="px-8 py-6">
                                         <div className="flex items-center gap-4">
-                                            <div className="w-12 h-12 rounded-2xl border-2 border-white/5 overflow-hidden group-hover:scale-110 transition-transform duration-300">
+                                            <div className="h-12 w-12 overflow-hidden rounded-2xl border-2 border-border transition-transform duration-300 group-hover:scale-110">
                                                 <img src={user.image || user.avatar || `https://ui-avatars.com/api/?name=${user.name}&background=008080&color=fff`} alt={user.name} />
                                             </div>
                                             <div>
-                                                <h5 className="text-[14px] font-bold text-white">{user.name}</h5>
-                                                <p className="text-xs font-medium text-slate-500 mt-0.5">{user.email}</p>
+                                                <h5 className="text-[14px] font-bold text-foreground">{user.name}</h5>
+                                                <p className="mt-0.5 text-xs font-medium text-muted-foreground">{user.email}</p>
                                             </div>
                                         </div>
                                     </td>
-                                    <td className="px-8 py-6 text-sm font-bold text-slate-400 capitalize">{user.role || 'Member'}</td>
+                                    <td className="px-8 py-6 text-sm font-bold capitalize text-muted-foreground">{user.role || 'Member'}</td>
                                     <td className="px-8 py-6">
                                         <div className="flex items-center gap-2">
-                                            <div className={`w-2 h-2 rounded-full ${getStatusStyles(user.status || '').replace('bg-', 'bg-').split(' ')[0]}`}></div>
+                                            <div className={`h-2 w-2 rounded-full ${getStatusStyles(user.status || '').replace('bg-', 'bg-').split(' ')[0]}`}></div>
                                             <span className={`text-[12px] font-bold capitalize ${getStatusStyles(user.status || '').replace('text-', 'text-').split(' ')[1]}`}>
                                                 {user.status || 'Unknown'}
                                             </span>
                                         </div>
                                     </td>
-                                    <td className="px-8 py-6 text-[13px] text-slate-500 font-medium">{formatDate(user.lastLogin || user.last_login)}</td>
-                                    <td className="px-8 py-6 text-right">
+                                    <td className="px-8 py-6 text-[13px] font-medium text-muted-foreground">{formatDate(user.lastLogin || user.last_login)}</td>
+                                    <td className="px-8 py-6 text-end">
                                         <div className="flex items-center justify-end gap-2">
-                                            <button onClick={() => handleOpenModal(user)} className="text-slate-500 hover:text-teal-400 p-2 border border-transparent hover:border-white/10 rounded-lg transition-all">
+                                            <button type="button" onClick={() => handleOpenModal(user)} className="rounded-lg border border-transparent p-2 text-muted-foreground transition-all hover:border-border hover:bg-muted hover:text-primary">
                                                 <Edit size={16} />
                                             </button>
-                                            <button onClick={() => handleDelete(user.id)} className="text-slate-500 hover:text-rose-400 p-2 border border-transparent hover:border-white/10 rounded-lg transition-all">
+                                            <button type="button" onClick={() => handleDelete(user.id)} className="rounded-lg border border-transparent p-2 text-muted-foreground transition-all hover:border-border hover:bg-destructive/10 hover:text-destructive">
                                                 <Trash2 size={16} />
                                             </button>
                                         </div>
@@ -221,7 +222,7 @@ const Users = () => {
                             ))}
                             {userList.length === 0 && (
                                 <tr>
-                                    <td colSpan={5} className="px-6 py-12 text-center text-slate-500">No users found.</td>
+                                    <td colSpan={5} className="px-6 py-12 text-center text-muted-foreground">No users found.</td>
                                 </tr>
                             )}
                         </tbody>
@@ -235,52 +236,52 @@ const Users = () => {
                     showCloseButton={false}
                     className="p-0 !max-w-lg w-full max-h-screen overflow-y-auto border-none shadow-2xl flex flex-col gap-0 sm:!max-w-lg"
                 >
-                    <div className="p-6 border-b shrink-0 bg-slate-50">
+                    <div className="shrink-0 border-b border-border bg-muted/50 p-6">
                         <div className="flex items-center justify-between">
-                            <SheetHeader className="!p-0 !m-0">
-                                <SheetTitle className="text-xl font-bold font-outfit text-slate-900">
+                            <SheetHeader className="!m-0 !p-0">
+                                <SheetTitle className="font-outfit text-xl font-bold text-foreground">
                                     {editingId ? 'Edit Profile' : 'Invite New User'}
                                 </SheetTitle>
                             </SheetHeader>
                             <button
                                 type="button"
                                 onClick={() => setIsModalOpen(false)}
-                                className="p-2 hover:bg-slate-200 rounded-full transition-colors text-slate-400"
+                                className="rounded-full p-2 text-muted-foreground transition-colors hover:bg-muted"
                             >
                                 <X size={20} />
                             </button>
                         </div>
                     </div>
 
-                    <form onSubmit={handleSubmit} className="flex flex-col flex-1 min-h-0">
-                        <div className="p-8 space-y-6 flex-1 overflow-y-auto premium-scrollbar">
+                    <form onSubmit={handleSubmit} className="flex min-h-0 flex-1 flex-col">
+                        <div className="premium-scrollbar flex-1 space-y-6 overflow-y-auto p-8">
                             <div className="space-y-2">
-                                <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest ps-2">Full Name</label>
-                                <input required className="w-full h-12 bg-slate-50 border border-slate-200 rounded-xl px-4 text-sm font-bold focus:bg-white focus:border-teal-500 transition-all outline-none" value={formData.name} onChange={e => setFormData({ ...formData, name: e.target.value })} placeholder="John Doe" />
+                                <label className="ps-2 text-[11px] font-black uppercase tracking-widest text-muted-foreground">Full Name</label>
+                                <input required className="h-12 w-full rounded-xl border border-border bg-background px-4 text-sm font-bold text-foreground outline-none transition-all focus:border-primary focus:ring-2 focus:ring-ring/20" value={formData.name} onChange={e => setFormData({ ...formData, name: e.target.value })} placeholder="John Doe" />
                             </div>
                             <div className="space-y-2">
-                                <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest ps-2">Email Address</label>
-                                <input type="email" required className="w-full h-12 bg-slate-50 border border-slate-200 rounded-xl px-4 text-sm font-bold focus:bg-white focus:border-teal-500 transition-all outline-none" value={formData.email} onChange={e => setFormData({ ...formData, email: e.target.value })} placeholder="john@example.com" />
+                                <label className="ps-2 text-[11px] font-black uppercase tracking-widest text-muted-foreground">Email Address</label>
+                                <input type="email" required className="h-12 w-full rounded-xl border border-border bg-background px-4 text-sm font-bold text-foreground outline-none transition-all focus:border-primary focus:ring-2 focus:ring-ring/20" value={formData.email} onChange={e => setFormData({ ...formData, email: e.target.value })} placeholder="john@example.com" />
                             </div>
                             <div className="space-y-2">
-                                <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest ps-2">System Role</label>
+                                <label className="ps-2 text-[11px] font-black uppercase tracking-widest text-muted-foreground">System Role</label>
                                 <div className="relative">
-                                    <select required className="w-full h-12 bg-slate-50 border border-slate-200 rounded-xl px-4 text-sm font-bold appearance-none outline-none focus:border-teal-500 transition-all" value={formData.role} onChange={e => setFormData({ ...formData, role: e.target.value })}>
+                                    <select required className="h-12 w-full appearance-none rounded-xl border border-border bg-background px-4 text-sm font-bold text-foreground outline-none transition-all focus:border-primary focus:ring-2 focus:ring-ring/20" value={formData.role} onChange={e => setFormData({ ...formData, role: e.target.value })}>
                                         <option value="user">Standard User</option>
                                         <option value="admin">Administrator</option>
                                         <option value="editor">Editor</option>
                                     </select>
-                                    <ChevronDown className="absolute end-4 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" size={16} />
+                                    <ChevronDown className="pointer-events-none absolute end-4 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
                                 </div>
                             </div>
                             <div className="space-y-2">
-                                <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest ps-2">{editingId ? 'New Password (Optional)' : 'Passcode'}</label>
-                                <input type="password" required={!editingId} className="w-full h-12 bg-slate-50 border border-slate-200 rounded-xl px-4 text-sm font-bold focus:bg-white focus:border-teal-500 transition-all outline-none" value={formData.password} onChange={e => setFormData({ ...formData, password: e.target.value })} placeholder="••••••••" />
+                                <label className="ps-2 text-[11px] font-black uppercase tracking-widest text-muted-foreground">{editingId ? 'New Password (Optional)' : 'Passcode'}</label>
+                                <input type="password" required={!editingId} className="h-12 w-full rounded-xl border border-border bg-background px-4 text-sm font-bold text-foreground outline-none transition-all focus:border-primary focus:ring-2 focus:ring-ring/20" value={formData.password} onChange={e => setFormData({ ...formData, password: e.target.value })} placeholder="••••••••" />
                             </div>
                         </div>
-                        <div className="p-6 border-t border-slate-100 flex justify-end gap-3 bg-slate-50 shrink-0">
-                            <button type="button" className="px-6 py-2.5 rounded-xl text-sm font-bold text-slate-500 hover:bg-slate-200 transition-all" onClick={() => setIsModalOpen(false)}>Cancel</button>
-                            <button type="submit" disabled={formSaving} className="px-8 py-2.5 bg-teal-600 rounded-xl text-sm font-black text-white hover:bg-teal-700 transition-all flex items-center gap-2 shadow-lg shadow-teal-500/20">
+                        <div className="flex shrink-0 justify-end gap-3 border-t border-border bg-muted/50 p-6">
+                            <button type="button" className="rounded-xl px-6 py-2.5 text-sm font-bold text-muted-foreground transition-all hover:bg-muted" onClick={() => setIsModalOpen(false)}>Cancel</button>
+                            <button type="submit" disabled={formSaving} className="flex items-center gap-2 rounded-xl bg-primary px-8 py-2.5 text-sm font-black text-primary-foreground shadow-lg transition-all hover:bg-primary/90 disabled:opacity-50">
                                 {formSaving && <Loader2 className="animate-spin" size={16} />} Configure Access
                             </button>
                         </div>

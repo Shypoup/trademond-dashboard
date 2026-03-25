@@ -77,7 +77,7 @@ export const ServicesTab: React.FC<ServicesTabProps> = ({
                             <p className="text-[11px] text-slate-400 font-bold uppercase tracking-widest mb-4">
                                 {t('profile.servicePackage')}
                             </p>
-                            <p className="text-xs text-slate-500 font-medium leading-relaxed line-clamp-2 mb-6">
+                            <p className="text-xs text-muted-foreground font-medium leading-relaxed line-clamp-2 mb-6">
                                 {typeof service.description === 'string'
                                     ? service.description
                                     : service.description?.en || t('profile.reliableService')}

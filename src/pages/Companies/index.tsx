@@ -257,7 +257,7 @@ const Companies = () => {
             <div className="flex items-center justify-center min-h-[60vh]">
                 <div className="flex flex-col items-center gap-4">
                     <div className="w-12 h-12 border-4 border-teal-500/20 border-t-teal-500 rounded-full animate-spin" />
-                    <p className="text-slate-400 font-bold animate-pulse text-sm">
+                    <p className="text-sm font-bold text-muted-foreground animate-pulse">
                         {t('companies.loading')}
                     </p>
                 </div>
@@ -270,10 +270,10 @@ const Companies = () => {
             {/* Page header */}
             <div className="flex items-center justify-between">
                 <div>
-                    <h2 className="text-2xl font-bold text-slate-900 font-outfit">
+                    <h2 className="text-2xl font-bold text-foreground font-outfit">
                         {t('companies.management')}
                     </h2>
-                    <p className="text-slate-500 text-sm mt-1">
+                    <p className="mt-1 text-sm text-muted-foreground">
                         {t('companies.verifiedCount', { count: totalCompanies })}
                     </p>
                 </div>
@@ -289,28 +289,28 @@ const Companies = () => {
             {/* Stats cards */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 <StatCard
-                    icon={<Building2 size={18} className="text-slate-500" />}
+                    icon={<Building2 size={18} className="text-muted-foreground" />}
                     label={t('companies.totalCompanies')}
                     value={stats.total}
-                    bg="bg-slate-50"
+                    bg="bg-muted/50 dark:bg-muted/20"
                 />
                 <StatCard
-                    icon={<ShieldCheck size={18} className="text-emerald-500" />}
+                    icon={<ShieldCheck size={18} className="text-emerald-600 dark:text-emerald-400" />}
                     label={t('companies.activeCompanies')}
                     value={stats.active}
-                    bg="bg-emerald-50"
+                    bg="bg-emerald-50/90 dark:bg-emerald-950/35"
                 />
                 <StatCard
-                    icon={<Globe size={18} className="text-teal-500" />}
+                    icon={<Globe size={18} className="text-primary" />}
                     label={t('companies.verifiedCompanies')}
                     value={stats.verified}
-                    bg="bg-teal-50"
+                    bg="bg-primary/10 dark:bg-primary/20"
                 />
                 <StatCard
-                    icon={<Eye size={18} className="text-blue-500" />}
+                    icon={<Eye size={18} className="text-blue-600 dark:text-blue-400" />}
                     label={t('companies.publishedCompanies')}
                     value={stats.published}
-                    bg="bg-blue-50"
+                    bg="bg-blue-50/90 dark:bg-blue-950/35"
                 />
             </div>
 
@@ -371,13 +371,13 @@ interface StatCardProps {
 
 /** Small stat card shown at the top of the page. */
 const StatCard: React.FC<StatCardProps> = ({ icon, label, value, bg }) => (
-    <div className={`rounded-xl border border-slate-100 px-4 py-3.5 flex items-center gap-3 ${bg}`}>
-        <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-white shadow-sm border border-slate-100">
+    <div className={`flex items-center gap-3 rounded-xl border border-border px-4 py-3.5 ${bg}`}>
+        <div className="flex h-9 w-9 items-center justify-center rounded-lg border border-border bg-card shadow-sm">
             {icon}
         </div>
         <div>
-            <p className="text-lg font-bold text-slate-800">{value}</p>
-            <p className="text-[11px] font-medium text-slate-500">{label}</p>
+            <p className="text-lg font-bold text-foreground">{value}</p>
+            <p className="text-[11px] font-medium text-muted-foreground">{label}</p>
         </div>
     </div>
 );

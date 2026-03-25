@@ -43,7 +43,7 @@ const AdminSettings = () => {
         <div className="space-y-6 animate-in fade-in duration-500 pb-12">
             <div className="flex items-center justify-between">
                 <div>
-                    <h2 className="text-2xl font-bold text-slate-900 font-outfit">Platform Meta Settings</h2>
+                    <h2 className="text-2xl font-bold text-foreground font-outfit">Platform Meta Settings</h2>
                     <p className="text-slate-500 text-sm mt-1">Control Global Modules & Configurations</p>
                 </div>
             </div>
@@ -60,7 +60,7 @@ const AdminSettings = () => {
                                     <span className="flex items-center gap-1 text-[10px] font-bold text-slate-500 bg-slate-100 border border-slate-200 px-2 py-0.5 rounded-full uppercase"><ShieldAlert size={12} /> Halted</span>
                                 )}
                             </div>
-                            <p className="text-sm text-slate-500 mt-2">Activate or halt the sponsorship and keyword advertising network across search APIs globally.</p>
+                            <p className="text-sm text-muted-foreground mt-2">Activate or halt the sponsorship and keyword advertising network across search APIs globally.</p>
                         </div>
                     </div>
                     <div className="mt-8 pt-6 border-t border-slate-100 flex items-center justify-between">
@@ -78,7 +78,7 @@ const AdminSettings = () => {
 
                 <div className="premium-card p-8 opacity-50 grayscale select-none">
                     <h3 className="text-lg font-bold text-slate-800">Mail Distribution Daemon</h3>
-                    <p className="text-sm text-slate-500 mt-2">Manage AWS SES endpoints.</p>
+                    <p className="text-sm text-muted-foreground mt-2">Manage AWS SES endpoints.</p>
                     <div className="mt-8 pt-6 border-t border-slate-100 flex items-center justify-end">
                         <span className="text-xs font-bold bg-slate-200 px-3 py-1 rounded text-slate-500 uppercase tracking-wider">Locked</span>
                     </div>

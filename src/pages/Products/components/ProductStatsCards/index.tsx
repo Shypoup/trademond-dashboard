@@ -22,15 +22,15 @@ export const ProductStatsCards: React.FC<ProductStatsCardsProps> = ({
     publishedCount,
 }) => {
     return (
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-5 flex items-center gap-4">
-                <div className="w-11 h-11 rounded-xl bg-teal-50 flex items-center justify-center shrink-0">
-                    <CheckCircle className="text-teal-600" size={22} />
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+            <div className="premium-card flex items-center gap-4 p-5">
+                <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
+                    <CheckCircle size={22} />
                 </div>
                 <div>
-                    <p className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">Active Products</p>
+                    <p className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">Active Products</p>
                     <div className="flex items-end gap-2 mt-0.5">
-                        <h3 className="text-2xl font-bold text-slate-900">{activeCount.toLocaleString()}</h3>
+                        <h3 className="text-2xl font-bold text-foreground">{activeCount.toLocaleString()}</h3>
                         <span className="text-[11px] font-bold text-teal-600 flex items-center gap-0.5 pb-0.5">
                             <TrendingUp size={11} /> Live
                         </span>
@@ -38,28 +38,28 @@ export const ProductStatsCards: React.FC<ProductStatsCardsProps> = ({
                 </div>
             </div>
 
-            <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-5 flex items-center gap-4">
-                <div className="w-11 h-11 rounded-xl bg-amber-50 flex items-center justify-center shrink-0">
-                    <AlertTriangle className="text-amber-500" size={22} />
+            <div className="premium-card flex items-center gap-4 p-5">
+                <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-amber-500/15 text-amber-600 dark:bg-amber-950/50 dark:text-amber-400">
+                    <AlertTriangle size={22} />
                 </div>
                 <div>
-                    <p className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">Pending Review</p>
+                    <p className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">Pending Review</p>
                     <div className="flex items-end gap-2 mt-0.5">
-                        <h3 className="text-2xl font-bold text-slate-900">{pendingCount.toLocaleString()}</h3>
-                        <span className="text-[11px] font-semibold text-amber-500 pb-0.5">Active + Unpublished</span>
+                        <h3 className="text-2xl font-bold text-foreground">{pendingCount.toLocaleString()}</h3>
+                        <span className="pb-0.5 text-[11px] font-semibold text-amber-600 dark:text-amber-400">Active + Unpublished</span>
                     </div>
                 </div>
             </div>
 
-            <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-5 flex items-center gap-4">
-                <div className="w-11 h-11 rounded-xl bg-sky-50 flex items-center justify-center shrink-0">
-                    <Eye className="text-sky-500" size={22} />
+            <div className="premium-card flex items-center gap-4 p-5">
+                <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-sky-500/15 text-sky-600 dark:bg-sky-950/50 dark:text-sky-400">
+                    <Eye size={22} />
                 </div>
                 <div>
-                    <p className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">Published</p>
+                    <p className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">Published</p>
                     <div className="flex items-end gap-2 mt-0.5">
-                        <h3 className="text-2xl font-bold text-slate-900">{publishedCount.toLocaleString()}</h3>
-                        <span className="text-[11px] font-semibold text-sky-500 pb-0.5">Visible to users</span>
+                        <h3 className="text-2xl font-bold text-foreground">{publishedCount.toLocaleString()}</h3>
+                        <span className="pb-0.5 text-[11px] font-semibold text-sky-600 dark:text-sky-400">Visible to users</span>
                     </div>
                 </div>
             </div>

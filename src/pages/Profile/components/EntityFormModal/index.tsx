@@ -132,7 +132,7 @@ const EntityFormModalInner: React.FC<InnerProps> = ({
                         <SheetTitle className="text-xl font-bold font-outfit text-slate-900">
                             {title}
                         </SheetTitle>
-                        <p className="text-xs text-slate-500 font-medium mt-1">
+                        <p className="text-xs text-muted-foreground font-medium mt-1">
                             {t('profile.modalSubtitle')}
                         </p>
                     </SheetHeader>

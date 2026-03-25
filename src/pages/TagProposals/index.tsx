@@ -78,37 +78,39 @@ const TagProposals = () => {
         }
     };
 
-    if (loading && proposals.length === 0) return <div className="p-8">Loading tag proposals...</div>;
+    if (loading && proposals.length === 0) {
+        return <div className="p-8 font-bold text-muted-foreground">Loading tag proposals...</div>;
+    }
 
     return (
         <div className="space-y-6 animate-in fade-in duration-500 pb-12">
             <div className="flex items-center justify-between">
                 <div>
-                    <h2 className="text-2xl font-bold text-slate-900 font-outfit">Tag Proposals</h2>
-                    <p className="text-slate-500 text-sm mt-1">Review community suggested tags</p>
+                    <h2 className="text-2xl font-bold text-foreground font-outfit">Tag Proposals</h2>
+                    <p className="mt-1 text-sm text-muted-foreground">Review community suggested tags</p>
                 </div>
             </div>
 
-            <div className="premium-card overflow-hidden bg-white">
+            <div className="premium-card overflow-hidden">
                 <table className="w-full text-left border-collapse">
                     <thead>
-                        <tr className="border-b border-slate-50">
-                            <th className="px-6 py-4 text-[11px] font-bold text-slate-400 uppercase">Tag Name / Proposed By</th>
-                            <th className="px-6 py-4 text-[11px] font-bold text-slate-400 uppercase">Status</th>
-                            <th className="px-6 py-4 text-[11px] font-bold text-slate-400 uppercase">Canonical ID</th>
-                            <th className="px-6 py-4 text-[11px] font-bold text-slate-400 uppercase">Date</th>
-                            <th className="px-6 py-4 text-[11px] font-bold text-slate-400 uppercase text-right">Actions</th>
+                        <tr className="border-b border-border bg-muted/30">
+                            <th className="px-6 py-4 text-[11px] font-bold uppercase text-muted-foreground">Tag Name / Proposed By</th>
+                            <th className="px-6 py-4 text-[11px] font-bold uppercase text-muted-foreground">Status</th>
+                            <th className="px-6 py-4 text-[11px] font-bold uppercase text-muted-foreground">Canonical ID</th>
+                            <th className="px-6 py-4 text-[11px] font-bold uppercase text-muted-foreground">Date</th>
+                            <th className="px-6 py-4 text-end text-[11px] font-bold uppercase text-muted-foreground">Actions</th>
                         </tr>
                     </thead>
-                    <tbody className="divide-y divide-slate-50">
+                    <tbody className="divide-y divide-border">
                         {proposals.map((t) => (
-                            <tr key={t.id} className="hover:bg-slate-50/50 transition-colors group">
+                            <tr key={t.id} className="group transition-colors hover:bg-muted/50">
                                 <td className="px-6 py-5">
                                     <div className="flex items-center gap-3">
-                                        <div className="w-10 h-10 rounded-xl bg-indigo-50 flex items-center justify-center text-indigo-500 group-hover:bg-indigo-500 group-hover:text-white transition-colors"><FileCheck size={18} /></div>
+                                        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-indigo-500/10 text-indigo-600 transition-colors group-hover:bg-indigo-600 group-hover:text-white dark:bg-indigo-950/50 dark:text-indigo-300"><FileCheck size={18} /></div>
                                         <div>
-                                            <p className="text-sm font-bold text-slate-800">{displayBilingual(t.name)}</p>
-                                            <p className="text-[10px] text-slate-400 font-mono mt-0.5 max-w-[200px] truncate" title={t.proposed_by}>By: {t.proposed_by || 'Anonymous'}</p>
+                                            <p className="text-sm font-bold text-foreground">{displayBilingual(t.name)}</p>
+                                            <p className="mt-0.5 max-w-[200px] truncate font-mono text-[10px] text-muted-foreground" title={t.proposed_by}>By: {t.proposed_by || 'Anonymous'}</p>
                                         </div>
                                     </div>
                                 </td>
@@ -118,19 +120,19 @@ const TagProposals = () => {
                                     </span>
                                 </td>
                                 <td className="px-6 py-5">
-                                    <span className="text-xs text-slate-500 font-mono truncate max-w-[150px] inline-block">{t.canonical_tag_id || 'N/A'}</span>
+                                    <span className="text-xs text-muted-foreground font-mono truncate max-w-[150px] inline-block">{t.canonical_tag_id || 'N/A'}</span>
                                 </td>
-                                <td className="px-6 py-5 text-xs text-slate-500">{formatDate(t.created_at)}</td>
+                                <td className="px-6 py-5 text-xs text-muted-foreground">{formatDate(t.created_at)}</td>
                                 <td className="px-6 py-5 pr-4 text-right">
                                     {t.status === 'pending' ? (
                                         <div className="flex items-center justify-end gap-1">
-                                            <button onClick={() => handleAccept(t.id)} className="text-slate-400 hover:text-emerald-500 p-2 hover:bg-slate-100 rounded-lg border border-transparent hover:border-slate-200 transition-all" title="Accept">
+                                            <button onClick={() => handleAccept(t.id)} className="rounded-lg border border-transparent p-2 text-muted-foreground transition-all hover:border-border hover:bg-muted hover:text-emerald-600" title="Accept">
                                                 <Check size={16} />
                                             </button>
-                                            <button onClick={() => handleOpenMerge(t)} className="text-slate-400 hover:text-indigo-500 p-2 hover:bg-slate-100 rounded-lg border border-transparent hover:border-slate-200 transition-all" title="Merge">
+                                            <button onClick={() => handleOpenMerge(t)} className="rounded-lg border border-transparent p-2 text-muted-foreground transition-all hover:border-border hover:bg-muted hover:text-indigo-600" title="Merge">
                                                 <Merge size={16} />
                                             </button>
-                                            <button onClick={() => handleReject(t.id)} className="text-slate-400 hover:text-rose-500 p-2 hover:bg-slate-100 rounded-lg border border-transparent hover:border-slate-200 transition-all" title="Reject">
+                                            <button onClick={() => handleReject(t.id)} className="rounded-lg border border-transparent p-2 text-muted-foreground transition-all hover:border-border hover:bg-muted hover:text-rose-600" title="Reject">
                                                 <X size={16} />
                                             </button>
                                         </div>
@@ -140,7 +142,7 @@ const TagProposals = () => {
                                 </td>
                             </tr>
                         ))}
-                        {proposals.length === 0 && <tr><td colSpan={5} className="px-6 py-12 text-center text-slate-400">No tag proposals found.</td></tr>}
+                        {proposals.length === 0 && <tr><td colSpan={5} className="px-6 py-12 text-center text-muted-foreground">No tag proposals found.</td></tr>}
                     </tbody>
                 </table>
             </div>
@@ -151,14 +153,14 @@ const TagProposals = () => {
                     showCloseButton={false}
                     className="p-0 !max-w-lg w-full max-h-screen overflow-y-auto border-none shadow-2xl flex flex-col gap-0 sm:!max-w-lg"
                 >
-                    <div className="p-6 border-b shrink-0 bg-indigo-50/50">
+                    <div className="shrink-0 border-b border-border bg-muted/50 p-6">
                         <div className="flex items-center justify-between gap-4">
-                            <SheetHeader className="!p-0 !m-0 flex-1 min-w-0">
-                                <SheetTitle className="text-xl font-bold font-outfit text-indigo-900">
+                            <SheetHeader className="!m-0 !min-w-0 !flex-1 !p-0">
+                                <SheetTitle className="font-outfit text-xl font-bold text-foreground">
                                     Merge Proposal
                                 </SheetTitle>
                                 {selectedProposal && (
-                                    <p className="text-xs text-indigo-600 font-medium mt-1">
+                                    <p className="mt-1 text-xs font-medium text-muted-foreground">
                                         Map this proposal `{displayBilingual(selectedProposal.name)}` to an existing Tag ID.
                                     </p>
                                 )}
@@ -166,7 +168,7 @@ const TagProposals = () => {
                             <button
                                 type="button"
                                 onClick={() => setIsMergeOpen(false)}
-                                className="p-2 hover:bg-indigo-100 rounded-full transition-colors text-indigo-900/50 shrink-0"
+                                className="shrink-0 rounded-full p-2 text-muted-foreground transition-colors hover:bg-muted"
                             >
                                 <X size={20} />
                             </button>
@@ -176,15 +178,15 @@ const TagProposals = () => {
                     <form onSubmit={submitMerge} className="flex flex-col flex-1 min-h-0">
                         <div className="p-8 space-y-6 flex-1 overflow-y-auto premium-scrollbar">
                                 <div className="space-y-2">
-                                    <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest pl-2">Canonical Tag ID</label>
-                                    <input required className="w-full h-12 bg-slate-50 border border-slate-200 rounded-xl px-4 text-sm font-mono focus:bg-white focus:border-indigo-400 transition-all outline-none" value={canonicalTagId} onChange={e => setCanonicalTagId(e.target.value)} placeholder="01H..." />
+                                    <label className="pl-2 text-[11px] font-black uppercase tracking-widest text-muted-foreground">Canonical Tag ID</label>
+                                    <input required className="h-12 w-full rounded-xl border border-border bg-background px-4 font-mono text-sm text-foreground outline-none transition-all focus:border-primary focus:ring-2 focus:ring-ring/20" value={canonicalTagId} onChange={e => setCanonicalTagId(e.target.value)} placeholder="01H..." />
                                 </div>
                                 {suggestions.length > 0 && (
                                     <div className="space-y-2">
-                                        <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest pl-2">Suggested Tags</label>
+                                        <label className="pl-2 text-[11px] font-black uppercase tracking-widest text-muted-foreground">Suggested Tags</label>
                                         <div className="flex flex-wrap gap-2">
                                             {suggestions.map((s: any) => (
-                                                <button type="button" key={s.id} onClick={() => setCanonicalTagId(s.id)} className="px-3 py-1.5 bg-slate-100 hover:bg-indigo-100 text-slate-700 hover:text-indigo-700 text-xs font-medium rounded-lg transition-colors border border-transparent hover:border-indigo-200">
+                                                <button type="button" key={s.id} onClick={() => setCanonicalTagId(s.id)} className="rounded-lg border border-transparent bg-muted px-3 py-1.5 text-xs font-medium text-foreground transition-colors hover:border-primary/40 hover:bg-primary/10 hover:text-primary">
                                                     {displayBilingual(s.name)}
                                                 </button>
                                             ))}
@@ -192,9 +194,9 @@ const TagProposals = () => {
                                     </div>
                                 )}
                         </div>
-                        <div className="p-6 border-t border-slate-100 flex justify-end gap-3 bg-slate-50 shrink-0">
-                            <button type="button" className="px-6 py-2.5 rounded-xl text-sm font-bold text-slate-500 hover:bg-slate-200 transition-all" onClick={() => setIsMergeOpen(false)}>Cancel</button>
-                            <button type="submit" disabled={!canonicalTagId} className="px-8 py-2.5 bg-indigo-600 disabled:bg-slate-300 disabled:text-white/50 rounded-xl text-sm font-black text-white hover:bg-indigo-700 transition-all flex items-center gap-2 shadow-lg shadow-indigo-600/20 disabled:shadow-none">
+                        <div className="flex shrink-0 justify-end gap-3 border-t border-border bg-muted/50 p-6">
+                            <button type="button" className="rounded-xl px-6 py-2.5 text-sm font-bold text-muted-foreground transition-all hover:bg-muted" onClick={() => setIsMergeOpen(false)}>Cancel</button>
+                            <button type="submit" disabled={!canonicalTagId} className="flex items-center gap-2 rounded-xl bg-primary px-8 py-2.5 text-sm font-black text-primary-foreground shadow-lg transition-all hover:bg-primary/90 disabled:cursor-not-allowed disabled:bg-muted disabled:text-muted-foreground disabled:shadow-none">
                                 Merge Content
                             </button>
                         </div>

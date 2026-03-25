@@ -168,7 +168,7 @@ const SponsoredAds = () => {
 
   if (loading && rows.length === 0) {
     return (
-      <div className="flex min-h-[40vh] items-center justify-center gap-2 text-slate-500">
+      <div className="flex min-h-[40vh] items-center justify-center gap-2 text-muted-foreground">
         <Loader2 className="animate-spin" size={20} />
         <span>{t('common.loading')}</span>
       </div>
@@ -179,8 +179,8 @@ const SponsoredAds = () => {
     <div className="space-y-6 pb-12 animate-in fade-in duration-500">
       <div className="flex flex-wrap items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-slate-900 font-outfit">{t('sidebar.sponsoredAds')}</h1>
-          <p className="mt-1 text-sm text-slate-500">{t('sponsoredAdsPage.subtitle')}</p>
+          <h1 className="text-2xl font-bold text-foreground font-outfit">{t('sidebar.sponsoredAds')}</h1>
+          <p className="mt-1 text-sm text-muted-foreground">{t('sponsoredAdsPage.subtitle')}</p>
         </div>
         <button
           type="button"
@@ -192,37 +192,39 @@ const SponsoredAds = () => {
         </button>
       </div>
 
-      <div className="premium-card overflow-hidden bg-white">
+      <div className="premium-card overflow-hidden">
         <table className="w-full border-collapse text-start">
           <thead>
-            <tr className="border-b border-slate-100">
-              <th className="px-6 py-4 text-[11px] font-bold uppercase text-slate-400">{t('sponsoredAdsPage.colPlacement')}</th>
-              <th className="px-6 py-4 text-[11px] font-bold uppercase text-slate-400">{t('sponsoredAdsPage.colHeadline')}</th>
-              <th className="px-6 py-4 text-[11px] font-bold uppercase text-slate-400">{t('sponsoredAdsPage.colPriority')}</th>
-              <th className="px-6 py-4 text-[11px] font-bold uppercase text-slate-400">{t('common.status')}</th>
-              <th className="px-6 py-4 text-[11px] font-bold uppercase text-slate-400">{t('sponsoredAdsPage.colSchedule')}</th>
-              <th className="px-6 py-4 text-end text-[11px] font-bold uppercase text-slate-400">{t('common.actions')}</th>
+            <tr className="border-b border-border">
+              <th className="px-6 py-4 text-[11px] font-bold uppercase text-muted-foreground">{t('sponsoredAdsPage.colPlacement')}</th>
+              <th className="px-6 py-4 text-[11px] font-bold uppercase text-muted-foreground">{t('sponsoredAdsPage.colHeadline')}</th>
+              <th className="px-6 py-4 text-[11px] font-bold uppercase text-muted-foreground">{t('sponsoredAdsPage.colPriority')}</th>
+              <th className="px-6 py-4 text-[11px] font-bold uppercase text-muted-foreground">{t('common.status')}</th>
+              <th className="px-6 py-4 text-[11px] font-bold uppercase text-muted-foreground">{t('sponsoredAdsPage.colSchedule')}</th>
+              <th className="px-6 py-4 text-end text-[11px] font-bold uppercase text-muted-foreground">{t('common.actions')}</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-slate-50">
+          <tbody className="divide-y divide-border">
             {rows.map((row) => (
-              <tr key={row.id} className="hover:bg-slate-50/60">
-                <td className="px-6 py-4 font-mono text-xs text-slate-700">{row.placement}</td>
-                <td className="max-w-xs px-6 py-4 text-sm font-semibold text-slate-800">
+              <tr key={row.id} className="hover:bg-muted/50">
+                <td className="px-6 py-4 font-mono text-xs text-foreground">{row.placement}</td>
+                <td className="max-w-xs px-6 py-4 text-sm font-semibold text-foreground">
                   {row.headline ? displayBilingual(row.headline) : '—'}
                 </td>
-                <td className="px-6 py-4 text-sm text-slate-600">{row.priority ?? 0}</td>
+                <td className="px-6 py-4 text-sm text-muted-foreground">{row.priority ?? 0}</td>
                 <td className="px-6 py-4">
                   <span
                     className={cn(
                       'rounded-full border px-2 py-0.5 text-[10px] font-bold uppercase',
-                      row.is_active ? 'border-emerald-200 bg-emerald-50 text-emerald-700' : 'border-slate-200 bg-slate-50 text-slate-500',
+                      row.is_active
+                        ? 'border-emerald-200 bg-emerald-50 text-emerald-700 dark:border-emerald-800 dark:bg-emerald-950/50 dark:text-emerald-300'
+                        : 'border-border bg-muted text-muted-foreground',
                     )}
                   >
                     {row.is_active ? t('common.active') : t('common.inactive')}
                   </span>
                 </td>
-                <td className="px-6 py-4 text-xs text-slate-500">
+                <td className="px-6 py-4 text-xs text-muted-foreground">
                   {row.starts_at || row.ends_at ? (
                     <span>
                       {row.starts_at ? formatDate(row.starts_at) : '—'} → {row.ends_at ? formatDate(row.ends_at) : '—'}
@@ -236,14 +238,14 @@ const SponsoredAds = () => {
                     type="button"
                     title={t('sponsoredAdsPage.toggleActive')}
                     onClick={() => void toggleActive(row.id)}
-                    className="me-1 inline-flex rounded-lg p-2 text-slate-400 hover:bg-slate-100 hover:text-teal-600"
+                    className="me-1 inline-flex rounded-lg p-2 text-muted-foreground hover:bg-muted hover:text-teal-600"
                   >
                     <Power size={16} />
                   </button>
-                  <button type="button" onClick={() => openEdit(row)} className="me-2 inline-flex rounded-lg p-2 text-slate-400 hover:bg-slate-100 hover:text-teal-600">
+                  <button type="button" onClick={() => openEdit(row)} className="me-2 inline-flex rounded-lg p-2 text-muted-foreground hover:bg-muted hover:text-teal-600">
                     <Pencil size={16} />
                   </button>
-                  <button type="button" onClick={() => void handleDelete(row.id)} className="inline-flex rounded-lg p-2 text-slate-400 hover:bg-rose-50 hover:text-rose-600">
+                  <button type="button" onClick={() => void handleDelete(row.id)} className="inline-flex rounded-lg p-2 text-muted-foreground hover:bg-destructive/10 hover:text-rose-600">
                     <Trash2 size={16} />
                   </button>
                 </td>
@@ -251,7 +253,7 @@ const SponsoredAds = () => {
             ))}
           </tbody>
         </table>
-        {rows.length === 0 && !loading && <p className="px-6 py-12 text-center text-sm text-slate-400">{t('common.noData')}</p>}
+        {rows.length === 0 && !loading && <p className="px-6 py-12 text-center text-sm text-muted-foreground">{t('common.noData')}</p>}
       </div>
 
       <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
@@ -261,119 +263,119 @@ const SponsoredAds = () => {
           </SheetHeader>
           <form onSubmit={(e) => void handleSubmit(e)} className="space-y-4">
             <label className="space-y-1 text-sm">
-              <span className="text-[11px] font-bold uppercase text-slate-400">{t('sponsoredAdsPage.placement')}</span>
+              <span className="text-[11px] font-bold uppercase text-muted-foreground">{t('sponsoredAdsPage.placement')}</span>
               <input
                 required
                 value={form.placement}
                 onChange={(e) => setForm((f) => ({ ...f, placement: e.target.value }))}
-                className="w-full rounded-xl border border-slate-200 px-3 py-2 font-mono text-sm"
+                className="w-full rounded-xl border border-border bg-background text-foreground px-3 py-2 font-mono text-sm"
               />
             </label>
             <label className="space-y-1 text-sm">
-              <span className="text-[11px] font-bold uppercase text-slate-400">{t('industriesPage.nameEn')}</span>
+              <span className="text-[11px] font-bold uppercase text-muted-foreground">{t('industriesPage.nameEn')}</span>
               <input
                 required
                 value={form.headline_en}
                 onChange={(e) => setForm((f) => ({ ...f, headline_en: e.target.value }))}
-                className="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm"
+                className="w-full rounded-xl border border-border bg-background text-foreground px-3 py-2 text-sm"
               />
             </label>
             <label className="space-y-1 text-sm">
-              <span className="text-[11px] font-bold uppercase text-slate-400">{t('industriesPage.nameAr')}</span>
+              <span className="text-[11px] font-bold uppercase text-muted-foreground">{t('industriesPage.nameAr')}</span>
               <input
                 required
                 dir="rtl"
                 value={form.headline_ar}
                 onChange={(e) => setForm((f) => ({ ...f, headline_ar: e.target.value }))}
-                className="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm"
+                className="w-full rounded-xl border border-border bg-background text-foreground px-3 py-2 text-sm"
               />
             </label>
             <label className="space-y-1 text-sm">
-              <span className="text-[11px] font-bold uppercase text-slate-400">{t('sponsoredAdsPage.descriptionEn')}</span>
+              <span className="text-[11px] font-bold uppercase text-muted-foreground">{t('sponsoredAdsPage.descriptionEn')}</span>
               <textarea
                 rows={2}
                 value={form.description_en}
                 onChange={(e) => setForm((f) => ({ ...f, description_en: e.target.value }))}
-                className="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm"
+                className="w-full rounded-xl border border-border bg-background text-foreground px-3 py-2 text-sm"
               />
             </label>
             <label className="space-y-1 text-sm">
-              <span className="text-[11px] font-bold uppercase text-slate-400">{t('sponsoredAdsPage.descriptionAr')}</span>
+              <span className="text-[11px] font-bold uppercase text-muted-foreground">{t('sponsoredAdsPage.descriptionAr')}</span>
               <textarea
                 rows={2}
                 dir="rtl"
                 value={form.description_ar}
                 onChange={(e) => setForm((f) => ({ ...f, description_ar: e.target.value }))}
-                className="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm"
+                className="w-full rounded-xl border border-border bg-background text-foreground px-3 py-2 text-sm"
               />
             </label>
             <label className="space-y-1 text-sm">
-              <span className="text-[11px] font-bold uppercase text-slate-400">{t('sponsoredAdsPage.ctaLabelEn')}</span>
+              <span className="text-[11px] font-bold uppercase text-muted-foreground">{t('sponsoredAdsPage.ctaLabelEn')}</span>
               <input
                 value={form.cta_label_en}
                 onChange={(e) => setForm((f) => ({ ...f, cta_label_en: e.target.value }))}
-                className="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm"
+                className="w-full rounded-xl border border-border bg-background text-foreground px-3 py-2 text-sm"
               />
             </label>
             <label className="space-y-1 text-sm">
-              <span className="text-[11px] font-bold uppercase text-slate-400">{t('sponsoredAdsPage.ctaLabelAr')}</span>
+              <span className="text-[11px] font-bold uppercase text-muted-foreground">{t('sponsoredAdsPage.ctaLabelAr')}</span>
               <input
                 dir="rtl"
                 value={form.cta_label_ar}
                 onChange={(e) => setForm((f) => ({ ...f, cta_label_ar: e.target.value }))}
-                className="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm"
+                className="w-full rounded-xl border border-border bg-background text-foreground px-3 py-2 text-sm"
               />
             </label>
             <label className="space-y-1 text-sm">
-              <span className="text-[11px] font-bold uppercase text-slate-400">{t('sponsoredAdsPage.ctaUrl')}</span>
+              <span className="text-[11px] font-bold uppercase text-muted-foreground">{t('sponsoredAdsPage.ctaUrl')}</span>
               <input
                 value={form.cta_url}
                 onChange={(e) => setForm((f) => ({ ...f, cta_url: e.target.value }))}
-                className="w-full rounded-xl border border-slate-200 px-3 py-2 font-mono text-sm"
+                className="w-full rounded-xl border border-border bg-background text-foreground px-3 py-2 font-mono text-sm"
               />
             </label>
             <label className="space-y-1 text-sm">
-              <span className="text-[11px] font-bold uppercase text-slate-400">{t('sponsoredAdsPage.companyId')}</span>
+              <span className="text-[11px] font-bold uppercase text-muted-foreground">{t('sponsoredAdsPage.companyId')}</span>
               <input
                 value={form.company_id}
                 onChange={(e) => setForm((f) => ({ ...f, company_id: e.target.value }))}
-                className="w-full rounded-xl border border-slate-200 px-3 py-2 font-mono text-sm"
+                className="w-full rounded-xl border border-border bg-background text-foreground px-3 py-2 font-mono text-sm"
               />
             </label>
             <label className="space-y-1 text-sm">
-              <span className="text-[11px] font-bold uppercase text-slate-400">{t('sponsoredAdsPage.externalBrand')}</span>
+              <span className="text-[11px] font-bold uppercase text-muted-foreground">{t('sponsoredAdsPage.externalBrand')}</span>
               <input
                 value={form.external_brand}
                 onChange={(e) => setForm((f) => ({ ...f, external_brand: e.target.value }))}
-                className="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm"
+                className="w-full rounded-xl border border-border bg-background text-foreground px-3 py-2 text-sm"
               />
             </label>
             <label className="space-y-1 text-sm">
-              <span className="text-[11px] font-bold uppercase text-slate-400">{t('sponsoredAdsPage.priority')}</span>
+              <span className="text-[11px] font-bold uppercase text-muted-foreground">{t('sponsoredAdsPage.priority')}</span>
               <input
                 type="number"
                 value={form.priority}
                 onChange={(e) => setForm((f) => ({ ...f, priority: Number(e.target.value) }))}
-                className="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm"
+                className="w-full rounded-xl border border-border bg-background text-foreground px-3 py-2 text-sm"
               />
             </label>
             <div className="grid gap-3 sm:grid-cols-2">
               <label className="space-y-1 text-sm">
-                <span className="text-[11px] font-bold uppercase text-slate-400">{t('globalNotificationsPage.startsAt')}</span>
+                <span className="text-[11px] font-bold uppercase text-muted-foreground">{t('globalNotificationsPage.startsAt')}</span>
                 <input
                   type="datetime-local"
                   value={form.starts_at}
                   onChange={(e) => setForm((f) => ({ ...f, starts_at: e.target.value }))}
-                  className="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm"
+                  className="w-full rounded-xl border border-border bg-background text-foreground px-3 py-2 text-sm"
                 />
               </label>
               <label className="space-y-1 text-sm">
-                <span className="text-[11px] font-bold uppercase text-slate-400">{t('globalNotificationsPage.endsAt')}</span>
+                <span className="text-[11px] font-bold uppercase text-muted-foreground">{t('globalNotificationsPage.endsAt')}</span>
                 <input
                   type="datetime-local"
                   value={form.ends_at}
                   onChange={(e) => setForm((f) => ({ ...f, ends_at: e.target.value }))}
-                  className="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm"
+                  className="w-full rounded-xl border border-border bg-background text-foreground px-3 py-2 text-sm"
                 />
               </label>
             </div>
@@ -382,10 +384,10 @@ const SponsoredAds = () => {
               {t('common.active')}
             </label>
             <div className="flex justify-end gap-2 pt-4">
-              <button type="button" onClick={() => setSheetOpen(false)} className="rounded-xl px-4 py-2 text-sm font-bold text-slate-500 hover:bg-slate-100">
+              <button type="button" onClick={() => setSheetOpen(false)} className="rounded-xl px-4 py-2 text-sm font-bold text-muted-foreground hover:bg-muted">
                 {t('common.cancel')}
               </button>
-              <button type="submit" disabled={saving} className="inline-flex items-center gap-2 rounded-xl bg-slate-900 px-6 py-2.5 text-sm font-bold text-white disabled:opacity-50">
+              <button type="submit" disabled={saving} className="inline-flex items-center gap-2 rounded-xl bg-primary px-6 py-2.5 text-sm font-bold text-primary-foreground disabled:opacity-50">
                 {saving && <Loader2 className="animate-spin" size={16} />}
                 {t('common.save')}
               </button>

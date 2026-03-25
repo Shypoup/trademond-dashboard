@@ -4,13 +4,14 @@ import { useTranslation } from 'react-i18next';
 import { LogOut, Settings, ShieldCheck } from 'lucide-react';
 
 import { cn } from '@utils/core/cn';
-import { COLORS } from '@utils/core/colors';
+import { BRAND_PRIMARY_HEX_PARAM, COLORS } from '@utils/core/colors';
 import { authService } from '@services/authService';
 import { SIDEBAR_NAV_SECTIONS } from '@/components/Sidebar/utils/navSections';
 
 /**
  * Primary navigation for the authenticated admin shell. Items and section titles
  * come from {@link SIDEBAR_NAV_SECTIONS} and `sidebar.*` / `sidebar.section.*` i18n keys.
+ * Uses `sidebar` CSS variables so light/dark theme matches the rest of the shell.
  */
 const Sidebar = () => {
   const { t, i18n } = useTranslation();
@@ -50,9 +51,8 @@ const Sidebar = () => {
     <aside
       className={cn(
         'fixed top-0 z-50 flex h-screen w-64 flex-col border-e',
-        'bg-[#0a2525] text-slate-100',
+        'border-sidebar-border bg-sidebar text-sidebar-foreground',
       )}
-      style={{ borderColor: COLORS.sidebarBorder }}
       dir={i18n.dir()}
     >
       <div className="flex shrink-0 items-center gap-3 p-6">
@@ -63,20 +63,23 @@ const Sidebar = () => {
           <ShieldCheck className="text-white" size={22} aria-hidden />
         </div>
         <div className="min-w-0">
-          <h1 className="truncate font-bold leading-tight tracking-tight text-white">Trademond</h1>
-          <span className="text-[10px] font-bold uppercase tracking-wider text-teal-300/90">
+          <h1 className="truncate font-bold leading-tight tracking-tight text-sidebar-foreground">Trademond</h1>
+          <span className="text-[10px] font-bold uppercase tracking-wider text-teal-700 dark:text-teal-300/90">
             {t('sidebar.brandSubtitle')}
           </span>
         </div>
       </div>
 
       <nav
-        className="min-h-0 flex-1 space-y-1 overflow-y-auto overscroll-contain px-3 py-2 [scrollbar-width:thin] [scrollbar-color:rgba(255,255,255,0.12)_transparent]"
+        className={cn(
+          'min-h-0 flex-1 space-y-1 overflow-y-auto overscroll-contain px-3 py-2 [scrollbar-width:thin]',
+          '[scrollbar-color:var(--color-sidebar-border)_transparent] dark:[scrollbar-color:rgba(255,255,255,0.12)_transparent]',
+        )}
         aria-label={t('sidebar.dashboard')}
       >
         {SIDEBAR_NAV_SECTIONS.map((section) => (
           <div key={section.sectionKey} className="pb-2">
-            <div className="mb-2 px-2 pt-4 text-[10px] font-bold uppercase tracking-widest text-slate-500 first:pt-0">
+            <div className="mb-2 px-2 pt-4 text-[10px] font-bold uppercase tracking-widest text-muted-foreground first:pt-0">
               {t(`sidebar.section.${section.sectionKey}`)}
             </div>
             <ul className="space-y-0.5">
@@ -90,10 +93,13 @@ const Sidebar = () => {
                       className={({ isActive }) =>
                         cn(
                           'flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-colors duration-200',
-                          'focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-teal-500/60',
+                          'focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring',
                           isActive
-                            ? 'border border-teal-500/25 bg-teal-500/10 text-teal-300'
-                            : 'border border-transparent text-slate-300 hover:bg-white/[0.04] hover:text-white',
+                            ? 'border border-teal-600/25 bg-teal-600/10 text-teal-800 dark:border-teal-500/25 dark:bg-teal-500/10 dark:text-teal-300'
+                            : cn(
+                                'border border-transparent text-muted-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground',
+                                'dark:text-slate-300 dark:hover:bg-white/[0.04] dark:hover:text-white',
+                              ),
                         )
                       }
                     >
@@ -108,15 +114,18 @@ const Sidebar = () => {
         ))}
       </nav>
 
-      <div className="shrink-0 border-t border-white/10 p-3" style={{ borderColor: COLORS.sidebarBorder }}>
+      <div className="shrink-0 border-t border-sidebar-border p-3">
         <NavLink
           to="/settings"
           className={({ isActive }) =>
             cn(
               'mb-1 flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-colors',
               isActive
-                ? 'bg-teal-500/10 text-teal-300'
-                : 'text-slate-400 hover:bg-white/[0.04] hover:text-slate-200',
+                ? 'bg-teal-600/10 text-teal-800 dark:bg-teal-500/10 dark:text-teal-300'
+                : cn(
+                    'text-muted-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground',
+                    'dark:text-slate-400 dark:hover:bg-white/[0.04] dark:hover:text-slate-200',
+                  ),
             )
           }
         >
@@ -126,7 +135,7 @@ const Sidebar = () => {
         <button
           type="button"
           onClick={() => void handleLogout()}
-          className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-slate-400 transition-colors hover:bg-rose-500/10 hover:text-rose-300"
+          className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-muted-foreground transition-colors hover:bg-destructive/10 hover:text-destructive dark:text-slate-400 dark:hover:bg-rose-500/10 dark:hover:text-rose-300"
         >
           <LogOut size={18} aria-hidden />
           <span>{t('sidebar.logout')}</span>
@@ -139,17 +148,19 @@ const Sidebar = () => {
           cn(
             'mx-3 mb-4 mt-1 flex items-center gap-3 rounded-2xl border p-3 transition-colors',
             isActive
-              ? 'border-teal-500/40 bg-teal-500/15'
-              : 'border-white/10 bg-black/20 hover:border-white/15 hover:bg-black/30',
+              ? 'border-teal-600/35 bg-teal-600/10 dark:border-teal-500/40 dark:bg-teal-500/15'
+              : cn(
+                  'border-sidebar-border bg-muted/40 hover:bg-sidebar-accent dark:bg-black/20 dark:hover:border-white/15 dark:hover:bg-black/30',
+                ),
           )
         }
       >
-        <div className="h-10 w-10 shrink-0 overflow-hidden rounded-full border border-white/10">
+        <div className="h-10 w-10 shrink-0 overflow-hidden rounded-full border border-sidebar-border dark:border-white/10">
           <img src={avatarUrl} alt="" className="h-full w-full object-cover" />
         </div>
         <div className="min-w-0 flex-1">
-          <p className="truncate text-xs font-bold text-white">{user?.name ?? '—'}</p>
-          <p className="truncate text-[10px] text-slate-500">{user?.email ?? ''}</p>
+          <p className="truncate text-xs font-bold text-sidebar-foreground">{user?.name ?? '—'}</p>
+          <p className="truncate text-[10px] text-muted-foreground">{user?.email ?? ''}</p>
         </div>
       </NavLink>
     </aside>

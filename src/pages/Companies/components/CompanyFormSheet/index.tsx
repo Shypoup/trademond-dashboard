@@ -109,30 +109,31 @@ export const CompanyFormSheet: React.FC<CompanyFormSheetProps> = ({
         <Sheet open={isOpen} onOpenChange={onOpenChange}>
             <SheetContent side="right" className="p-0 !max-w-3xl w-full max-h-screen overflow-y-auto border-none shadow-2xl flex flex-col">
                 {/* Header */}
-                <div className="p-6 border-b bg-slate-50">
+                <div className="border-b border-border bg-muted/50 p-6">
                     <div className="flex items-center justify-between">
                         <SheetHeader className="!p-0 !m-0">
-                            <SheetTitle className="text-xl font-bold font-outfit text-slate-900">
+                            <SheetTitle className="font-outfit text-xl font-bold text-foreground">
                                 {editingId ? t('companies.editCompany') : t('companies.registerCompany')}
                             </SheetTitle>
                         </SheetHeader>
                         <button
+                            type="button"
                             onClick={() => onOpenChange(false)}
-                            className="p-2 hover:bg-slate-200 rounded-full transition-colors text-slate-400"
+                            className="rounded-full p-2 text-muted-foreground transition-colors hover:bg-muted"
                         >
                             <X size={20} />
                         </button>
                     </div>
-                    <div className="mt-4 flex items-center gap-4 text-[11px] font-semibold text-slate-400 uppercase tracking-widest">
+                    <div className="mt-4 flex items-center gap-4 text-[11px] font-semibold uppercase tracking-widest text-muted-foreground">
                         <div className="flex items-center gap-2">
                             <span className="w-5 h-5 rounded-full bg-teal-600 text-white flex items-center justify-center text-[10px]">
                                 1
                             </span>
                             <span>{t('companies.identity')}</span>
                         </div>
-                        <div className="h-px w-6 bg-slate-200" />
+                        <div className="h-px w-6 bg-border" />
                         <div className="flex items-center gap-2">
-                            <span className="w-5 h-5 rounded-full bg-slate-200 text-slate-500 flex items-center justify-center text-[10px]">
+                            <span className="flex h-5 w-5 items-center justify-center rounded-full bg-muted text-[10px] text-muted-foreground">
                                 2
                             </span>
                             <span>{t('companies.locationMeta')}</span>
@@ -147,24 +148,24 @@ export const CompanyFormSheet: React.FC<CompanyFormSheetProps> = ({
                         <div className="space-y-6">
                             <div className="grid grid-cols-2 gap-6">
                                 <div className="space-y-2">
-                                    <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest">
+                                    <label className="text-[11px] font-black uppercase tracking-widest text-muted-foreground">
                                         {t('companies.englishName')}
                                     </label>
                                     <input
                                         required
-                                        className="w-full h-12 bg-slate-50 border border-slate-200 rounded-xl px-4 text-sm font-bold focus:bg-white focus:border-teal-500 transition-all outline-none"
+                                        className="h-12 w-full rounded-xl border border-border bg-background px-4 text-sm font-bold text-foreground outline-none transition-all focus:border-primary focus:ring-2 focus:ring-ring/20"
                                         value={formData.name.en}
                                         onChange={e => updateBilingual('name', 'en', e.target.value)}
                                     />
                                 </div>
                                 <div className="space-y-2">
-                                    <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest text-end block">
+                                    <label className="text-[11px] font-black uppercase tracking-widest text-muted-foreground text-end block">
                                         {t('companies.arabicName')}
                                     </label>
                                     <input
                                         required
                                         dir="rtl"
-                                        className="w-full h-12 bg-slate-50 border border-slate-200 rounded-xl px-4 text-sm font-bold focus:bg-white focus:border-teal-500 transition-all outline-none text-end"
+                                        className="h-12 w-full rounded-xl border border-border bg-background px-4 text-end text-sm font-bold text-foreground outline-none transition-all focus:border-primary focus:ring-2 focus:ring-ring/20"
                                         value={formData.name.ar}
                                         onChange={e => updateBilingual('name', 'ar', e.target.value)}
                                     />
@@ -173,22 +174,22 @@ export const CompanyFormSheet: React.FC<CompanyFormSheetProps> = ({
 
                             <div className="grid grid-cols-2 gap-6">
                                 <div className="space-y-2">
-                                    <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest">
+                                    <label className="text-[11px] font-black uppercase tracking-widest text-muted-foreground">
                                         {t('companies.sloganEn')}
                                     </label>
                                     <input
-                                        className="w-full h-11 bg-slate-50 border border-slate-200 rounded-xl px-4 text-sm font-medium focus:bg-white focus:border-teal-500 transition-all outline-none"
+                                        className="h-11 w-full rounded-xl border border-border bg-background px-4 text-sm font-medium text-foreground outline-none transition-all focus:border-primary focus:ring-2 focus:ring-ring/20"
                                         value={formData.slogan.en}
                                         onChange={e => setFormData(prev => ({ ...prev, slogan: { ...prev.slogan, en: e.target.value } }))}
                                     />
                                 </div>
                                 <div className="space-y-2">
-                                    <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest text-end block">
+                                    <label className="text-[11px] font-black uppercase tracking-widest text-muted-foreground text-end block">
                                         {t('companies.sloganAr')}
                                     </label>
                                     <input
                                         dir="rtl"
-                                        className="w-full h-11 bg-slate-50 border border-slate-200 rounded-xl px-4 text-sm font-medium focus:bg-white focus:border-teal-500 transition-all outline-none text-end"
+                                        className="h-11 w-full rounded-xl border border-border bg-background px-4 text-end text-sm font-medium text-foreground outline-none transition-all focus:border-primary focus:ring-2 focus:ring-ring/20"
                                         value={formData.slogan.ar}
                                         onChange={e => setFormData(prev => ({ ...prev, slogan: { ...prev.slogan, ar: e.target.value } }))}
                                     />
@@ -197,35 +198,35 @@ export const CompanyFormSheet: React.FC<CompanyFormSheetProps> = ({
 
                             <div className="grid grid-cols-3 gap-6">
                                 <div className="space-y-2">
-                                    <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest">
+                                    <label className="text-[11px] font-black uppercase tracking-widest text-muted-foreground">
                                         {t('companies.acronym')}
                                     </label>
                                     <input
-                                        className="w-full h-11 bg-slate-50 border border-slate-200 rounded-xl px-4 text-sm font-bold focus:bg-white focus:border-teal-500 transition-all outline-none uppercase placeholder:lowercase"
+                                        className="h-11 w-full rounded-xl border border-border bg-background px-4 text-sm font-bold uppercase text-foreground outline-none transition-all placeholder:lowercase focus:border-primary focus:ring-2 focus:ring-ring/20"
                                         value={formData.acronym}
                                         onChange={e => setFormData(prev => ({ ...prev, acronym: e.target.value }))}
                                     />
                                 </div>
                                 <div className="space-y-2">
-                                    <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest">
+                                    <label className="text-[11px] font-black uppercase tracking-widest text-muted-foreground">
                                         {t('companies.handle')}
                                     </label>
                                     <input
-                                        className="w-full h-11 bg-slate-50 border border-slate-200 rounded-xl px-4 text-sm font-medium focus:bg-white focus:border-teal-500 transition-all outline-none"
+                                        className="h-11 w-full rounded-xl border border-border bg-background px-4 text-sm font-medium text-foreground outline-none transition-all focus:border-primary focus:ring-2 focus:ring-ring/20"
                                         placeholder="@handle"
                                         value={formData.handle}
                                         onChange={e => setFormData(prev => ({ ...prev, handle: e.target.value }))}
                                     />
                                 </div>
                                 <div className="space-y-2">
-                                    <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest">
+                                    <label className="text-[11px] font-black uppercase tracking-widest text-muted-foreground">
                                         {t('companies.establishedYear')}
                                     </label>
                                     <input
                                         type="number"
                                         min="1800"
                                         max={new Date().getFullYear()}
-                                        className="w-full h-11 bg-slate-50 border border-slate-200 rounded-xl px-4 text-sm font-bold focus:bg-white focus:border-teal-500 transition-all outline-none"
+                                        className="h-11 w-full rounded-xl border border-border bg-background px-4 text-sm font-bold text-foreground outline-none transition-all focus:border-primary focus:ring-2 focus:ring-ring/20"
                                         value={formData.established}
                                         onChange={e => setFormData(prev => ({ ...prev, established: e.target.value }))}
                                     />
@@ -237,33 +238,33 @@ export const CompanyFormSheet: React.FC<CompanyFormSheetProps> = ({
                         <div className="space-y-6">
                             <div className="grid grid-cols-2 gap-6">
                                 <div className="space-y-2" ref={ownerRef}>
-                                    <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest">
+                                    <label className="text-[11px] font-black uppercase tracking-widest text-muted-foreground">
                                         {t('companies.owner')}
                                     </label>
                                     <div className="relative">
                                         <button
                                             type="button"
                                             onClick={() => setOwnerDropdownOpen((prev) => !prev)}
-                                            className="w-full h-11 bg-slate-50 border border-slate-200 rounded-xl px-4 text-sm font-medium text-start flex items-center justify-between gap-2 focus:bg-white focus:border-teal-500 transition-all outline-none"
+                                            className="flex h-11 w-full items-center justify-between gap-2 rounded-xl border border-border bg-background px-4 text-start text-sm font-medium text-foreground outline-none transition-all focus:border-primary focus:ring-2 focus:ring-ring/20"
                                         >
-                                            <span className={selectedUser ? 'text-slate-800 font-bold' : 'text-slate-400'}>
+                                            <span className={selectedUser ? 'font-bold text-foreground' : 'text-muted-foreground'}>
                                                 {selectedUser
                                                     ? `${selectedUser.name} (${selectedUser.email})`
                                                     : t('companies.selectOwner')}
                                             </span>
-                                            <ChevronDown size={14} className="text-slate-400 shrink-0" />
+                                            <ChevronDown size={14} className="shrink-0 text-muted-foreground" />
                                         </button>
                                         {ownerDropdownOpen && (
-                                            <div className="absolute z-50 mt-1 w-full bg-white border border-slate-200 rounded-xl shadow-xl max-h-64 flex flex-col overflow-hidden">
-                                                <div className="p-2 border-b border-slate-100">
+                                            <div className="absolute z-50 mt-1 flex max-h-64 w-full flex-col overflow-hidden rounded-xl border border-border bg-popover shadow-xl">
+                                                <div className="p-2 border-b border-border">
                                                     <div className="relative">
-                                                        <Search size={14} className="absolute start-3 top-1/2 -translate-y-1/2 text-slate-400" />
+                                                        <Search size={14} className="absolute start-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
                                                         <input
                                                             type="text"
                                                             value={ownerSearch}
                                                             onChange={(e) => setOwnerSearch(e.target.value)}
                                                             placeholder={t('companies.searchUsers')}
-                                                            className="w-full h-8 ps-8 pe-3 bg-slate-50 border border-slate-100 rounded-lg text-xs outline-none focus:border-teal-400 transition-all placeholder:text-slate-400"
+                                                            className="h-8 w-full rounded-lg border border-border bg-muted/50 ps-8 pe-3 text-xs text-foreground outline-none transition-all placeholder:text-muted-foreground focus:border-primary focus:ring-1 focus:ring-ring/30"
                                                             autoFocus
                                                         />
                                                     </div>
@@ -278,24 +279,24 @@ export const CompanyFormSheet: React.FC<CompanyFormSheetProps> = ({
                                                                 setOwnerDropdownOpen(false);
                                                                 setOwnerSearch('');
                                                             }}
-                                                            className={`w-full text-start px-4 py-2.5 flex items-center gap-3 hover:bg-teal-50 transition-colors ${
-                                                                String(u.id) === formData.owner_id ? 'bg-teal-50' : ''
+                                                            className={`flex w-full items-center gap-3 px-4 py-2.5 text-start transition-colors hover:bg-muted ${
+                                                                String(u.id) === formData.owner_id ? 'bg-primary/10' : ''
                                                             }`}
                                                         >
-                                                            <div className="w-7 h-7 rounded-full bg-slate-100 border border-slate-200 flex items-center justify-center text-[10px] font-bold text-slate-500 shrink-0 uppercase">
+                                                            <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-border bg-muted text-[10px] font-bold uppercase text-muted-foreground">
                                                                 {u.name?.charAt(0) || '?'}
                                                             </div>
                                                             <div className="min-w-0 flex-1">
-                                                                <p className="text-xs font-bold text-slate-800 truncate">{u.name}</p>
-                                                                <p className="text-[10px] text-slate-400 truncate">{u.email}</p>
+                                                                <p className="truncate text-xs font-bold text-foreground">{u.name}</p>
+                                                                <p className="truncate text-[10px] text-muted-foreground">{u.email}</p>
                                                             </div>
                                                             {String(u.id) === formData.owner_id && (
-                                                                <span className="text-teal-600 text-[10px] font-bold shrink-0">&#10003;</span>
+                                                                <span className="shrink-0 text-[10px] font-bold text-primary">&#10003;</span>
                                                             )}
                                                         </button>
                                                     ))}
                                                     {filteredUsers.length === 0 && (
-                                                        <p className="px-4 py-3 text-xs text-slate-400 text-center">
+                                                        <p className="px-4 py-3 text-center text-xs text-muted-foreground">
                                                             {t('companies.noUsersFound')}
                                                         </p>
                                                     )}
@@ -305,11 +306,11 @@ export const CompanyFormSheet: React.FC<CompanyFormSheetProps> = ({
                                     </div>
                                 </div>
                                 <div className="space-y-2">
-                                    <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest">
+                                    <label className="text-[11px] font-black uppercase tracking-widest text-muted-foreground">
                                         {t('companies.industryUlid')}
                                     </label>
                                     <input
-                                        className="w-full h-11 bg-slate-50 border border-slate-200 rounded-xl px-4 text-sm font-mono focus:bg-white focus:border-teal-500 transition-all outline-none"
+                                        className="h-11 w-full rounded-xl border border-border bg-background px-4 font-mono text-sm text-foreground outline-none transition-all focus:border-primary focus:ring-2 focus:ring-ring/20"
                                         value={formData.industry_id}
                                         onChange={e => setFormData(prev => ({ ...prev, industry_id: e.target.value }))}
                                     />
@@ -317,13 +318,13 @@ export const CompanyFormSheet: React.FC<CompanyFormSheetProps> = ({
                             </div>
 
                             <div className="space-y-3">
-                                <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest flex items-center gap-1">
+                                <label className="text-[11px] font-black uppercase tracking-widest text-muted-foreground flex items-center gap-1">
                                     {t('companies.expertises')}
-                                    <span className="text-slate-300 font-bold ms-1">
+                                    <span className="ms-1 font-bold text-muted-foreground">
                                         ({formData.expertise_ids.length})
                                     </span>
                                 </label>
-                                <div className="flex flex-wrap gap-2 p-4 bg-slate-50 border border-slate-200 rounded-2xl min-h-[90px]">
+                                <div className="flex min-h-[90px] flex-wrap gap-2 rounded-2xl border border-border bg-muted/40 p-4">
                                     {allExpertises.map(tag => {
                                         const id = String(tag.id);
                                         const isSelected = formData.expertise_ids.includes(id);
@@ -332,10 +333,10 @@ export const CompanyFormSheet: React.FC<CompanyFormSheetProps> = ({
                                                 key={id}
                                                 type="button"
                                                 onClick={() => toggleExpertise(id)}
-                                                className={`px-3 py-1.5 rounded-full text-[11px] font-bold border transition-all ${
+                                                className={`rounded-full border px-3 py-1.5 text-[11px] font-bold transition-all ${
                                                     isSelected
-                                                        ? 'bg-teal-600 border-teal-600 text-white shadow-md shadow-teal-600/10'
-                                                        : 'bg-white border-slate-200 text-slate-600 hover:border-teal-400 hover:text-teal-600'
+                                                        ? 'border-primary bg-primary text-primary-foreground shadow-md shadow-primary/10'
+                                                        : 'border-border bg-card text-muted-foreground hover:border-primary hover:text-primary'
                                                 }`}
                                             >
                                                 <span className="inline-flex items-center gap-1">
@@ -346,7 +347,7 @@ export const CompanyFormSheet: React.FC<CompanyFormSheetProps> = ({
                                         );
                                     })}
                                     {allExpertises.length === 0 && (
-                                        <p className="text-xs text-slate-400 italic">
+                                        <p className="text-xs italic text-muted-foreground">
                                             {t('companies.noExpertises')}
                                         </p>
                                     )}
@@ -383,10 +384,10 @@ export const CompanyFormSheet: React.FC<CompanyFormSheetProps> = ({
                     </div>
 
                     {/* Footer */}
-                    <div className="p-6 border-t border-slate-100 flex justify-end gap-4 bg-slate-50">
+                    <div className="flex justify-end gap-4 border-t border-border bg-muted/50 p-6">
                         <button
                             type="button"
-                            className="px-6 py-2.5 rounded-xl text-sm font-bold text-slate-500 hover:bg-slate-200 transition-all"
+                            className="rounded-xl px-6 py-2.5 text-sm font-bold text-muted-foreground transition-all hover:bg-muted"
                             onClick={() => onOpenChange(false)}
                         >
                             {t('common.cancel')}
@@ -394,7 +395,7 @@ export const CompanyFormSheet: React.FC<CompanyFormSheetProps> = ({
                         <button
                             type="submit"
                             disabled={formSaving}
-                            className="px-10 py-2.5 bg-teal-600 rounded-xl text-sm font-black text-white hover:bg-teal-700 transition-all flex items-center gap-2"
+                            className="flex items-center gap-2 rounded-xl bg-primary px-10 py-2.5 text-sm font-black text-primary-foreground transition-all hover:bg-primary/90 disabled:opacity-50"
                         >
                             {formSaving && <Loader2 className="animate-spin" size={16} />}
                             {t('companies.saveCompany')}
@@ -422,19 +423,19 @@ interface GovernanceToggleProps {
  * Small toggle card used in the governance & visibility section of the form.
  */
 const GovernanceToggle: React.FC<GovernanceToggleProps> = ({ label, description, checked, onChange }) => (
-    <div className="flex items-center justify-between p-3 bg-white border border-slate-100 rounded-2xl shadow-sm">
+    <div className="flex items-center justify-between rounded-2xl border border-border bg-card p-3 shadow-sm">
         <div className="space-y-0.5">
-            <p className="text-xs font-bold text-slate-800">{label}</p>
-            <p className="text-[10px] text-slate-400 font-medium">{description}</p>
+            <p className="text-xs font-bold text-foreground">{label}</p>
+            <p className="text-[10px] font-medium text-muted-foreground">{description}</p>
         </div>
-        <div className="relative inline-flex items-center cursor-pointer scale-90">
+        <div className="relative inline-flex scale-90 cursor-pointer items-center">
             <input
                 type="checkbox"
                 checked={checked}
                 onChange={e => onChange(e.target.checked)}
-                className="sr-only peer"
+                className="peer sr-only"
             />
-            <div className="w-10 h-5 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-teal-600" />
+            <div className="peer h-5 w-10 rounded-full bg-muted after:absolute after:start-[2px] after:top-[2px] after:h-4 after:w-4 after:rounded-full after:border after:border-border after:bg-background after:transition-all after:content-[''] peer-checked:bg-primary peer-checked:after:translate-x-full peer-checked:after:border-transparent peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-ring/40" />
         </div>
     </div>
 );

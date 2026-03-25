@@ -114,7 +114,7 @@ const Tags = () => {
             <div className="flex items-center justify-center min-h-[60vh]">
                 <div className="flex flex-col items-center gap-4">
                     <div className="w-12 h-12 border-4 border-teal-500/20 border-t-teal-500 rounded-full animate-spin"></div>
-                    <p className="text-slate-400 font-bold animate-pulse text-sm">Indexing Platform Taxonomy...</p>
+                    <p className="text-sm font-bold text-muted-foreground animate-pulse">Indexing Platform Taxonomy...</p>
                 </div>
             </div>
         );
@@ -124,12 +124,12 @@ const Tags = () => {
         <div className="space-y-6 animate-in fade-in zoom-in duration-500 pb-12">
             <div className="flex items-center justify-between">
                 <div>
-                    <h2 className="text-2xl font-bold text-slate-900 font-outfit">Tags & Taxonomy</h2>
-                    <p className="text-slate-500 text-sm mt-1">{totalTags} total tags used across products and services</p>
+                    <h2 className="text-2xl font-bold text-foreground font-outfit">Tags & Taxonomy</h2>
+                    <p className="mt-1 text-sm text-muted-foreground">{totalTags} total tags used across products and services</p>
                 </div>
                 <button
                     onClick={() => handleOpenModal()}
-                    className="flex items-center gap-2 px-6 py-2.5 bg-[#008080] rounded-xl text-sm font-bold text-white hover:bg-[#005f5f] transition-all shadow-lg"
+                    className="flex items-center gap-2 rounded-xl bg-primary px-6 py-2.5 text-sm font-bold text-primary-foreground shadow-lg transition-all hover:bg-primary/90"
                 >
                     <Plus size={18} />
                     <span>Create Tag</span>
@@ -138,7 +138,7 @@ const Tags = () => {
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
                 <div className="premium-card p-4 flex items-center gap-4 relative group transition-all bg-gradient-to-r from-teal-500 to-teal-600 text-white shadow-xl shadow-teal-500/20">
-                    <div className="p-3 bg-white/20 rounded-xl">
+                    <div className="rounded-xl bg-white/20 p-3">
                         <TagIcon size={20} />
                     </div>
                     <div className="flex-1 min-w-0">
@@ -148,19 +148,19 @@ const Tags = () => {
                 </div>
 
                 {tagList.map((tag) => (
-                    <div key={tag.id} className="premium-card p-4 flex items-center justify-between hover:border-teal-200 hover:shadow-lg transition-all bg-white group border-slate-100">
+                    <div key={tag.id} className="premium-card group flex items-center justify-between border-border p-4 transition-all hover:border-teal-500/40 hover:shadow-lg">
                         <div className="flex items-center gap-3">
                             <div className="w-2 h-2 rounded-full bg-teal-400"></div>
                             <div>
-                                <h4 className="font-bold text-slate-800 text-sm">{displayBilingual(tag.name)}</h4>
-                                <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">ID: {tag.id}</p>
+                                <h4 className="text-sm font-bold text-foreground">{displayBilingual(tag.name)}</h4>
+                                <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">ID: {tag.id}</p>
                             </div>
                         </div>
                         <div className="flex items-center gap-1 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity">
-                            <button onClick={() => handleOpenModal(tag)} className="p-1.5 text-slate-400 hover:text-teal-600 hover:bg-teal-50 rounded-lg transition-colors border border-transparent hover:border-teal-100">
+                            <button onClick={() => handleOpenModal(tag)} className="rounded-lg border border-transparent p-1.5 text-muted-foreground transition-colors hover:border-primary/30 hover:bg-muted hover:text-primary">
                                 <Edit3 size={14} />
                             </button>
-                            <button onClick={() => setDeleteTagId(tag.id)} className="p-1.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors border border-transparent hover:border-rose-100">
+                            <button onClick={() => setDeleteTagId(tag.id)} className="rounded-lg border border-transparent p-1.5 text-muted-foreground transition-colors hover:border-destructive/30 hover:bg-destructive/10 hover:text-destructive">
                                 <Trash2 size={14} />
                             </button>
                         </div>
@@ -169,12 +169,12 @@ const Tags = () => {
             </div>
 
             {tagList.length === 0 && (
-                <div className="premium-card p-12 flex flex-col items-center justify-center text-center bg-white border border-dashed border-slate-200">
-                    <div className="w-16 h-16 bg-slate-50 rounded-full flex items-center justify-center mb-4">
-                        <TagIcon size={32} className="text-slate-300" />
+                <div className="premium-card flex flex-col items-center justify-center border border-dashed border-border p-12 text-center">
+                    <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-muted">
+                        <TagIcon size={32} className="text-muted-foreground" />
                     </div>
-                    <h3 className="text-lg font-bold text-slate-800">No Tags Found</h3>
-                    <p className="text-slate-400 text-sm max-w-xs mt-2">The platform taxonomy is currently empty. Start by creating a new descriptive tag.</p>
+                    <h3 className="text-lg font-bold text-foreground">No Tags Found</h3>
+                    <p className="mt-2 max-w-xs text-sm text-muted-foreground">The platform taxonomy is currently empty. Start by creating a new descriptive tag.</p>
                 </div>
             )}
 
@@ -184,17 +184,17 @@ const Tags = () => {
                     showCloseButton={false}
                     className="p-0 !max-w-md w-full max-h-screen overflow-y-auto border-none shadow-2xl flex flex-col gap-0 sm:!max-w-md"
                 >
-                    <div className="p-6 border-b shrink-0 bg-slate-50">
+                    <div className="shrink-0 border-b border-border bg-muted/50 p-6">
                         <div className="flex items-center justify-between">
                             <SheetHeader className="!p-0 !m-0">
-                                <SheetTitle className="text-xl font-bold font-outfit text-slate-900">
+                                <SheetTitle className="text-xl font-bold font-outfit text-foreground">
                                     {editingId ? 'Edit Tag' : 'Create Tag'}
                                 </SheetTitle>
                             </SheetHeader>
                             <button
                                 type="button"
                                 onClick={() => setIsModalOpen(false)}
-                                className="p-2 hover:bg-slate-200 rounded-full transition-colors text-slate-400"
+                                className="rounded-full p-2 text-muted-foreground transition-colors hover:bg-muted"
                             >
                                 <X size={20} />
                             </button>
@@ -204,17 +204,17 @@ const Tags = () => {
                     <form onSubmit={handleSubmit} className="flex flex-col flex-1 min-h-0">
                         <div className="p-6 space-y-6 flex-1 overflow-y-auto premium-scrollbar">
                             <div className="space-y-2">
-                                <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest ps-2">English Name</label>
-                                <input required className="w-full h-12 bg-slate-50 border border-slate-200 rounded-2xl px-4 text-sm font-bold focus:bg-white focus:border-teal-500 transition-all outline-none" value={formData.name.en} onChange={e => updateBilingual('name', 'en', e.target.value)} placeholder="Summer Sale" />
+                                <label className="ps-2 text-[11px] font-black uppercase tracking-widest text-muted-foreground">English Name</label>
+                                <input required className="h-12 w-full rounded-2xl border border-border bg-background px-4 text-sm font-bold text-foreground outline-none transition-all focus:border-primary focus:ring-2 focus:ring-ring/20" value={formData.name.en} onChange={e => updateBilingual('name', 'en', e.target.value)} placeholder="Summer Sale" />
                             </div>
                             <div className="space-y-2">
-                                <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest text-end block pe-2">الإسم بالعربية</label>
-                                <input required dir="rtl" className="w-full h-12 bg-slate-50 border border-slate-200 rounded-2xl px-4 text-sm font-bold focus:bg-white focus:border-teal-500 transition-all outline-none text-right" value={formData.name.ar} onChange={e => updateBilingual('name', 'ar', e.target.value)} placeholder="تخفيضات الصيف" />
+                                <label className="block pe-2 text-end text-[11px] font-black uppercase tracking-widest text-muted-foreground">الإسم بالعربية</label>
+                                <input required dir="rtl" className="h-12 w-full rounded-2xl border border-border bg-background px-4 text-right text-sm font-bold text-foreground outline-none transition-all focus:border-primary focus:ring-2 focus:ring-ring/20" value={formData.name.ar} onChange={e => updateBilingual('name', 'ar', e.target.value)} placeholder="تخفيضات الصيف" />
                             </div>
                         </div>
-                        <div className="p-6 border-t border-slate-100 flex justify-end gap-3 bg-slate-50 shrink-0">
-                            <button type="button" className="px-6 py-2.5 rounded-xl text-sm font-bold text-slate-500 hover:bg-slate-200 transition-all" onClick={() => setIsModalOpen(false)}>Cancel</button>
-                            <button type="submit" disabled={formSaving} className="px-8 py-2.5 bg-teal-600 rounded-xl text-sm font-black text-white hover:bg-teal-700 transition-all flex items-center gap-2 shadow-lg shadow-teal-500/20">
+                        <div className="flex shrink-0 justify-end gap-3 border-t border-border bg-muted/50 p-6">
+                            <button type="button" className="rounded-xl px-6 py-2.5 text-sm font-bold text-muted-foreground transition-all hover:bg-muted" onClick={() => setIsModalOpen(false)}>Cancel</button>
+                            <button type="submit" disabled={formSaving} className="flex items-center gap-2 rounded-xl bg-primary px-8 py-2.5 text-sm font-black text-primary-foreground shadow-lg transition-all hover:bg-primary/90 disabled:opacity-50">
                                 {formSaving && <Loader2 className="animate-spin" size={16} />} Save Tag
                             </button>
                         </div>
@@ -227,13 +227,13 @@ const Tags = () => {
                     <DialogHeader>
                         <DialogTitle>Delete tag?</DialogTitle>
                     </DialogHeader>
-                    <p className="text-sm text-slate-500 mt-2">
+                    <p className="text-sm text-muted-foreground mt-2">
                         This action cannot be undone. The tag will be removed from the system taxonomy.
                     </p>
                     <DialogFooter className="mt-4">
                         <button
                             type="button"
-                            className="px-6 py-2.5 rounded-xl text-sm font-bold text-slate-500 hover:bg-slate-200 transition-all"
+                            className="rounded-xl px-6 py-2.5 text-sm font-bold text-muted-foreground transition-all hover:bg-muted"
                             onClick={() => setDeleteTagId(null)}
                         >
                             Cancel

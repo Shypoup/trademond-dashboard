@@ -81,8 +81,8 @@ const Analytics = () => {
     <div className="space-y-6 pb-12 animate-in fade-in duration-500">
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-slate-900 font-outfit">{t('sidebar.analytics')}</h1>
-          <p className="mt-1 text-sm text-slate-500">{t('analyticsPage.subtitle')}</p>
+          <h1 className="text-2xl font-bold text-foreground font-outfit">{t('sidebar.analytics')}</h1>
+          <p className="mt-1 text-sm text-muted-foreground">{t('analyticsPage.subtitle')}</p>
         </div>
         <div className="flex flex-wrap items-center gap-2">
           <label className="flex items-center gap-2 text-sm font-medium text-slate-600">
@@ -129,9 +129,9 @@ const Analytics = () => {
         ))}
       </div>
 
-      <div className="premium-card bg-white p-4">
+      <div className="premium-card p-4">
         {loading && (
-          <div className="mb-4 flex items-center gap-2 text-sm text-slate-500">
+          <div className="mb-4 flex items-center gap-2 text-sm text-muted-foreground">
             <Loader2 className="animate-spin" size={18} />
             {t('common.loading')}
           </div>

@@ -135,16 +135,16 @@ const AnalyticsExport = () => {
   return (
     <div className="space-y-8 pb-12 animate-in fade-in duration-500">
       <div>
-        <h1 className="text-2xl font-bold text-slate-900 font-outfit">{t('sidebar.analyticsExport')}</h1>
-        <p className="mt-1 text-sm text-slate-500">{t('analyticsExportPage.subtitle')}</p>
+        <h1 className="text-2xl font-bold text-foreground font-outfit">{t('sidebar.analyticsExport')}</h1>
+        <p className="mt-1 text-sm text-muted-foreground">{t('analyticsExportPage.subtitle')}</p>
       </div>
 
       <div className="grid gap-6 lg:grid-cols-2">
-        <section className="premium-card space-y-4 bg-white p-6">
+        <section className="premium-card space-y-4 p-6">
           <h2 className="text-lg font-bold text-slate-900">{t('analyticsExportPage.visitsTitle')}</h2>
           <div className="grid gap-3 sm:grid-cols-2">
             <label className="space-y-1 text-sm">
-              <span className="text-[11px] font-bold uppercase text-slate-400">{t('analyticsExportPage.dateFrom')}</span>
+              <span className="text-[11px] font-bold uppercase text-muted-foreground">{t('analyticsExportPage.dateFrom')}</span>
               <input
                 type="date"
                 value={dateFrom}
@@ -153,7 +153,7 @@ const AnalyticsExport = () => {
               />
             </label>
             <label className="space-y-1 text-sm">
-              <span className="text-[11px] font-bold uppercase text-slate-400">{t('analyticsExportPage.dateTo')}</span>
+              <span className="text-[11px] font-bold uppercase text-muted-foreground">{t('analyticsExportPage.dateTo')}</span>
               <input
                 type="date"
                 value={dateTo}
@@ -163,7 +163,7 @@ const AnalyticsExport = () => {
             </label>
           </div>
           <label className="space-y-1 text-sm">
-            <span className="text-[11px] font-bold uppercase text-slate-400">{t('analyticsExportPage.format')}</span>
+            <span className="text-[11px] font-bold uppercase text-muted-foreground">{t('analyticsExportPage.format')}</span>
             <select
               value={format}
               onChange={(e) => setFormat(e.target.value as AnalyticsExportFormat)}
@@ -174,7 +174,7 @@ const AnalyticsExport = () => {
             </select>
           </label>
           <label className="space-y-1 text-sm">
-            <span className="text-[11px] font-bold uppercase text-slate-400">{t('analyticsExportPage.entityType')}</span>
+            <span className="text-[11px] font-bold uppercase text-muted-foreground">{t('analyticsExportPage.entityType')}</span>
             <select
               value={entityType}
               onChange={(e) => setEntityType(e.target.value as AnalyticsVisitEntityType)}
@@ -197,9 +197,9 @@ const AnalyticsExport = () => {
           </button>
         </section>
 
-        <section className="premium-card space-y-4 bg-white p-6">
+        <section className="premium-card space-y-4 p-6">
           <h2 className="text-lg font-bold text-slate-900">{t('analyticsExportPage.searchesTitle')}</h2>
-          <p className="text-xs text-slate-500">{t('analyticsExportPage.searchesHint')}</p>
+          <p className="text-xs text-muted-foreground">{t('analyticsExportPage.searchesHint')}</p>
           <button
             type="button"
             disabled={busy !== null}
@@ -212,11 +212,11 @@ const AnalyticsExport = () => {
         </section>
       </div>
 
-      <div className="premium-card bg-white p-4">
+      <div className="premium-card p-4">
         <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
           <h3 className="text-sm font-bold text-slate-800">{t('analyticsExportPage.lastResponse')}</h3>
           {polling && (
-            <span className="inline-flex items-center gap-1 text-xs text-slate-500">
+            <span className="inline-flex items-center gap-1 text-xs text-muted-foreground">
               <Loader2 className="animate-spin" size={14} />
               {t('analyticsExportPage.polling')}
             </span>

@@ -26,6 +26,7 @@ import {
     Bar,
     Cell
 } from 'recharts';
+import { COLORS } from '@utils/core/colors';
 
 const stats = [
     { label: 'Total Users', value: '12,840', change: '+12.5%', icon: Users, color: 'text-blue-500', bg: 'bg-blue-50' },
@@ -99,7 +100,7 @@ const Dashboard = () => {
             <div className="flex items-center justify-center min-h-[60vh]">
                 <div className="flex flex-col items-center gap-4">
                     <div className="w-12 h-12 border-4 border-teal-500/20 border-t-teal-500 rounded-full animate-spin"></div>
-                    <p className="text-slate-400 font-bold animate-pulse text-sm">Synchronizing Platform Data...</p>
+                    <p className="text-sm font-bold text-muted-foreground animate-pulse">Synchronizing Platform Data...</p>
                 </div>
             </div>
         );
@@ -109,11 +110,11 @@ const Dashboard = () => {
         <div className="space-y-8 animate-in fade-in duration-500">
             <div className="flex items-center justify-between">
                 <div>
-                    <h2 className="text-2xl font-bold text-slate-900 font-outfit">Admin Overview</h2>
-                    <p className="text-slate-500 text-sm mt-1">Platform metrics and health snapshot for today.</p>
+                    <h2 className="text-2xl font-bold text-foreground font-outfit">Admin Overview</h2>
+                    <p className="mt-1 text-sm text-muted-foreground">Platform metrics and health snapshot for today.</p>
                 </div>
                 <div className="flex gap-3">
-                    <button className="flex items-center gap-2 px-4 py-2 bg-white border border-slate-200 rounded-xl text-sm font-bold text-slate-700 hover:bg-slate-50 transition-all shadow-sm">
+                    <button className="flex items-center gap-2 rounded-xl border border-border bg-card px-4 py-2 text-sm font-bold text-foreground shadow-sm transition-all hover:bg-muted">
                         <Clock size={16} />
                         <span>Last 30 Days</span>
                     </button>
@@ -132,7 +133,7 @@ const Dashboard = () => {
                                 <stat.icon size={22} />
                             </div>
                             {stat.change && (
-                                <div className="flex items-center gap-0.5 text-emerald-500 bg-emerald-50 px-2 py-0.5 rounded-full text-[11px] font-bold">
+                                <div className="flex items-center gap-0.5 rounded-full bg-emerald-50 px-2 py-0.5 text-[11px] font-bold text-emerald-600 dark:bg-emerald-950/50 dark:text-emerald-400">
                                     <TrendingUp size={12} />
                                     <span>{stat.change}</span>
                                 </div>
@@ -144,11 +145,11 @@ const Dashboard = () => {
                             )}
                         </div>
                         <div className="mt-4">
-                            <p className="text-slate-500 text-[13px] font-medium">{stat.label}</p>
-                            <h3 className="text-2xl font-bold text-slate-900 mt-1 font-outfit">{stat.value}</h3>
+                            <p className="text-[13px] font-medium text-muted-foreground">{stat.label}</p>
+                            <h3 className="text-2xl font-bold text-foreground mt-1 font-outfit">{stat.value}</h3>
                         </div>
                         {/* Subtle background decoration */}
-                        <div className="absolute -right-2 -bottom-2 text-slate-500/5 transition-colors group-hover:text-teal-500/5">
+                        <div className="absolute -right-2 -bottom-2 text-muted-foreground/5 transition-colors group-hover:text-primary/10">
                             <stat.icon size={80} />
                         </div>
                     </div>
@@ -158,10 +159,10 @@ const Dashboard = () => {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                 <div className="premium-card p-6">
                     <div className="flex items-center justify-between mb-8">
-                        <h4 className="font-bold text-slate-800">User Signups Trend</h4>
+                        <h4 className="font-bold text-foreground">User Signups Trend</h4>
                         <div className="flex items-center gap-2">
                             <div className="w-3 h-3 bg-teal-500 rounded-full"></div>
-                            <span className="text-xs font-semibold text-slate-500">This Month</span>
+                            <span className="text-xs font-semibold text-muted-foreground">This Month</span>
                         </div>
                     </div>
                     <div className="h-64">
@@ -173,7 +174,7 @@ const Dashboard = () => {
                                         <stop offset="95%" stopColor="#008080" stopOpacity={0} />
                                     </linearGradient>
                                 </defs>
-                                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
+                                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="var(--color-border)" />
                                 <XAxis dataKey="name" hide />
                                 <YAxis hide />
                                 <Tooltip
@@ -188,24 +189,27 @@ const Dashboard = () => {
 
                 <div className="premium-card p-6">
                     <div className="flex items-center justify-between mb-8">
-                        <h4 className="font-bold text-slate-800">Listings Added Trend</h4>
-                        <select className="bg-slate-50 text-[11px] font-bold text-slate-500 border-none outline-none pr-6 rounded-lg uppercase tracking-wider">
+                        <h4 className="font-bold text-foreground">Listings Added Trend</h4>
+                        <select className="rounded-lg border-none bg-muted/50 pr-6 text-[11px] font-bold uppercase tracking-wider text-muted-foreground outline-none">
                             <option>Last 4 Weeks</option>
                         </select>
                     </div>
                     <div className="h-64">
                         <ResponsiveContainer width="100%" height="100%">
                             <BarChart data={listingData}>
-                                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
+                                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="var(--color-border)" />
                                 <XAxis dataKey="name" hide />
                                 <YAxis hide />
                                 <Tooltip
-                                    cursor={{ fill: '#f8fafc' }}
+                                    cursor={{ fill: 'var(--color-muted)' }}
                                     contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)' }}
                                 />
                                 <Bar dataKey="value" radius={[6, 6, 0, 0]}>
                                     {listingData.map((entry, index) => (
-                                        <Cell key={`cell-${index}`} fill={index === 1 || index === 3 ? '#008080' : '#cbd5e1'} />
+                                        <Cell
+                                            key={`cell-${index}`}
+                                            fill={index === 1 || index === 3 ? COLORS.brandCyan : 'var(--color-muted)'}
+                                        />
                                     ))}
                                 </Bar>
                             </BarChart>
@@ -216,21 +220,27 @@ const Dashboard = () => {
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                 <div className="premium-card flex flex-col">
-                    <div className="p-6 border-b border-slate-50 flex items-center justify-between">
-                        <h4 className="font-bold text-slate-800">Pending Approvals</h4>
+                    <div className="p-6 border-b border-border flex items-center justify-between">
+                        <h4 className="font-bold text-foreground">Pending Approvals</h4>
                         <button className="text-[11px] font-bold text-teal-600 uppercase hover:underline">View All</button>
                     </div>
                     <div className="p-6 space-y-6 flex-1">
                         {approvals.map((item, idx) => (
                             <div key={idx} className="flex items-center gap-4 group cursor-pointer">
-                                <div className="w-10 h-10 rounded-full bg-slate-50 flex items-center justify-center text-[10px] font-bold text-slate-400 border border-slate-100 group-hover:bg-teal-50 group-hover:text-teal-600 transition-colors">
+                                <div className="flex h-10 w-10 items-center justify-center rounded-full border border-border bg-muted text-[10px] font-bold text-muted-foreground transition-colors group-hover:bg-primary/10 group-hover:text-primary">
                                     {item.name.split(' ').map(n => n[0]).join('')}
                                 </div>
                                 <div className="flex-1 min-w-0">
-                                    <h5 className="text-[13px] font-bold text-slate-800 truncate">{item.name}</h5>
-                                    <p className="text-[11px] text-slate-400 font-medium uppercase tracking-wider mt-0.5">{item.type}</p>
+                                    <h5 className="text-[13px] font-bold text-foreground truncate">{item.name}</h5>
+                                    <p className="mt-0.5 text-[11px] font-medium uppercase tracking-wider text-muted-foreground">{item.type}</p>
                                 </div>
-                                <div className={item.status === 'New' ? 'bg-amber-50 text-amber-600 text-[10px] px-2 py-0.5 rounded-full font-bold' : 'text-slate-400 text-[10px] font-semibold'}>
+                                <div
+                                    className={
+                                        item.status === 'New'
+                                            ? 'rounded-full bg-amber-50 px-2 py-0.5 text-[10px] font-bold text-amber-700 dark:bg-amber-950/50 dark:text-amber-400'
+                                            : 'text-[10px] font-semibold text-muted-foreground'
+                                    }
+                                >
                                     {item.status}
                                 </div>
                             </div>
@@ -239,44 +249,46 @@ const Dashboard = () => {
                 </div>
 
                 <div className="premium-card flex flex-col">
-                    <div className="p-6 border-b border-slate-50 flex items-center justify-between">
+                    <div className="p-6 border-b border-border flex items-center justify-between">
                         <div className="flex items-center gap-2">
-                            <h4 className="font-bold text-slate-800">Recent Reports</h4>
-                            <span className="bg-rose-50 text-rose-500 text-[10px] font-bold uppercase px-1.5 py-0.5 rounded-md flex items-center gap-1">
+                            <h4 className="font-bold text-foreground">Recent Reports</h4>
+                            <span className="flex items-center gap-1 rounded-md bg-rose-50 px-1.5 py-0.5 text-[10px] font-bold uppercase text-rose-600 dark:bg-rose-950/40 dark:text-rose-400">
                                 <div className="w-1 h-1 bg-rose-500 rounded-full"></div>
                                 Urgent
                             </span>
                         </div>
                     </div>
                     <div className="p-6 space-y-4">
-                        <div className="p-4 bg-rose-50/30 border border-rose-100 rounded-2xl relative overflow-hidden">
-                            <div className="flex justify-between items-start">
-                                <div className="bg-rose-50 text-rose-600 text-[9px] font-black uppercase tracking-tighter px-1.5 rounded block">High Priority</div>
-                                <span className="text-[10px] text-rose-500 font-bold">Flagged User</span>
+                        <div className="relative overflow-hidden rounded-2xl border border-rose-200/80 bg-rose-50/30 p-4 dark:border-rose-900/50 dark:bg-rose-950/20">
+                            <div className="flex items-start justify-between">
+                                <div className="block rounded bg-rose-50 px-1.5 text-[9px] font-black uppercase tracking-tighter text-rose-700 dark:bg-rose-950/60 dark:text-rose-300">
+                                    High Priority
+                                </div>
+                                <span className="text-[10px] font-bold text-rose-600 dark:text-rose-400">Flagged User</span>
                             </div>
-                            <h5 className="font-bold text-slate-800 mt-2">User @JohnDoe22 reported for spam</h5>
-                            <p className="text-[11px] text-slate-500 mt-1">Reported by 3 unique companies in 24h.</p>
+                            <h5 className="font-bold text-foreground mt-2">User @JohnDoe22 reported for spam</h5>
+                            <p className="mt-1 text-[11px] text-muted-foreground">Reported by 3 unique companies in 24h.</p>
                             <div className="flex gap-2 mt-4">
                                 <button className="flex-1 py-1.5 bg-rose-500 text-white rounded-lg text-xs font-bold hover:bg-rose-600 transition-colors">Suspend</button>
-                                <button className="flex-1 py-1.5 bg-white border border-slate-200 text-slate-600 rounded-lg text-xs font-bold hover:bg-slate-50 transition-colors">Dismiss</button>
+                                <button className="flex-1 rounded-lg border border-border bg-card py-1.5 text-xs font-bold text-foreground transition-colors hover:bg-muted">Dismiss</button>
                             </div>
                         </div>
 
-                        <div className="p-4 bg-slate-50/50 border border-slate-100 rounded-2xl group hover:border-teal-200 transition-colors cursor-pointer">
-                            <h5 className="font-bold text-slate-800 text-[13px]">Counterfeit product claim #9021</h5>
-                            <p className="text-[11px] text-slate-400 mt-1 italic">Listing: "Original Designer Watch Luxury"</p>
-                            <div className="flex items-center justify-between mt-3">
-                                <span className="text-[10px] text-slate-400">Sent to moderation 1h ago</span>
-                                <ArrowUpRight size={14} className="text-slate-300 group-hover:text-teal-500" />
+                        <div className="group cursor-pointer rounded-2xl border border-border bg-muted/40 p-4 transition-colors hover:border-primary/30">
+                            <h5 className="text-[13px] font-bold text-foreground">Counterfeit product claim #9021</h5>
+                            <p className="mt-1 text-[11px] italic text-muted-foreground">Listing: "Original Designer Watch Luxury"</p>
+                            <div className="mt-3 flex items-center justify-between">
+                                <span className="text-[10px] text-muted-foreground">Sent to moderation 1h ago</span>
+                                <ArrowUpRight size={14} className="text-muted-foreground group-hover:text-primary" />
                             </div>
                         </div>
                     </div>
                 </div>
 
                 <div className="premium-card flex flex-col">
-                    <div className="p-6 border-b border-slate-50 flex items-center justify-between">
-                        <h4 className="font-bold text-slate-800">Support Tickets</h4>
-                        <span className="bg-teal-50 text-teal-600 text-[10px] font-bold px-2 py-0.5 rounded-md">12 Active</span>
+                    <div className="p-6 border-b border-border flex items-center justify-between">
+                        <h4 className="font-bold text-foreground">Support Tickets</h4>
+                        <span className="rounded-md bg-primary/10 px-2 py-0.5 text-[10px] font-bold text-primary">12 Active</span>
                     </div>
                     <div className="p-6 space-y-6">
                         {[
@@ -284,20 +296,20 @@ const Dashboard = () => {
                             { name: 'Mark Thompson', msg: 'Refund request #3391', time: '11:20 AM', avatar: 'https://ui-avatars.com/api/?name=MT&background=818cf8&color=fff' },
                             { name: 'Linda Chen', msg: 'Question about subsc...', time: '09:05 AM', avatar: 'https://ui-avatars.com/api/?name=LC&background=f472b6&color=fff' },
                         ].map((ticket, idx) => (
-                            <div key={idx} className="flex items-center gap-4 group cursor-pointer hover:bg-slate-50 p-2 -m-2 rounded-xl transition-colors">
-                                <div className="w-10 h-10 rounded-full border border-slate-100 overflow-hidden">
+                            <div key={idx} className="group -m-2 flex cursor-pointer items-center gap-4 rounded-xl p-2 transition-colors hover:bg-muted/50">
+                                <div className="h-10 w-10 overflow-hidden rounded-full border border-border">
                                     <img src={ticket.avatar} alt={ticket.name} />
                                 </div>
                                 <div className="flex-1 min-w-0">
                                     <div className="flex justify-between">
-                                        <h5 className="text-[13px] font-bold text-slate-800">{ticket.name}</h5>
-                                        <span className="text-[10px] text-slate-400">{ticket.time}</span>
+                                        <h5 className="text-[13px] font-bold text-foreground">{ticket.name}</h5>
+                                        <span className="text-[10px] text-muted-foreground">{ticket.time}</span>
                                     </div>
-                                    <p className="text-[11px] text-slate-500 truncate mt-0.5 italic">{ticket.msg}</p>
+                                    <p className="mt-0.5 truncate text-[11px] italic text-muted-foreground">{ticket.msg}</p>
                                 </div>
                             </div>
                         ))}
-                        <button className="w-full mt-4 py-2.5 border border-teal-100 text-teal-600 rounded-xl text-xs font-bold hover:bg-teal-50 transition-all uppercase tracking-wide">
+                        <button className="mt-4 w-full rounded-xl border border-border py-2.5 text-xs font-bold uppercase tracking-wide text-primary transition-all hover:bg-muted">
                             View Support Inbox
                         </button>
                     </div>

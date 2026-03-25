@@ -1,5 +1,5 @@
 import React from 'react';
-import { Search, Plus, MoreHorizontal, Star, Edit, Trash2, X, Loader2, ChevronDown } from 'lucide-react';
+import { Plus, Star, Edit, Trash2, X, Loader2, ChevronDown } from 'lucide-react';
 import { sponsorshipService } from '@services/sponsorshipService';
 import { Sponsorship } from '@data-types/api';
 import { getStatusStyles, formatDate, formatCurrency } from '@utils/ui';
@@ -104,76 +104,79 @@ const Sponsorships = () => {
         }
     };
 
-    if (loading && sponsorships.length === 0) return <div className="p-8 font-bold text-slate-400">Loading sponsorships...</div>;
+    if (loading && sponsorships.length === 0) {
+        return <div className="p-8 font-bold text-muted-foreground">Loading sponsorships...</div>;
+    }
 
     return (
         <div className="space-y-6 animate-in fade-in duration-500 pb-12">
             <div className="flex items-center justify-between">
                 <div>
-                    <h2 className="text-2xl font-bold text-slate-900 font-outfit">Sponsorships</h2>
-                    <p className="text-slate-500 text-sm mt-1">Manage sponsored keywords and entity rankings ({sponsorships.length} campaigns)</p>
+                    <h2 className="text-2xl font-bold text-foreground font-outfit">Sponsorships</h2>
+                    <p className="mt-1 text-sm text-muted-foreground">Manage sponsored keywords and entity rankings ({sponsorships.length} campaigns)</p>
                 </div>
                 <button
+                    type="button"
                     onClick={() => handleOpenModal()}
-                    className="flex items-center gap-2 px-6 py-2.5 bg-[#008080] rounded-xl text-sm font-bold text-white shadow-lg overflow-hidden transition-all hover:bg-[#006666]"
+                    className="flex items-center gap-2 rounded-xl bg-primary px-6 py-2.5 text-sm font-bold text-primary-foreground shadow-lg transition-colors hover:bg-primary/90"
                 >
                     <Plus size={18} /> Setup Sponsorship
                 </button>
             </div>
 
-            <div className="premium-card overflow-hidden bg-white">
-                <table className="w-full text-left border-collapse">
+            <div className="premium-card overflow-hidden">
+                <table className="w-full border-collapse text-left">
                     <thead>
-                        <tr className="border-b border-slate-50">
-                            <th className="px-6 py-4 text-[11px] font-bold text-slate-400 uppercase">Keyword Target</th>
-                            <th className="px-6 py-4 text-[11px] font-bold text-slate-400 uppercase">Type / Entity ID</th>
-                            <th className="px-6 py-4 text-[11px] font-bold text-slate-400 uppercase">Amount</th>
-                            <th className="px-6 py-4 text-[11px] font-bold text-slate-400 uppercase">Date Range</th>
-                            <th className="px-6 py-4 text-[11px] font-bold text-slate-400 uppercase">Status</th>
-                            <th className="px-6 py-4 text-[11px] font-bold text-slate-400 uppercase text-right">Actions</th>
+                        <tr className="border-b border-border bg-muted/30">
+                            <th className="px-6 py-4 text-[11px] font-bold uppercase text-muted-foreground">Keyword Target</th>
+                            <th className="px-6 py-4 text-[11px] font-bold uppercase text-muted-foreground">Type / Entity ID</th>
+                            <th className="px-6 py-4 text-[11px] font-bold uppercase text-muted-foreground">Amount</th>
+                            <th className="px-6 py-4 text-[11px] font-bold uppercase text-muted-foreground">Date Range</th>
+                            <th className="px-6 py-4 text-[11px] font-bold uppercase text-muted-foreground">Status</th>
+                            <th className="px-6 py-4 text-end text-[11px] font-bold uppercase text-muted-foreground">Actions</th>
                         </tr>
                     </thead>
-                    <tbody className="divide-y divide-slate-50">
+                    <tbody className="divide-y divide-border">
                         {sponsorships.map((s) => (
-                            <tr key={s.id} className="hover:bg-amber-50/20 transition-colors group">
+                            <tr key={s.id} className="group transition-colors hover:bg-muted/50">
                                 <td className="px-6 py-5">
                                     <div className="flex items-center gap-3">
-                                        <div className="w-8 h-8 rounded-full bg-amber-50 flex items-center justify-center text-amber-500 group-hover:bg-amber-500 group-hover:text-white transition-colors"><Star size={14} className="fill-current" /></div>
+                                        <div className="flex size-8 items-center justify-center rounded-full bg-primary/10 text-primary transition-colors group-hover:bg-primary group-hover:text-primary-foreground"><Star size={14} className="fill-current" /></div>
                                         <div>
-                                            <p className="text-sm font-bold text-slate-800">"{s.keyword}"</p>
-                                            <p className="text-[10px] text-slate-400 font-bold uppercase">Pos: {s.position || 1}</p>
+                                            <p className="text-sm font-bold text-foreground">&quot;{s.keyword}&quot;</p>
+                                            <p className="text-[10px] font-bold uppercase text-muted-foreground">Pos: {s.position || 1}</p>
                                         </div>
                                     </div>
                                 </td>
-                                <td className="px-6 py-5 text-sm font-medium text-slate-600">
+                                <td className="px-6 py-5 text-sm font-medium text-muted-foreground">
                                     <div className="capitalize">{s.entity_type}</div>
-                                    <div className="text-[10px] text-slate-400 font-mono mt-0.5 w-24 truncate">{s.entity_id || s.company_id}</div>
+                                    <div className="mt-0.5 w-24 truncate font-mono text-[10px] text-muted-foreground">{s.entity_id || s.company_id}</div>
                                 </td>
-                                <td className="px-6 py-5 text-sm font-bold text-amber-600">
+                                <td className="px-6 py-5 text-sm font-bold text-primary">
                                     {formatCurrency(s.amount_paid)}
                                 </td>
                                 <td className="px-6 py-5">
-                                    <div className="text-[11px] text-slate-500"><span className="font-bold text-slate-400">Starts:</span> {formatDate(s.starts_at)}</div>
-                                    <div className="text-[11px] text-slate-500 mt-0.5"><span className="font-bold text-slate-400">Ends:</span> {formatDate(s.expires_at)}</div>
+                                    <div className="text-[11px] text-muted-foreground"><span className="font-bold text-muted-foreground/80">Starts:</span> {formatDate(s.starts_at)}</div>
+                                    <div className="mt-0.5 text-[11px] text-muted-foreground"><span className="font-bold text-muted-foreground/80">Ends:</span> {formatDate(s.expires_at)}</div>
                                 </td>
                                 <td className="px-6 py-5">
                                     <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full border ${getStatusStyles(s.status || 'pending')} capitalize`}>
                                         {s.status || 'Active'}
                                     </span>
                                 </td>
-                                <td className="px-6 py-5 pr-4 text-right">
+                                <td className="px-6 py-5 pe-4 text-end">
                                     <div className="flex items-center justify-end gap-1">
-                                        <button onClick={() => handleOpenModal(s)} className="text-slate-400 hover:text-amber-600 p-2 hover:bg-slate-100 rounded-lg border border-transparent hover:border-slate-200 transition-all">
+                                        <button type="button" onClick={() => handleOpenModal(s)} className="rounded-lg border border-transparent p-2 text-muted-foreground transition-all hover:border-border hover:bg-muted hover:text-primary">
                                             <Edit size={16} />
                                         </button>
-                                        <button onClick={() => handleDelete(s.id)} className="text-slate-400 hover:text-rose-600 p-2 hover:bg-slate-100 rounded-lg border border-transparent hover:border-slate-200 transition-all">
+                                        <button type="button" onClick={() => handleDelete(s.id)} className="rounded-lg border border-transparent p-2 text-muted-foreground transition-all hover:border-border hover:bg-destructive/10 hover:text-destructive">
                                             <Trash2 size={16} />
                                         </button>
                                     </div>
                                 </td>
                             </tr>
                         ))}
-                        {sponsorships.length === 0 && <tr><td colSpan={6} className="px-6 py-12 text-center text-slate-400">No active sponsorships found.</td></tr>}
+                        {sponsorships.length === 0 && <tr><td colSpan={6} className="px-6 py-12 text-center text-muted-foreground">No active sponsorships found.</td></tr>}
                     </tbody>
                 </table>
             </div>
@@ -184,71 +187,71 @@ const Sponsorships = () => {
                     showCloseButton={false}
                     className="p-0 !max-w-xl w-full max-h-screen overflow-y-auto border-none shadow-2xl flex flex-col gap-0 sm:!max-w-xl"
                 >
-                    <div className="p-6 border-b shrink-0 bg-amber-50">
+                    <div className="shrink-0 border-b border-border bg-muted/50 p-6">
                         <div className="flex items-center justify-between">
-                            <SheetHeader className="!p-0 !m-0">
-                                <SheetTitle className="text-xl font-bold font-outfit text-slate-900">
+                            <SheetHeader className="!m-0 !p-0">
+                                <SheetTitle className="font-outfit text-xl font-bold text-foreground">
                                     {editingId ? 'Edit Sponsorship' : 'Create Sponsorship Campaign'}
                                 </SheetTitle>
                             </SheetHeader>
                             <button
                                 type="button"
                                 onClick={() => setIsModalOpen(false)}
-                                className="p-2 hover:bg-amber-100 rounded-full transition-colors text-amber-900/50"
+                                className="rounded-full p-2 text-muted-foreground transition-colors hover:bg-muted"
                             >
                                 <X size={20} />
                             </button>
                         </div>
                     </div>
 
-                    <form onSubmit={handleSubmit} className="flex flex-col flex-1 min-h-0">
-                        <div className="p-8 space-y-6 flex-1 overflow-y-auto premium-scrollbar">
+                    <form onSubmit={handleSubmit} className="flex min-h-0 flex-1 flex-col">
+                        <div className="premium-scrollbar flex-1 space-y-6 overflow-y-auto p-8">
                                 <div className="space-y-2">
-                                    <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest pl-2">Target Keyword Phrase</label>
-                                    <input required className="w-full h-12 bg-slate-50 border border-slate-200 rounded-xl px-4 text-sm font-bold focus:bg-white focus:border-amber-400 transition-all outline-none" value={formData.keyword} onChange={e => setFormData({ ...formData, keyword: e.target.value })} placeholder="e.g. machinery" />
+                                    <label className="ps-2 text-[11px] font-black uppercase tracking-widest text-muted-foreground">Target Keyword Phrase</label>
+                                    <input required className="h-12 w-full rounded-xl border border-border bg-background px-4 text-sm font-bold text-foreground outline-none transition-all focus:border-primary focus:ring-2 focus:ring-ring/20" value={formData.keyword} onChange={e => setFormData({ ...formData, keyword: e.target.value })} placeholder="e.g. machinery" />
                                 </div>
                                 <div className="grid grid-cols-2 gap-6">
                                     <div className="space-y-2">
-                                        <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest pl-2">Entity Type</label>
+                                        <label className="ps-2 text-[11px] font-black uppercase tracking-widest text-muted-foreground">Entity Type</label>
                                         <div className="relative">
-                                            <select required className="w-full h-12 bg-slate-50 border border-slate-200 rounded-xl px-4 text-sm font-bold appearance-none outline-none focus:border-amber-400 transition-all capitalize" value={formData.entity_type} onChange={e => setFormData({ ...formData, entity_type: e.target.value as any })}>
+                                            <select required className="h-12 w-full appearance-none rounded-xl border border-border bg-background px-4 pe-10 text-sm font-bold capitalize text-foreground outline-none transition-all focus:border-primary focus:ring-2 focus:ring-ring/20" value={formData.entity_type} onChange={e => setFormData({ ...formData, entity_type: e.target.value as any })}>
                                                 <option value="company">Company Profile</option>
                                                 <option value="product">Product Page</option>
                                                 <option value="service">Service Listing</option>
                                             </select>
-                                            <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" size={16} />
+                                            <ChevronDown className="pointer-events-none absolute end-4 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
                                         </div>
                                     </div>
                                     <div className="space-y-2">
-                                        <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest pl-2">Entity System ID</label>
-                                        <input required className="w-full h-12 bg-slate-50 border border-slate-200 rounded-xl px-4 text-sm font-mono focus:bg-white focus:border-amber-400 transition-all outline-none" value={formData.entity_id} onChange={e => setFormData({ ...formData, entity_id: e.target.value, company_id: e.target.value })} placeholder="UUID or Int..." />
+                                        <label className="ps-2 text-[11px] font-black uppercase tracking-widest text-muted-foreground">Entity System ID</label>
+                                        <input required className="h-12 w-full rounded-xl border border-border bg-background px-4 font-mono text-sm text-foreground outline-none transition-all focus:border-primary focus:ring-2 focus:ring-ring/20" value={formData.entity_id} onChange={e => setFormData({ ...formData, entity_id: e.target.value, company_id: e.target.value })} placeholder="UUID or Int..." />
                                     </div>
                                 </div>
                                 <div className="grid grid-cols-3 gap-4">
                                     <div className="space-y-2">
-                                        <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest pl-2">Rank Pos</label>
-                                        <input type="number" min="1" className="w-full h-12 bg-slate-50 border border-slate-200 rounded-xl px-4 text-sm font-bold focus:bg-white focus:border-amber-400 transition-all outline-none" value={formData.position} onChange={e => setFormData({ ...formData, position: e.target.value })} placeholder="1" />
+                                        <label className="ps-2 text-[11px] font-black uppercase tracking-widest text-muted-foreground">Rank Pos</label>
+                                        <input type="number" min="1" className="h-12 w-full rounded-xl border border-border bg-background px-4 text-sm font-bold text-foreground outline-none transition-all focus:border-primary focus:ring-2 focus:ring-ring/20" value={formData.position} onChange={e => setFormData({ ...formData, position: e.target.value })} placeholder="1" />
                                     </div>
                                     <div className="space-y-2">
-                                        <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest pl-2">Amount ($)</label>
-                                        <input type="number" step="0.01" className="w-full h-12 bg-slate-50 border border-slate-200 rounded-xl px-4 text-sm font-bold focus:bg-white focus:border-amber-400 transition-all outline-none" value={formData.amount_paid} onChange={e => setFormData({ ...formData, amount_paid: e.target.value })} placeholder="0.00" />
+                                        <label className="ps-2 text-[11px] font-black uppercase tracking-widest text-muted-foreground">Amount ($)</label>
+                                        <input type="number" step="0.01" className="h-12 w-full rounded-xl border border-border bg-background px-4 text-sm font-bold text-foreground outline-none transition-all focus:border-primary focus:ring-2 focus:ring-ring/20" value={formData.amount_paid} onChange={e => setFormData({ ...formData, amount_paid: e.target.value })} placeholder="0.00" />
                                     </div>
                                     <div className="space-y-2">
-                                        <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest pl-2">Status</label>
+                                        <label className="ps-2 text-[11px] font-black uppercase tracking-widest text-muted-foreground">Status</label>
                                         <div className="relative">
-                                            <select required className="w-full h-12 bg-slate-50 border border-slate-200 rounded-xl px-4 text-sm font-bold appearance-none outline-none focus:border-amber-400 transition-all capitalize" value={formData.status} onChange={e => setFormData({ ...formData, status: e.target.value })}>
+                                            <select required className="h-12 w-full appearance-none rounded-xl border border-border bg-background px-4 pe-10 text-sm font-bold capitalize text-foreground outline-none transition-all focus:border-primary focus:ring-2 focus:ring-ring/20" value={formData.status} onChange={e => setFormData({ ...formData, status: e.target.value })}>
                                                 <option value="active">Active</option>
                                                 <option value="pending">Pending</option>
                                                 <option value="completed">Completed</option>
                                             </select>
-                                            <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" size={16} />
+                                            <ChevronDown className="pointer-events-none absolute end-4 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
                                         </div>
                                     </div>
                                 </div>
                         </div>
-                        <div className="p-6 border-t border-slate-100 flex justify-end gap-3 bg-slate-50 shrink-0">
-                            <button type="button" className="px-6 py-2.5 rounded-xl text-sm font-bold text-slate-500 hover:bg-slate-200 transition-all" onClick={() => setIsModalOpen(false)}>Cancel</button>
-                            <button type="submit" disabled={formSaving} className="px-10 py-2.5 bg-amber-500 rounded-xl text-sm font-black text-white hover:bg-amber-600 transition-all flex items-center gap-2 shadow-lg shadow-amber-500/20">
+                        <div className="flex shrink-0 justify-end gap-3 border-t border-border bg-muted/50 p-6">
+                            <button type="button" className="rounded-xl px-6 py-2.5 text-sm font-bold text-muted-foreground transition-all hover:bg-muted" onClick={() => setIsModalOpen(false)}>Cancel</button>
+                            <button type="submit" disabled={formSaving} className="flex items-center gap-2 rounded-xl bg-primary px-10 py-2.5 text-sm font-black text-primary-foreground shadow-lg transition-all hover:bg-primary/90 disabled:opacity-50">
                                 {formSaving && <Loader2 className="animate-spin" size={16} />} Save Campaign
                             </button>
                         </div>

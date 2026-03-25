@@ -197,8 +197,8 @@ const GooglePlaces = () => {
   return (
     <div className="space-y-6 pb-12 animate-in fade-in duration-500">
       <div>
-        <h1 className="text-2xl font-bold text-slate-900 font-outfit">{t('sidebar.googlePlaces')}</h1>
-        <p className="mt-1 text-sm text-slate-500">{t('googlePlacesPage.subtitle')}</p>
+        <h1 className="text-2xl font-bold text-foreground font-outfit">{t('sidebar.googlePlaces')}</h1>
+        <p className="mt-1 text-sm text-muted-foreground">{t('googlePlacesPage.subtitle')}</p>
       </div>
 
       <div className="flex flex-wrap gap-2">
@@ -220,10 +220,10 @@ const GooglePlaces = () => {
 
       {tab === 'search' && (
         <div className="space-y-6">
-          <div className="premium-card space-y-4 bg-white p-6">
+          <div className="premium-card space-y-4 p-6">
             <div className="grid gap-3 md:grid-cols-2">
               <label className="space-y-1 text-sm md:col-span-2">
-                <span className="text-[11px] font-bold uppercase text-slate-400">{t('googlePlacesPage.query')}</span>
+                <span className="text-[11px] font-bold uppercase text-muted-foreground">{t('googlePlacesPage.query')}</span>
                 <input
                   value={query}
                   onChange={(e) => setQuery(e.target.value)}
@@ -232,7 +232,7 @@ const GooglePlaces = () => {
                 />
               </label>
               <label className="space-y-1 text-sm">
-                <span className="text-[11px] font-bold uppercase text-slate-400">{t('googlePlacesPage.region')}</span>
+                <span className="text-[11px] font-bold uppercase text-muted-foreground">{t('googlePlacesPage.region')}</span>
                 <input
                   value={region}
                   onChange={(e) => setRegion(e.target.value)}
@@ -240,7 +240,7 @@ const GooglePlaces = () => {
                 />
               </label>
               <label className="space-y-1 text-sm">
-                <span className="text-[11px] font-bold uppercase text-slate-400">{t('googlePlacesPage.city')}</span>
+                <span className="text-[11px] font-bold uppercase text-muted-foreground">{t('googlePlacesPage.city')}</span>
                 <input
                   value={city}
                   onChange={(e) => setCity(e.target.value)}
@@ -248,7 +248,7 @@ const GooglePlaces = () => {
                 />
               </label>
               <label className="space-y-1 text-sm">
-                <span className="text-[11px] font-bold uppercase text-slate-400">{t('googlePlacesPage.language')}</span>
+                <span className="text-[11px] font-bold uppercase text-muted-foreground">{t('googlePlacesPage.language')}</span>
                 <select
                   value={language}
                   onChange={(e) => setLanguage(e.target.value as GooglePlacesLanguage)}
@@ -272,8 +272,8 @@ const GooglePlaces = () => {
           </div>
 
           {places.length > 0 && (
-            <div className="premium-card overflow-hidden bg-white">
-              <div className="border-b border-slate-100 px-6 py-4">
+            <div className="premium-card overflow-hidden">
+              <div className="border-b border-border px-6 py-4">
                 <h2 className="text-sm font-bold text-slate-800">{t('googlePlacesPage.results')}</h2>
                 <div className="mt-3 grid gap-3 md:grid-cols-2">
                   <label className="space-y-1 text-xs">
@@ -319,18 +319,18 @@ const GooglePlaces = () => {
               </div>
               <table className="w-full border-collapse text-start">
                 <thead>
-                  <tr className="border-b border-slate-100">
+                  <tr className="border-b border-border">
                     <th className="w-10 px-4 py-3" />
-                    <th className="px-4 py-3 text-[11px] font-bold uppercase text-slate-400">{t('googlePlacesPage.colPlace')}</th>
-                    <th className="px-4 py-3 text-[11px] font-bold uppercase text-slate-400">{t('googlePlacesPage.colId')}</th>
+                    <th className="px-4 py-3 text-[11px] font-bold uppercase text-muted-foreground">{t('googlePlacesPage.colPlace')}</th>
+                    <th className="px-4 py-3 text-[11px] font-bold uppercase text-muted-foreground">{t('googlePlacesPage.colId')}</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-50">
+                <tbody className="divide-y divide-border">
                   {places.map((row) => {
                     const pid = placeIdOf(row);
                     if (!pid) return null;
                     return (
-                      <tr key={pid} className="hover:bg-slate-50/60">
+                      <tr key={pid} className="hover:bg-muted/50">
                         <td className="px-4 py-3">
                           <input
                             type="checkbox"
@@ -340,7 +340,7 @@ const GooglePlaces = () => {
                           />
                         </td>
                         <td className="px-4 py-3 text-sm font-medium text-slate-800">{displayName(row)}</td>
-                        <td className="px-4 py-3 font-mono text-xs text-slate-500">{pid}</td>
+                        <td className="px-4 py-3 font-mono text-xs text-muted-foreground">{pid}</td>
                       </tr>
                     );
                   })}
@@ -350,7 +350,7 @@ const GooglePlaces = () => {
           )}
 
           {searchRaw !== null && (
-            <div className="premium-card bg-white p-4">
+            <div className="premium-card p-4">
               <h3 className="mb-2 text-sm font-bold text-slate-800">{t('googlePlacesPage.rawResponse')}</h3>
               <JsonInspector data={searchRaw} />
             </div>
@@ -359,7 +359,7 @@ const GooglePlaces = () => {
       )}
 
       {tab === 'imports' && (
-        <div className="premium-card bg-white p-4">
+        <div className="premium-card p-4">
           <div className="mb-4 flex items-center justify-between gap-2">
             <h2 className="text-sm font-bold text-slate-800">{t('googlePlacesPage.importHistory')}</h2>
             <button
@@ -385,9 +385,9 @@ const GooglePlaces = () => {
 
       {tab === 'usage' && (
         <div className="space-y-4">
-          <div className="premium-card flex flex-wrap items-end gap-4 bg-white p-6">
+          <div className="premium-card flex flex-wrap items-end gap-4 p-6">
             <label className="space-y-1 text-sm">
-              <span className="text-[11px] font-bold uppercase text-slate-400">{t('analyticsExportPage.dateFrom')}</span>
+              <span className="text-[11px] font-bold uppercase text-muted-foreground">{t('analyticsExportPage.dateFrom')}</span>
               <input
                 type="date"
                 value={usageFrom}
@@ -396,7 +396,7 @@ const GooglePlaces = () => {
               />
             </label>
             <label className="space-y-1 text-sm">
-              <span className="text-[11px] font-bold uppercase text-slate-400">{t('analyticsExportPage.dateTo')}</span>
+              <span className="text-[11px] font-bold uppercase text-muted-foreground">{t('analyticsExportPage.dateTo')}</span>
               <input
                 type="date"
                 value={usageTo}
@@ -413,7 +413,7 @@ const GooglePlaces = () => {
               {t('googlePlacesPage.loadUsage')}
             </button>
           </div>
-          <div className="premium-card bg-white p-4">
+          <div className="premium-card p-4">
             <JsonInspector data={usageRaw} />
           </div>
         </div>

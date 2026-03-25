@@ -65,20 +65,20 @@ export const CompanyTable: React.FC<CompanyTableProps> = ({
     const { t } = useTranslation();
 
     return (
-        <div className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
+        <div className="premium-card overflow-hidden">
             {/* Toolbar */}
-            <div className="p-4 border-b border-slate-100 flex flex-wrap items-center gap-4 bg-slate-50/40">
-                <div className="flex-1 min-w-[280px] relative">
-                    <Search className="absolute inset-y-0 start-4 flex items-center mt-3 text-slate-400" size={16} />
+            <div className="flex flex-wrap items-center gap-4 border-b border-border bg-muted/40 p-4">
+                <div className="relative min-w-[280px] flex-1">
+                    <Search className="absolute inset-y-0 start-4 mt-3 flex items-center text-muted-foreground" size={16} />
                     <input
                         type="text"
                         value={search}
                         onChange={(e) => onSearchChange(e.target.value)}
                         placeholder={t('companies.searchPlaceholder')}
-                        className="w-full h-10 ps-11 pe-4 bg-white border border-slate-200 focus:border-teal-400 focus:ring-2 focus:ring-teal-400/10 rounded-xl text-sm outline-none transition-all placeholder:text-slate-400"
+                        className="h-10 w-full rounded-xl border border-border bg-background ps-11 pe-4 text-sm text-foreground outline-none transition-all placeholder:text-muted-foreground focus:border-primary focus:ring-2 focus:ring-ring/20"
                     />
                 </div>
-                <div className="flex items-center gap-2 text-xs text-slate-400 font-medium">
+                <div className="flex items-center gap-2 text-xs font-medium text-muted-foreground">
                     <Building2 size={14} />
                     <span>
                         {t('companies.filteredCount', { count: filteredCount })}
@@ -90,33 +90,33 @@ export const CompanyTable: React.FC<CompanyTableProps> = ({
             <div className="overflow-x-auto">
                 <table className="w-full text-left border-collapse">
                     <thead>
-                        <tr className="border-b border-slate-100 bg-slate-50/30">
-                            <th className="px-6 py-3.5 text-[11px] font-bold text-slate-400 uppercase tracking-wider">
+                        <tr className="border-b border-border bg-muted/30">
+                            <th className="px-6 py-3.5 text-[11px] font-bold uppercase tracking-wider text-muted-foreground">
                                 {t('companies.company')}
                             </th>
-                            <th className="px-6 py-3.5 text-[11px] font-bold text-slate-400 uppercase tracking-wider">
+                            <th className="px-6 py-3.5 text-[11px] font-bold uppercase tracking-wider text-muted-foreground">
                                 {t('companies.location')}
                             </th>
-                            <th className="px-6 py-3.5 text-[11px] font-bold text-slate-400 uppercase tracking-wider">
+                            <th className="px-6 py-3.5 text-[11px] font-bold uppercase tracking-wider text-muted-foreground">
                                 {t('common.status')}
                             </th>
-                            <th className="px-6 py-3.5 text-[11px] font-bold text-slate-400 uppercase tracking-wider">
+                            <th className="px-6 py-3.5 text-[11px] font-bold uppercase tracking-wider text-muted-foreground">
                                 {t('companies.joined')}
                             </th>
-                            <th className="px-6 py-3.5 text-[11px] font-bold text-slate-400 uppercase tracking-wider text-end">
+                            <th className="px-6 py-3.5 text-end text-[11px] font-bold uppercase tracking-wider text-muted-foreground">
                                 {t('common.actions')}
                             </th>
                         </tr>
                     </thead>
-                    <tbody className="divide-y divide-slate-50">
+                    <tbody className="divide-y divide-border">
                         {companies.map((c) => {
                             const d = getCompanyData(c);
                             return (
-                                <tr key={d.id} className="hover:bg-slate-50/60 transition-colors group">
+                                <tr key={d.id} className="hover:bg-muted/50 transition-colors group">
                                     {/* Company info */}
                                     <td className="px-6 py-4">
                                         <div className="flex items-center gap-3.5">
-                                            <div className="w-11 h-11 rounded-xl border border-slate-100 overflow-hidden bg-slate-50 shrink-0">
+                                            <div className="h-11 w-11 shrink-0 overflow-hidden rounded-xl border border-border bg-muted">
                                                 <img
                                                     src={d.profilePhoto || `https://ui-avatars.com/api/?name=${encodeURIComponent(displayBilingual(d.name))}&background=008080&color=fff&size=44`}
                                                     alt={displayBilingual(d.name)}
@@ -125,7 +125,7 @@ export const CompanyTable: React.FC<CompanyTableProps> = ({
                                             </div>
                                             <div className="min-w-0">
                                                 <div className="flex items-center gap-2">
-                                                    <h5 className="text-sm font-bold text-slate-800 truncate">
+                                                    <h5 className="truncate text-sm font-bold text-foreground">
                                                         {displayBilingual(d.name)}
                                                     </h5>
                                                     {d.verified && (
@@ -134,12 +134,12 @@ export const CompanyTable: React.FC<CompanyTableProps> = ({
                                                 </div>
                                                 <div className="flex items-center gap-2 mt-0.5">
                                                     {d.acronym && (
-                                                        <span className="text-[10px] text-slate-400 uppercase tracking-wider font-bold">
+                                                        <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
                                                             {d.acronym}
                                                         </span>
                                                     )}
                                                     {d.handle && (
-                                                        <span className="text-[11px] text-slate-400">
+                                                        <span className="text-[11px] text-muted-foreground">
                                                             @{d.handle}
                                                         </span>
                                                     )}
@@ -150,16 +150,16 @@ export const CompanyTable: React.FC<CompanyTableProps> = ({
 
                                     {/* Location */}
                                     <td className="px-6 py-4">
-                                        <div className="flex flex-col gap-1 text-xs text-slate-600 font-medium">
+                                        <div className="flex flex-col gap-1 text-xs font-medium text-muted-foreground">
                                             <div className="flex items-center gap-1.5">
-                                                <MapPin size={13} className="text-slate-400 shrink-0" />
+                                                <MapPin size={13} className="shrink-0 text-muted-foreground" />
                                                 <span className="truncate max-w-[180px]">
                                                     {displayBilingual(d.location) || t('companies.distributed')}
                                                 </span>
                                             </div>
                                             {d.industryName && (
-                                                <div className="flex items-center gap-1.5 text-[11px] text-slate-400">
-                                                    <Globe size={12} className="text-slate-300 shrink-0" />
+                                                <div className="flex items-center gap-1.5 text-[11px] text-muted-foreground/80">
+                                                    <Globe size={12} className="shrink-0 text-muted-foreground" />
                                                     <span className="truncate max-w-[180px]">
                                                         {displayBilingual(d.industryName)}
                                                     </span>
@@ -173,10 +173,10 @@ export const CompanyTable: React.FC<CompanyTableProps> = ({
                                         <div className="flex flex-wrap items-center gap-1.5">
                                             <button
                                                 onClick={() => onToggleStatus(d.id)}
-                                                className={`inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full border transition-colors hover:opacity-80 ${
+                                                className={`inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-[10px] font-bold transition-colors hover:opacity-80 ${
                                                     d.active
-                                                        ? 'bg-emerald-50 text-emerald-600 border-emerald-100'
-                                                        : 'bg-rose-50 text-rose-500 border-rose-100'
+                                                        ? 'border-emerald-200 bg-emerald-50 text-emerald-700 dark:border-emerald-800 dark:bg-emerald-950/50 dark:text-emerald-300'
+                                                        : 'border-rose-200 bg-rose-50 text-rose-600 dark:border-rose-900 dark:bg-rose-950/50 dark:text-rose-300'
                                                 }`}
                                                 title={t('companies.toggleStatus')}
                                             >
@@ -196,7 +196,7 @@ export const CompanyTable: React.FC<CompanyTableProps> = ({
                                     </td>
 
                                     {/* Date */}
-                                    <td className="px-6 py-4 text-xs text-slate-500 font-medium whitespace-nowrap">
+                                    <td className="px-6 py-4 text-xs text-muted-foreground font-medium whitespace-nowrap">
                                         {formatDate(d.createdAt)}
                                     </td>
 
@@ -205,14 +205,14 @@ export const CompanyTable: React.FC<CompanyTableProps> = ({
                                         <div className="flex items-center justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
                                             <button
                                                 onClick={() => onEdit(c)}
-                                                className="text-slate-400 hover:text-blue-600 p-2 hover:bg-blue-50 rounded-lg transition-all"
+                                                className="rounded-lg p-2 text-muted-foreground transition-all hover:bg-muted hover:text-primary"
                                                 title={t('common.edit')}
                                             >
                                                 <Edit size={15} />
                                             </button>
                                             <button
                                                 onClick={() => onDelete(c)}
-                                                className="text-slate-400 hover:text-rose-600 p-2 hover:bg-rose-50 rounded-lg transition-all"
+                                                className="rounded-lg p-2 text-muted-foreground transition-all hover:bg-destructive/10 hover:text-destructive"
                                                 title={t('common.delete')}
                                             >
                                                 <Trash2 size={15} />
@@ -226,8 +226,8 @@ export const CompanyTable: React.FC<CompanyTableProps> = ({
                             <tr>
                                 <td colSpan={5} className="px-6 py-16 text-center">
                                     <div className="flex flex-col items-center gap-3">
-                                        <Building2 size={36} className="text-slate-200" />
-                                        <p className="text-sm text-slate-400 font-medium">
+                                        <Building2 size={36} className="text-muted-foreground/30" />
+                                        <p className="text-sm font-medium text-muted-foreground">
                                             {t('companies.noCompaniesFound')}
                                         </p>
                                     </div>
@@ -239,15 +239,15 @@ export const CompanyTable: React.FC<CompanyTableProps> = ({
             </div>
 
             {/* Pagination footer */}
-            <div className="px-6 py-3.5 border-t border-slate-100 flex items-center justify-between bg-slate-50/30">
+            <div className="flex items-center justify-between border-t border-border bg-muted/30 px-6 py-3.5">
                 <div className="flex items-center gap-3">
-                    <p className="text-xs font-medium text-slate-400">
+                    <p className="text-xs font-medium text-muted-foreground">
                         {t('companies.rowsPerPage')}
                     </p>
                     <select
                         value={rowsPerPage}
                         onChange={(e) => onRowsPerPageChange(Number(e.target.value))}
-                        className="h-7 rounded-lg border border-slate-200 bg-white text-xs font-medium text-slate-600 px-2 outline-none focus:border-teal-400"
+                        className="h-7 rounded-lg border border-border bg-background px-2 text-xs font-medium text-foreground outline-none focus:border-primary focus:ring-1 focus:ring-ring/30"
                     >
                         {[10, 25, 50].map(n => (
                             <option key={n} value={n}>{n}</option>
@@ -256,21 +256,21 @@ export const CompanyTable: React.FC<CompanyTableProps> = ({
                 </div>
 
                 <div className="flex items-center gap-2">
-                    <span className="text-xs font-medium text-slate-400">
+                    <span className="text-xs font-medium text-muted-foreground">
                         {t('companies.pageOf', { page, totalPages })}
                     </span>
                     <div className="flex gap-1">
                         <button
                             onClick={() => onPageChange(page - 1)}
                             disabled={page <= 1}
-                            className="h-7 w-7 flex items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-500 hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                            className="flex h-7 w-7 items-center justify-center rounded-lg border border-border bg-card text-muted-foreground transition-colors hover:bg-muted disabled:cursor-not-allowed disabled:opacity-40"
                         >
                             <ChevronLeft size={14} />
                         </button>
                         <button
                             onClick={() => onPageChange(page + 1)}
                             disabled={page >= totalPages}
-                            className="h-7 w-7 flex items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-500 hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                            className="flex h-7 w-7 items-center justify-center rounded-lg border border-border bg-card text-muted-foreground transition-colors hover:bg-muted disabled:cursor-not-allowed disabled:opacity-40"
                         >
                             <ChevronRight size={14} />
                         </button>

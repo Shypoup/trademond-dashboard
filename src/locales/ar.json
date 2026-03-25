@@ -99,7 +99,16 @@
   },
   "header": {
     "searchPlaceholder": "ابحث عن منتجات أو شركات أو مستخدمين...",
-    "productionEnv": "بيئة الإنتاج"
+    "productionEnv": "بيئة الإنتاج",
+    "notifications": "الإشعارات",
+    "themeMenu": "المظهر",
+    "appearance": "المظهر",
+    "themeLight": "فاتح",
+    "themeDark": "داكن",
+    "themeSystem": "حسب النظام",
+    "userFallbackName": "مسؤول",
+    "userFallbackRole": "مسؤول",
+    "profileUnavailable": "تعذر تحميل الملف"
   },
   "dashboard": {
     "title": "لوحة التحكم"

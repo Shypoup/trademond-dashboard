@@ -7,7 +7,6 @@ import {
     X,
     Loader2,
     ChevronDown,
-    MoreHorizontal
 } from 'lucide-react';
 import { serviceService } from '@services/serviceService';
 import { companyService } from '@services/companyService';
@@ -123,7 +122,7 @@ const Services = () => {
             <div className="flex items-center justify-center min-h-[60vh]">
                 <div className="flex flex-col items-center gap-4">
                     <div className="w-12 h-12 border-4 border-teal-500/20 border-t-teal-500 rounded-full animate-spin"></div>
-                    <p className="text-slate-400 font-bold animate-pulse text-sm">Querying Global Services...</p>
+                    <p className="text-sm font-bold text-muted-foreground animate-pulse">Querying Global Services...</p>
                 </div>
             </div>
         );
@@ -133,19 +132,19 @@ const Services = () => {
         <div className="space-y-6 animate-in slide-in-from-right-4 duration-500 pb-12">
             <div className="flex items-center justify-between">
                 <div>
-                    <h2 className="text-2xl font-bold text-slate-900 font-outfit">Services Management</h2>
-                    <p className="text-slate-500 text-sm mt-1">{totalServices.toLocaleString()} registered services providing cross-border value</p>
+                    <h2 className="text-2xl font-bold text-foreground font-outfit">Services Management</h2>
+                    <p className="mt-1 text-sm text-muted-foreground">{totalServices.toLocaleString()} registered services providing cross-border value</p>
                 </div>
                 <button
                     onClick={() => handleOpenModal()}
-                    className="flex items-center gap-2 px-6 py-2.5 bg-[#008080] rounded-xl text-sm font-bold text-white hover:bg-[#005f5f] transition-all shadow-lg"
+                    className="flex items-center gap-2 rounded-xl bg-primary px-6 py-2.5 text-sm font-bold text-primary-foreground shadow-lg transition-all hover:bg-primary/90"
                 >
                     <Plus size={18} />
                     <span>Create Service</span>
                 </button>
             </div>
 
-            <div className="premium-card overflow-hidden bg-white">
+            <div className="premium-card overflow-hidden">
                 <div className="p-4 border-b border-slate-50 flex flex-wrap items-center gap-4 bg-slate-50/30">
                     <div className="flex-1 min-w-[300px] relative">
                         <Search className="absolute inset-y-0 left-4 flex items-center mt-3 text-slate-400" size={18} />
@@ -160,30 +159,30 @@ const Services = () => {
                 <div className="overflow-x-auto">
                     <table className="w-full text-left border-collapse">
                         <thead>
-                            <tr className="border-b border-slate-50">
-                                <th className="px-6 py-4 text-[11px] font-bold text-slate-400 uppercase tracking-wider">Service</th>
-                                <th className="px-6 py-4 text-[11px] font-bold text-slate-400 uppercase tracking-wider">Company Provider</th>
-                                <th className="px-6 py-4 text-[11px] font-bold text-slate-400 uppercase tracking-wider">Category</th>
-                                <th className="px-6 py-4 text-[11px] font-bold text-slate-400 uppercase tracking-wider">Status</th>
-                                <th className="px-6 py-4 text-[11px] font-bold text-slate-400 uppercase tracking-wider text-right">Actions</th>
+                            <tr className="border-b border-border bg-muted/30">
+                                <th className="px-6 py-4 text-[11px] font-bold uppercase tracking-wider text-muted-foreground">Service</th>
+                                <th className="px-6 py-4 text-[11px] font-bold uppercase tracking-wider text-muted-foreground">Company Provider</th>
+                                <th className="px-6 py-4 text-[11px] font-bold uppercase tracking-wider text-muted-foreground">Category</th>
+                                <th className="px-6 py-4 text-[11px] font-bold uppercase tracking-wider text-muted-foreground">Status</th>
+                                <th className="px-6 py-4 text-end text-[11px] font-bold uppercase tracking-wider text-muted-foreground">Actions</th>
                             </tr>
                         </thead>
-                        <tbody className="divide-y divide-slate-50">
+                        <tbody className="divide-y divide-border">
                             {serviceList.map((s) => (
-                                <tr key={s.id} className="hover:bg-slate-50/50 transition-colors group">
+                                <tr key={s.id} className="group transition-colors hover:bg-muted/50">
                                     <td className="px-6 py-5">
                                         <div className="flex items-center gap-4">
-                                            <div className="w-12 h-12 rounded-xl border border-slate-100 overflow-hidden bg-slate-50">
-                                                <img src={s.profilePhoto || `https://ui-avatars.com/api/?name=${displayBilingual(s.name)}&background=008080&color=fff`} alt={displayBilingual(s.name)} className="w-full h-full object-cover" />
+                                            <div className="h-12 w-12 overflow-hidden rounded-xl border border-border bg-muted">
+                                                <img src={s.profilePhoto || `https://ui-avatars.com/api/?name=${displayBilingual(s.name)}&background=008080&color=fff`} alt={displayBilingual(s.name)} className="h-full w-full object-cover" />
                                             </div>
                                             <div>
-                                                <h5 className="text-[14px] font-bold text-slate-800">{displayBilingual(s.name)}</h5>
-                                                <p className="text-xs text-slate-400 truncate max-w-[200px]">{displayBilingual(s.description)}</p>
+                                                <h5 className="text-[14px] font-bold text-foreground">{displayBilingual(s.name)}</h5>
+                                                <p className="max-w-[200px] truncate text-xs text-muted-foreground">{displayBilingual(s.description)}</p>
                                             </div>
                                         </div>
                                     </td>
                                     <td className="px-6 py-5">
-                                        <span className="text-xs font-bold text-teal-600 hover:underline cursor-pointer">
+                                        <span className="cursor-pointer text-xs font-bold text-primary hover:underline">
                                             {s.company?.name ? displayBilingual(s.company.name) : (s as any).company || 'N/A'}
                                         </span>
                                     </td>
@@ -195,12 +194,12 @@ const Services = () => {
                                             {s.published ? 'Published' : 'Draft'}
                                         </span>
                                     </td>
-                                    <td className="px-6 py-5 pr-4 text-right">
+                                    <td className="px-6 py-5 pe-4 text-end">
                                         <div className="flex items-center justify-end gap-1">
-                                            <button onClick={() => handleOpenModal(s)} className="text-slate-400 hover:text-blue-600 p-2 hover:bg-slate-100 rounded-lg border border-transparent hover:border-slate-200 transition-all">
+                                            <button type="button" onClick={() => handleOpenModal(s)} className="rounded-lg border border-transparent p-2 text-muted-foreground transition-all hover:border-border hover:bg-muted hover:text-primary">
                                                 <Edit size={16} />
                                             </button>
-                                            <button onClick={() => handleDelete(s.id)} className="text-slate-400 hover:text-rose-600 p-2 hover:bg-slate-100 rounded-lg border border-transparent hover:border-slate-200 transition-all">
+                                            <button type="button" onClick={() => handleDelete(s.id)} className="rounded-lg border border-transparent p-2 text-muted-foreground transition-all hover:border-border hover:bg-destructive/10 hover:text-destructive">
                                                 <Trash2 size={16} />
                                             </button>
                                         </div>
@@ -209,16 +208,16 @@ const Services = () => {
                             ))}
                             {serviceList.length === 0 && (
                                 <tr>
-                                    <td colSpan={5} className="px-6 py-12 text-center text-slate-400">No services found.</td>
+                                    <td colSpan={5} className="px-6 py-12 text-center text-muted-foreground">No services found.</td>
                                 </tr>
                             )}
                         </tbody>
                     </table>
                 </div>
 
-                <div className="p-4 border-t border-slate-50 flex items-center justify-between bg-slate-50/10">
-                    <p className="text-xs font-semibold text-slate-400">
-                        Showing total <span className="text-slate-900 font-bold">{totalServices.toLocaleString()}</span> services
+                <div className="flex items-center justify-between border-t border-border bg-muted/30 p-4">
+                    <p className="text-xs font-semibold text-muted-foreground">
+                        Showing total <span className="font-bold text-foreground">{totalServices.toLocaleString()}</span> services
                     </p>
                 </div>
             </div>
@@ -229,71 +228,71 @@ const Services = () => {
                     showCloseButton={false}
                     className="p-0 !max-w-2xl w-full max-h-screen overflow-y-auto border-none shadow-2xl flex flex-col gap-0 sm:!max-w-2xl"
                 >
-                    <div className="p-6 border-b shrink-0 bg-slate-50">
+                    <div className="shrink-0 border-b border-border bg-muted/50 p-6">
                         <div className="flex items-center justify-between">
-                            <SheetHeader className="!p-0 !m-0">
-                                <SheetTitle className="text-xl font-bold font-outfit text-slate-900">
+                            <SheetHeader className="!m-0 !p-0">
+                                <SheetTitle className="font-outfit text-xl font-bold text-foreground">
                                     {editingId ? 'Edit Service' : 'Create New Service'}
                                 </SheetTitle>
                             </SheetHeader>
                             <button
                                 type="button"
                                 onClick={() => setIsModalOpen(false)}
-                                className="p-2 hover:bg-slate-200 rounded-full transition-colors text-slate-400"
+                                className="rounded-full p-2 text-muted-foreground transition-colors hover:bg-muted"
                             >
                                 <X size={20} />
                             </button>
                         </div>
                     </div>
 
-                    <form onSubmit={handleSubmit} className="flex flex-col flex-1 min-h-0">
-                        <div className="p-8 space-y-6 overflow-y-auto premium-scrollbar flex-1">
+                    <form onSubmit={handleSubmit} className="flex min-h-0 flex-1 flex-col">
+                        <div className="premium-scrollbar flex-1 space-y-6 overflow-y-auto p-8">
                                 <div className="grid grid-cols-2 gap-6">
                                     <div className="space-y-2">
-                                        <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest">English Name</label>
-                                        <input required className="w-full h-12 bg-slate-50 border border-slate-200 rounded-xl px-4 text-sm font-bold focus:bg-white focus:border-teal-500 transition-all outline-none" value={formData.name.en} onChange={e => updateBilingual('name', 'en', e.target.value)} />
+                                        <label className="text-[11px] font-black uppercase tracking-widest text-muted-foreground">English Name</label>
+                                        <input required className="h-12 w-full rounded-xl border border-border bg-background px-4 text-sm font-bold text-foreground outline-none transition-all focus:border-primary focus:ring-2 focus:ring-ring/20" value={formData.name.en} onChange={e => updateBilingual('name', 'en', e.target.value)} />
                                     </div>
                                     <div className="space-y-2">
-                                        <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest text-right block">الإسم بالعربية</label>
-                                        <input required dir="rtl" className="w-full h-12 bg-slate-50 border border-slate-200 rounded-xl px-4 text-sm font-bold focus:bg-white focus:border-teal-500 transition-all outline-none text-right" value={formData.name.ar} onChange={e => updateBilingual('name', 'ar', e.target.value)} />
+                                        <label className="block text-end text-[11px] font-black uppercase tracking-widest text-muted-foreground">الإسم بالعربية</label>
+                                        <input required dir="rtl" className="h-12 w-full rounded-xl border border-border bg-background px-4 text-end text-sm font-bold text-foreground outline-none transition-all focus:border-primary focus:ring-2 focus:ring-ring/20" value={formData.name.ar} onChange={e => updateBilingual('name', 'ar', e.target.value)} />
                                     </div>
                                 </div>
                                 <div className="grid grid-cols-2 gap-6">
                                     <div className="space-y-2">
-                                        <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest">Category</label>
+                                        <label className="text-[11px] font-black uppercase tracking-widest text-muted-foreground">Category</label>
                                         <div className="relative">
-                                            <select required className="w-full h-12 bg-slate-50 border border-slate-200 rounded-xl px-4 text-sm font-bold appearance-none outline-none focus:border-teal-500 transition-all" value={formData.category_id} onChange={e => setFormData({ ...formData, category_id: e.target.value })}>
+                                            <select required className="h-12 w-full appearance-none rounded-xl border border-border bg-background px-4 text-sm font-bold text-foreground outline-none transition-all focus:border-primary focus:ring-2 focus:ring-ring/20" value={formData.category_id} onChange={e => setFormData({ ...formData, category_id: e.target.value })}>
                                                 <option value="">Select Category...</option>
                                                 {categories.map(c => <option key={c.id} value={c.id}>{displayBilingual(c.name)}</option>)}
                                             </select>
-                                            <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" size={16} />
+                                            <ChevronDown className="pointer-events-none absolute end-4 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
                                         </div>
                                     </div>
                                     <div className="space-y-2">
-                                        <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest">Company</label>
+                                        <label className="text-[11px] font-black uppercase tracking-widest text-muted-foreground">Company</label>
                                         <div className="relative">
-                                            <select required className="w-full h-12 bg-slate-50 border border-slate-200 rounded-xl px-4 text-sm font-bold appearance-none outline-none focus:border-teal-500 transition-all" value={formData.company_id} onChange={e => setFormData({ ...formData, company_id: e.target.value })}>
+                                            <select required className="h-12 w-full appearance-none rounded-xl border border-border bg-background px-4 text-sm font-bold text-foreground outline-none transition-all focus:border-primary focus:ring-2 focus:ring-ring/20" value={formData.company_id} onChange={e => setFormData({ ...formData, company_id: e.target.value })}>
                                                 <option value="">Select Company...</option>
                                                 {companies.map(c => <option key={c.id} value={c.id}>{displayBilingual(c.name)}</option>)}
                                             </select>
-                                            <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" size={16} />
+                                            <ChevronDown className="pointer-events-none absolute end-4 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
                                         </div>
                                     </div>
                                 </div>
                                 <div className="grid grid-cols-2 gap-6">
                                     <div className="space-y-2">
-                                        <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest">Description (EN)</label>
-                                        <textarea className="w-full min-h-[100px] p-4 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium focus:bg-white focus:border-teal-500 transition-all outline-none resize-none" value={formData.description.en} onChange={e => updateBilingual('description', 'en', e.target.value)} />
+                                        <label className="text-[11px] font-black uppercase tracking-widest text-muted-foreground">Description (EN)</label>
+                                        <textarea className="min-h-[100px] w-full resize-none rounded-xl border border-border bg-background p-4 text-sm font-medium text-foreground outline-none transition-all focus:border-primary focus:ring-2 focus:ring-ring/20" value={formData.description.en} onChange={e => updateBilingual('description', 'en', e.target.value)} />
                                     </div>
                                     <div className="space-y-2">
-                                        <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest text-right block">الوصف (عربي)</label>
-                                        <textarea dir="rtl" className="w-full min-h-[100px] p-4 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium focus:bg-white focus:border-teal-500 transition-all outline-none resize-none text-right" value={formData.description.ar} onChange={e => updateBilingual('description', 'ar', e.target.value)} />
+                                        <label className="block text-end text-[11px] font-black uppercase tracking-widest text-muted-foreground">الوصف (عربي)</label>
+                                        <textarea dir="rtl" className="min-h-[100px] w-full resize-none rounded-xl border border-border bg-background p-4 text-end text-sm font-medium text-foreground outline-none transition-all focus:border-primary focus:ring-2 focus:ring-ring/20" value={formData.description.ar} onChange={e => updateBilingual('description', 'ar', e.target.value)} />
                                     </div>
                                 </div>
                         </div>
-                        <div className="p-6 border-t border-slate-100 flex justify-end gap-4 bg-slate-50 shrink-0">
-                            <button type="button" className="px-6 py-2.5 rounded-xl text-sm font-bold text-slate-500 hover:bg-slate-200 transition-all" onClick={() => setIsModalOpen(false)}>Cancel</button>
-                            <button type="submit" disabled={formSaving} className="px-10 py-2.5 bg-teal-600 rounded-xl text-sm font-black text-white hover:bg-teal-700 transition-all flex items-center gap-2">
+                        <div className="flex shrink-0 justify-end gap-4 border-t border-border bg-muted/50 p-6">
+                            <button type="button" className="rounded-xl px-6 py-2.5 text-sm font-bold text-muted-foreground transition-all hover:bg-muted" onClick={() => setIsModalOpen(false)}>Cancel</button>
+                            <button type="submit" disabled={formSaving} className="flex items-center gap-2 rounded-xl bg-primary px-10 py-2.5 text-sm font-black text-primary-foreground transition-all hover:bg-primary/90 disabled:opacity-50">
                                 {formSaving && <Loader2 className="animate-spin" size={16} />} Save Service
                             </button>
                         </div>

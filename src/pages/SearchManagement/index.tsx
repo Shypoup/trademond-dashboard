@@ -73,13 +73,13 @@ const SearchManagement = () => {
         <div className="space-y-8 animate-in fade-in duration-500 pb-12">
             <div className="flex items-center justify-between">
                 <div>
-                    <h2 className="text-2xl font-bold text-slate-900 font-outfit">Search Matrix</h2>
-                    <p className="text-slate-500 text-sm mt-1">Meilisearch / Elastic routing stats</p>
+                    <h2 className="text-2xl font-bold text-foreground font-outfit">Search Matrix</h2>
+                    <p className="mt-1 text-sm text-muted-foreground">Meilisearch / Elastic routing stats</p>
                 </div>
                 <button
                     onClick={handleReindexAll}
                     disabled={reindexingAll}
-                    className="flex items-center gap-2 px-6 py-2.5 bg-slate-900 rounded-xl text-sm font-bold text-white shadow-lg disabled:opacity-50 transition-all hover:bg-black"
+                    className="flex items-center gap-2 rounded-xl bg-primary px-6 py-2.5 text-sm font-bold text-primary-foreground shadow-lg transition-all hover:bg-primary/90 disabled:opacity-50"
                 >
                     {reindexingAll ? <Loader2 size={18} className="animate-spin" /> : <RotateCw size={18} />} Resync Registry
                 </button>
@@ -87,37 +87,37 @@ const SearchManagement = () => {
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {[
-                    { label: 'Cluster Engine', value: statusData?.engine || 'Elastic/Scout', icon: Database, color: 'text-indigo-500', bg: 'bg-indigo-50' },
-                    { label: 'Cluster Health', value: statusData?.health || 'Operational', icon: Zap, color: 'text-emerald-500', bg: 'bg-emerald-50' },
-                    { label: 'Total Indices', value: indexes.length || '0', icon: Search, color: 'text-teal-500', bg: 'bg-teal-50' },
+                    { label: 'Cluster Engine', value: statusData?.engine || 'Elastic/Scout', icon: Database, color: 'text-indigo-600 dark:text-indigo-400', bg: 'bg-indigo-500/10 dark:bg-indigo-950/40' },
+                    { label: 'Cluster Health', value: statusData?.health || 'Operational', icon: Zap, color: 'text-emerald-600 dark:text-emerald-400', bg: 'bg-emerald-500/10 dark:bg-emerald-950/40' },
+                    { label: 'Total Indices', value: indexes.length || '0', icon: Search, color: 'text-primary', bg: 'bg-primary/10 dark:bg-primary/20' },
                 ].map((stat, idx) => (
                     <div key={idx} className="premium-card p-6">
                         <div className="flex items-center justify-between">
-                            <div className={`${stat.bg} ${stat.color} p-3 rounded-xl`}><stat.icon size={24} /></div>
+                            <div className={`rounded-xl p-3 ${stat.bg} ${stat.color}`}><stat.icon size={24} /></div>
                         </div>
-                        <h3 className="text-2xl font-bold font-outfit text-slate-800 mt-4">{stat.value}</h3>
-                        <p className="text-slate-500 text-xs font-bold uppercase tracking-wider">{stat.label}</p>
+                        <h3 className="mt-4 font-outfit text-2xl font-bold text-foreground">{stat.value}</h3>
+                        <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground">{stat.label}</p>
                     </div>
                 ))}
             </div>
 
-            <div className="premium-card overflow-hidden bg-white">
-                <div className="p-6 border-b border-slate-50">
-                    <h3 className="text-lg font-bold">Node Bindings</h3>
+            <div className="premium-card overflow-hidden">
+                <div className="border-b border-border bg-muted/30 p-6">
+                    <h3 className="text-lg font-bold text-foreground">Node Bindings</h3>
                 </div>
                 {loading && indexes.length === 0 ? (
-                    <div className="p-8 text-slate-400">Inspecting partitions...</div>
+                    <div className="p-8 font-medium text-muted-foreground">Inspecting partitions...</div>
                 ) : (
-                    <table className="w-full text-left border-collapse">
+                    <table className="w-full border-collapse text-left">
                         <thead>
-                            <tr className="border-b border-slate-50">
-                                <th className="px-6 py-4 text-[11px] font-bold text-slate-400 uppercase">Namespace</th>
-                                <th className="px-6 py-4 text-[11px] font-bold text-slate-400 uppercase">Indexed Docs</th>
-                                <th className="px-6 py-4 text-[11px] font-bold text-slate-400 uppercase">Last Synchronization</th>
-                                <th className="px-6 py-4 text-[11px] font-bold text-slate-400 uppercase text-right">Actions</th>
+                            <tr className="border-b border-border bg-muted/30">
+                                <th className="px-6 py-4 text-[11px] font-bold uppercase text-muted-foreground">Namespace</th>
+                                <th className="px-6 py-4 text-[11px] font-bold uppercase text-muted-foreground">Indexed Docs</th>
+                                <th className="px-6 py-4 text-[11px] font-bold uppercase text-muted-foreground">Last Synchronization</th>
+                                <th className="px-6 py-4 text-end text-[11px] font-bold uppercase text-muted-foreground">Actions</th>
                             </tr>
                         </thead>
-                        <tbody className="divide-y divide-slate-50">
+                        <tbody className="divide-y divide-border">
                             {indexes.map((idxStrOrObj, i) => {
                                 // sometimes api returns array of strings. Fallback accordingly.
                                 const idxName = typeof idxStrOrObj === 'string' ? idxStrOrObj : idxStrOrObj.name;
@@ -125,32 +125,39 @@ const SearchManagement = () => {
                                 const lastTs = typeof idxStrOrObj === 'object' ? idxStrOrObj.last_indexed_at : '-';
 
                                 return (
-                                    <tr key={i} className="hover:bg-slate-50 transition-colors">
-                                        <td className="px-6 py-5 text-sm font-bold text-slate-800 capitalize flex items-center gap-3">
-                                            <div className="w-2 h-2 bg-teal-400 rounded-full" /> {idxName}
+                                    <tr key={i} className="transition-colors hover:bg-muted/50">
+                                        <td className="px-6 py-5">
+                                            <div className="flex items-center gap-3 text-sm font-bold capitalize text-foreground">
+                                                <div className="h-2 w-2 shrink-0 rounded-full bg-primary" />
+                                                <span>{idxName}</span>
+                                            </div>
                                         </td>
-                                        <td className="px-6 py-5 text-sm font-bold font-mono text-slate-600">{docCount}</td>
-                                        <td className="px-6 py-5 text-xs text-slate-500">{lastTs}</td>
-                                        <td className="px-6 py-5 flex justify-end gap-2">
-                                            <button
-                                                disabled={actionState[`reindex_${idxName}`]}
-                                                onClick={() => handleReindexSpecific(idxName)}
-                                                className="px-3 py-1.5 flex items-center gap-2 bg-slate-100 disabled:opacity-50 text-slate-500 hover:text-slate-800 hover:bg-slate-200 text-xs font-bold rounded-lg transition-colors"
-                                            >
-                                                {actionState[`reindex_${idxName}`] ? <Loader2 size={12} className="animate-spin" /> : <RotateCw size={12} />} Re-map
-                                            </button>
-                                            <button
-                                                disabled={actionState[`flush_${idxName}`]}
-                                                onClick={() => handleFlush(idxName)}
-                                                className="px-3 py-1.5 flex items-center gap-2 bg-rose-50 disabled:opacity-50 text-rose-500 hover:bg-rose-100 text-xs font-bold rounded-lg transition-colors"
-                                            >
-                                                {actionState[`flush_${idxName}`] ? <Loader2 size={12} className="animate-spin" /> : <Trash2 size={12} />} Drop
-                                            </button>
+                                        <td className="px-6 py-5 font-mono text-sm font-bold text-muted-foreground">{docCount}</td>
+                                        <td className="px-6 py-5 text-xs text-muted-foreground">{lastTs}</td>
+                                        <td className="px-6 py-5 text-end">
+                                            <div className="flex justify-end gap-2">
+                                                <button
+                                                    type="button"
+                                                    disabled={actionState[`reindex_${idxName}`]}
+                                                    onClick={() => handleReindexSpecific(idxName)}
+                                                    className="flex items-center gap-2 rounded-lg bg-muted px-3 py-1.5 text-xs font-bold text-foreground transition-colors hover:bg-muted/80 disabled:opacity-50"
+                                                >
+                                                    {actionState[`reindex_${idxName}`] ? <Loader2 size={12} className="animate-spin" /> : <RotateCw size={12} />} Re-map
+                                                </button>
+                                                <button
+                                                    type="button"
+                                                    disabled={actionState[`flush_${idxName}`]}
+                                                    onClick={() => handleFlush(idxName)}
+                                                    className="flex items-center gap-2 rounded-lg border border-destructive/30 bg-destructive/10 px-3 py-1.5 text-xs font-bold text-destructive transition-colors hover:bg-destructive/20 disabled:opacity-50"
+                                                >
+                                                    {actionState[`flush_${idxName}`] ? <Loader2 size={12} className="animate-spin" /> : <Trash2 size={12} />} Drop
+                                                </button>
+                                            </div>
                                         </td>
                                     </tr>
                                 );
                             })}
-                            {indexes.length === 0 && !loading && <tr><td colSpan={4} className="px-6 py-12 text-center text-slate-400">No active Search schemas registered.</td></tr>}
+                            {indexes.length === 0 && !loading && <tr><td colSpan={4} className="px-6 py-12 text-center text-muted-foreground">No active Search schemas registered.</td></tr>}
                         </tbody>
                     </table>
                 )}

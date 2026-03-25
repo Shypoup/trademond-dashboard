@@ -97,43 +97,43 @@ export const ProductTable: React.FC<ProductTableProps> = ({
             <div className="overflow-x-auto">
                 <table className="w-full text-left">
                     <thead>
-                        <tr className="border-b border-slate-100 bg-slate-50/60">
+                        <tr className="border-b border-border bg-muted/40">
                             <th className="pl-5 pr-3 py-3 w-10">
                                 <input
                                     type="checkbox"
                                     checked={paginatedList.length > 0 && selected.size === paginatedList.length}
                                     onChange={onToggleSelectAll}
-                                    className="rounded border-slate-300 text-teal-600 focus:ring-teal-500 cursor-pointer"
+                                    className="cursor-pointer rounded border-border text-primary focus:ring-ring"
                                 />
                             </th>
-                            <th className="px-4 py-3 text-[11px] font-semibold text-slate-400 uppercase tracking-wider">Product</th>
-                            <th className="px-4 py-3 text-[11px] font-semibold text-slate-400 uppercase tracking-wider">Company</th>
-                            <th className="px-4 py-3 text-[11px] font-semibold text-slate-400 uppercase tracking-wider">Category</th>
-                            <th className="px-4 py-3 text-[11px] font-semibold text-slate-400 uppercase tracking-wider">Status</th>
-                            <th className="px-4 py-3 text-[11px] font-semibold text-slate-400 uppercase tracking-wider text-right">Views</th>
-                            <th className="px-4 py-3 text-[11px] font-semibold text-slate-400 uppercase tracking-wider text-right">Price</th>
-                            <th className="px-4 py-3 text-[11px] font-semibold text-slate-400 uppercase tracking-wider">Updated</th>
-                            <th className="px-4 py-3 text-[11px] font-semibold text-slate-400 uppercase tracking-wider text-right">Action</th>
+                            <th className="px-4 py-3 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">Product</th>
+                            <th className="px-4 py-3 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">Company</th>
+                            <th className="px-4 py-3 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">Category</th>
+                            <th className="px-4 py-3 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">Status</th>
+                            <th className="px-4 py-3 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground text-right">Views</th>
+                            <th className="px-4 py-3 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground text-right">Price</th>
+                            <th className="px-4 py-3 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">Updated</th>
+                            <th className="px-4 py-3 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground text-right">Action</th>
                         </tr>
                     </thead>
-                    <tbody className="divide-y divide-slate-50">
+                    <tbody className="divide-y divide-border">
                         {paginatedList.map((p) => {
                             const data = getProductData(p);
                             const status = getStatus(data);
                             const isSelected = selected.has(String(p.id));
                             return (
-                                <tr key={p.id} className={`transition-colors ${isSelected ? 'bg-teal-50/40' : 'hover:bg-slate-50/60'}`}>
+                                <tr key={p.id} className={`transition-colors ${isSelected ? 'bg-primary/10 dark:bg-primary/20' : 'hover:bg-muted/50'}`}>
                                     <td className="pl-5 pr-3 py-4">
                                         <input
                                             type="checkbox"
                                             checked={isSelected}
                                             onChange={() => onToggleSelect(String(p.id))}
-                                            className="rounded border-slate-300 text-teal-600 focus:ring-teal-500 cursor-pointer"
+                                            className="cursor-pointer rounded border-border text-primary focus:ring-ring"
                                         />
                                     </td>
                                     <td className="px-4 py-4">
                                         <div className="flex items-center gap-3">
-                                            <div className="w-11 h-11 rounded-xl overflow-hidden bg-slate-800 shrink-0 border border-slate-100">
+                                            <div className="h-11 w-11 shrink-0 overflow-hidden rounded-xl border border-border bg-muted">
                                                 <img
                                                     src={data.image || `https://ui-avatars.com/api/?name=${encodeURIComponent(displayBilingual(data.name))}&background=1e293b&color=94a3b8&size=44`}
                                                     alt={displayBilingual(data.name)}
@@ -142,22 +142,22 @@ export const ProductTable: React.FC<ProductTableProps> = ({
                                             </div>
                                             <div className="min-w-0">
                                                 <div className="flex items-center gap-1.5 flex-wrap">
-                                                    <span className="text-[13.5px] font-semibold text-slate-800 truncate max-w-[160px]">{displayBilingual(data.name)}</span>
+                                                    <span className="max-w-[160px] truncate text-[13.5px] font-semibold text-foreground">{displayBilingual(data.name)}</span>
                                                     {data.premium && (
-                                                        <span className="text-[9px] font-black bg-amber-100 text-amber-600 px-1.5 py-0.5 rounded uppercase tracking-tight shrink-0">Premium</span>
+                                                        <span className="shrink-0 rounded bg-amber-100 px-1.5 py-0.5 text-[9px] font-black uppercase tracking-tight text-amber-700 dark:bg-amber-950/50 dark:text-amber-300">Premium</span>
                                                     )}
                                                 </div>
                                                 {data.sku && (
-                                                    <p className="text-[11px] text-slate-400 mt-0.5">SKU: {data.sku}</p>
+                                                    <p className="mt-0.5 text-[11px] text-muted-foreground">SKU: {data.sku}</p>
                                                 )}
                                             </div>
                                         </div>
                                     </td>
                                     <td className="px-4 py-4">
-                                        <span className="text-[13px] font-semibold text-[#008080]">{displayBilingual(data.companyName)}</span>
+                                        <span className="text-[13px] font-semibold text-primary">{displayBilingual(data.companyName)}</span>
                                     </td>
                                     <td className="px-4 py-4">
-                                        <span className="text-[13px] text-slate-600">{displayBilingual(data.categoryName)}</span>
+                                        <span className="text-[13px] text-muted-foreground">{displayBilingual(data.categoryName)}</span>
                                     </td>
                                     <td className="px-4 py-4">
                                         <Badge variant="outline" className={`${status.bg} ${status.text} border-transparent font-bold text-[11px]`}>
@@ -166,28 +166,28 @@ export const ProductTable: React.FC<ProductTableProps> = ({
                                         </Badge>
                                     </td>
                                     <td className="px-4 py-4 text-right">
-                                        <span className="text-[13px] font-bold text-slate-700">{data.views > 0 ? data.views.toLocaleString() : '—'}</span>
+                                        <span className="text-[13px] font-bold text-foreground">{data.views > 0 ? data.views.toLocaleString() : '—'}</span>
                                     </td>
                                     <td className="px-4 py-4 text-right">
-                                        <span className="text-[14px] font-black text-slate-900">
+                                        <span className="text-[14px] font-black text-foreground">
                                             {data.price !== null && data.price !== '' && data.price !== undefined
                                                 ? formatCurrency(data.price)
                                                 : '—'}
                                         </span>
                                     </td>
                                     <td className="px-4 py-4">
-                                        <span className="text-[12px] text-slate-400 font-medium">{timeAgo(data.updatedAt || data.createdAt)}</span>
+                                        <span className="text-[12px] font-medium text-muted-foreground">{timeAgo(data.updatedAt || data.createdAt)}</span>
                                     </td>
                                     <td className="px-4 py-4 text-right">
                                         <div className="flex items-center justify-end gap-1">
-                                            <Button variant="ghost" size="icon-sm" onClick={() => onViewDetail(p)} className="text-slate-400 hover:text-teal-600 hover:bg-teal-50">
+                                            <Button variant="ghost" size="icon-sm" onClick={() => onViewDetail(p)} className="text-muted-foreground hover:bg-muted hover:text-primary">
                                                 <ExternalLink size={15} />
                                             </Button>
                                             <Button
                                                 variant="ghost" size="icon-sm"
                                                 onClick={() => onToggleActive(p.id)}
                                                 disabled={togglingId === `active-${p.id}`}
-                                                className={data.active ? 'text-emerald-500 hover:bg-emerald-50' : 'text-slate-300 hover:bg-slate-100'}
+                                                className={data.active ? 'text-emerald-600 hover:bg-emerald-500/10 dark:text-emerald-400' : 'text-muted-foreground hover:bg-muted'}
                                             >
                                                 {togglingId === `active-${p.id}` ? <Loader2 size={15} className="animate-spin" /> : data.active ? <ToggleRight size={15} /> : <ToggleLeft size={15} />}
                                             </Button>
@@ -195,14 +195,14 @@ export const ProductTable: React.FC<ProductTableProps> = ({
                                                 variant="ghost" size="icon-sm"
                                                 onClick={() => onTogglePublished(p.id)}
                                                 disabled={togglingId === `pub-${p.id}`}
-                                                className={data.published ? 'text-sky-500 hover:bg-sky-50' : 'text-slate-300 hover:bg-slate-100'}
+                                                className={data.published ? 'text-sky-600 hover:bg-sky-500/10 dark:text-sky-400' : 'text-muted-foreground hover:bg-muted'}
                                             >
                                                 {togglingId === `pub-${p.id}` ? <Loader2 size={15} className="animate-spin" /> : data.published ? <Eye size={15} /> : <EyeOff size={15} />}
                                             </Button>
-                                            <Button variant="ghost" size="icon-sm" onClick={() => onEdit(p)} className="text-slate-400 hover:text-blue-600 hover:bg-blue-50">
+                                            <Button variant="ghost" size="icon-sm" onClick={() => onEdit(p)} className="text-muted-foreground hover:bg-muted hover:text-primary">
                                                 <Edit size={15} />
                                             </Button>
-                                            <Button variant="ghost" size="icon-sm" onClick={() => onDelete(p.id)} className="text-slate-400 hover:text-rose-600 hover:bg-rose-50">
+                                            <Button variant="ghost" size="icon-sm" onClick={() => onDelete(p.id)} className="text-muted-foreground hover:bg-destructive/10 hover:text-destructive">
                                                 <Trash2 size={15} />
                                             </Button>
                                         </div>
@@ -214,11 +214,11 @@ export const ProductTable: React.FC<ProductTableProps> = ({
                             <tr>
                                 <td colSpan={9} className="px-6 py-16 text-center">
                                     <div className="flex flex-col items-center gap-2">
-                                        <div className="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-400">
+                                        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-muted text-muted-foreground">
                                             <Search size={18} />
                                         </div>
-                                        <p className="text-sm font-medium text-slate-500">No products found</p>
-                                        <p className="text-xs text-slate-400">Try adjusting your filters</p>
+                                        <p className="text-sm font-medium text-muted-foreground">No products found</p>
+                                        <p className="text-xs text-muted-foreground/80">Try adjusting your filters</p>
                                     </div>
                                 </td>
                             </tr>
@@ -227,18 +227,18 @@ export const ProductTable: React.FC<ProductTableProps> = ({
                 </table>
             </div>
 
-            <div className="px-5 py-3 border-t border-slate-100 flex items-center justify-between bg-white">
+            <div className="flex items-center justify-between border-t border-border bg-muted/30 px-5 py-3">
                 <div className="flex items-center gap-4">
-                    <p className="text-xs text-slate-500">
-                        Showing <span className="font-semibold text-slate-700">{filteredCount === 0 ? 0 : (page - 1) * rowsPerPage + 1}-{Math.min(page * rowsPerPage, filteredCount)}</span> of <span className="font-semibold text-slate-700">{filteredCount.toLocaleString()}</span> products
+                    <p className="text-xs text-muted-foreground">
+                        Showing <span className="font-semibold text-foreground">{filteredCount === 0 ? 0 : (page - 1) * rowsPerPage + 1}-{Math.min(page * rowsPerPage, filteredCount)}</span> of <span className="font-semibold text-foreground">{filteredCount.toLocaleString()}</span> products
                     </p>
                     <div className="flex items-center gap-1.5">
-                        <span className="text-xs text-slate-400 font-semibold uppercase tracking-wide">Rows:</span>
+                        <span className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Rows:</span>
                         {ROWS_OPTIONS.map(n => (
                             <button
                                 key={n}
                                 onClick={() => onRowsPerPageChange(n)}
-                                className={`px-2 py-0.5 rounded text-xs font-semibold transition-colors ${rowsPerPage === n ? 'bg-teal-600 text-white' : 'text-slate-500 hover:bg-slate-100'}`}
+                                className={`rounded px-2 py-0.5 text-xs font-semibold transition-colors ${rowsPerPage === n ? 'bg-primary text-primary-foreground' : 'text-muted-foreground hover:bg-muted'}`}
                             >
                                 {n}
                             </button>
@@ -249,17 +249,17 @@ export const ProductTable: React.FC<ProductTableProps> = ({
                     <button
                         onClick={() => onPageChange(Math.max(1, page - 1))}
                         disabled={page === 1}
-                        className="w-8 h-8 flex items-center justify-center rounded-lg border border-slate-200 text-slate-500 hover:border-slate-300 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                        className="flex h-8 w-8 items-center justify-center rounded-lg border border-border text-muted-foreground transition-colors hover:bg-muted disabled:cursor-not-allowed disabled:opacity-40"
                     >
                         <ChevronLeft size={15} />
                     </button>
                     {pageNumbers().map((pg, i) =>
                         pg === '...'
-                            ? <span key={`ellipsis-${i}`} className="w-8 h-8 flex items-center justify-center text-slate-400 text-sm">...</span>
+                            ? <span key={`ellipsis-${i}`} className="flex h-8 w-8 items-center justify-center text-sm text-muted-foreground">...</span>
                             : <button
                                 key={pg}
                                 onClick={() => onPageChange(pg as number)}
-                                className={`w-8 h-8 flex items-center justify-center rounded-lg text-sm font-semibold transition-colors ${page === pg ? 'bg-[#008080] text-white' : 'text-slate-600 hover:bg-slate-100'}`}
+                                className={`flex h-8 w-8 items-center justify-center rounded-lg text-sm font-semibold transition-colors ${page === pg ? 'bg-primary text-primary-foreground' : 'text-muted-foreground hover:bg-muted'}`}
                             >
                                 {pg}
                             </button>
@@ -267,7 +267,7 @@ export const ProductTable: React.FC<ProductTableProps> = ({
                     <button
                         onClick={() => onPageChange(Math.min(totalPages, page + 1))}
                         disabled={page === totalPages}
-                        className="w-8 h-8 flex items-center justify-center rounded-lg border border-slate-200 text-slate-500 hover:border-slate-300 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                        className="flex h-8 w-8 items-center justify-center rounded-lg border border-border text-muted-foreground transition-colors hover:bg-muted disabled:cursor-not-allowed disabled:opacity-40"
                     >
                         <ChevronRight size={15} />
                     </button>

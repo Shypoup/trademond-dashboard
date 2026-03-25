@@ -28,7 +28,7 @@ export const DeleteProductDialog: React.FC<DeleteProductDialogProps> = ({
                 <DialogHeader>
                     <DialogTitle>Delete product?</DialogTitle>
                 </DialogHeader>
-                <p className="text-sm text-slate-500 mt-2">
+                <p className="text-sm text-muted-foreground mt-2">
                     This action cannot be undone. The product will be removed from the catalog.
                 </p>
                 <DialogFooter className="mt-4">

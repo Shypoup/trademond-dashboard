@@ -53,6 +53,9 @@ function DropdownMenuGroup({ ...props }: MenuPrimitive.Group.Props) {
   return <MenuPrimitive.Group data-slot="dropdown-menu-group" {...props} />
 }
 
+/**
+ * Section title. Base UI requires a parent {@link DropdownMenuGroup} (`Menu.Group`).
+ */
 function DropdownMenuLabel({
   className,
   inset,

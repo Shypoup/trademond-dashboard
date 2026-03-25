@@ -58,20 +58,20 @@ export const ProductToolbar: React.FC<ProductToolbarProps> = ({
     onResetFilters,
 }) => {
     return (
-        <div className="px-5 py-4 border-b border-slate-100 flex flex-wrap items-center gap-3">
-            <div className="relative flex-1 min-w-[220px]">
-                <Filter className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" size={15} />
+        <div className="flex flex-wrap items-center gap-3 border-b border-border bg-muted/40 px-5 py-4">
+            <div className="relative min-w-[220px] flex-1">
+                <Filter className="pointer-events-none absolute start-3 top-1/2 size-[15px] -translate-y-1/2 text-muted-foreground" />
                 <input
                     type="text"
                     value={search}
                     onChange={e => onSearchChange(e.target.value)}
                     placeholder="Filter by product name, SKU..."
-                    className="w-full h-9 pl-9 pr-4 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:outline-none focus:border-teal-400 focus:bg-white transition-all"
+                    className="h-9 w-full rounded-lg border border-border bg-background ps-9 pe-4 text-sm text-foreground transition-all placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-2 focus:ring-ring/20"
                 />
             </div>
 
             <Select value={filterCategory} onValueChange={(val) => onFilterCategoryChange(val ?? 'all')}>
-                <SelectTrigger className="h-9 w-fit min-w-[130px] bg-white border-slate-200 text-slate-600 font-medium px-3">
+                <SelectTrigger className="h-9 w-fit min-w-[130px] border-border bg-background px-3 font-medium text-foreground">
                     <SelectValue placeholder="Category" />
                 </SelectTrigger>
                 <SelectContent>
@@ -85,7 +85,7 @@ export const ProductToolbar: React.FC<ProductToolbarProps> = ({
             </Select>
 
             <Select value={filterStatus} onValueChange={(val) => onFilterStatusChange(val ?? 'all')}>
-                <SelectTrigger className="h-9 w-fit min-w-[110px] bg-white border-slate-200 text-slate-600 font-medium px-3">
+                <SelectTrigger className="h-9 w-fit min-w-[110px] border-border bg-background px-3 font-medium text-foreground">
                     <SelectValue placeholder="Status" />
                 </SelectTrigger>
                 <SelectContent>
@@ -98,7 +98,7 @@ export const ProductToolbar: React.FC<ProductToolbarProps> = ({
             </Select>
 
             <Select value={filterCompany} onValueChange={(val) => onFilterCompanyChange(val ?? 'all')}>
-                <SelectTrigger className="h-9 w-fit min-w-[130px] bg-white border-slate-200 text-slate-600 font-medium px-3">
+                <SelectTrigger className="h-9 w-fit min-w-[130px] border-border bg-background px-3 font-medium text-foreground">
                     <SelectValue placeholder="Company" />
                 </SelectTrigger>
                 <SelectContent>
@@ -114,15 +114,15 @@ export const ProductToolbar: React.FC<ProductToolbarProps> = ({
             <button
                 onClick={onResetFilters}
                 title="Reset Filters & Refresh"
-                className="h-9 w-9 flex items-center justify-center bg-white border border-slate-200 rounded-lg text-slate-400 hover:text-teal-600 hover:border-teal-200 transition-colors"
+                className="flex h-9 w-9 items-center justify-center rounded-lg border border-border bg-card text-muted-foreground transition-colors hover:border-primary hover:text-primary"
             >
                 <RotateCcw size={15} />
             </button>
 
             {selectedCount > 0 && (
-                <div className="ml-auto flex items-center gap-2">
-                    <span className="text-xs font-semibold text-slate-500">{selectedCount} selected</span>
-                    <button className="h-9 px-4 bg-slate-100 border border-slate-200 rounded-lg text-sm font-semibold text-slate-600 hover:bg-slate-200 transition-colors flex items-center gap-1.5">
+                <div className="ms-auto flex items-center gap-2">
+                    <span className="text-xs font-semibold text-muted-foreground">{selectedCount} selected</span>
+                    <button type="button" className="flex h-9 items-center gap-1.5 rounded-lg border border-border bg-muted px-4 text-sm font-semibold text-foreground transition-colors hover:bg-muted/80">
                         Bulk Actions <ChevronDown size={13} />
                     </button>
                 </div>

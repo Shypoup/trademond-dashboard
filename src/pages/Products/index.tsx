@@ -293,7 +293,7 @@ const Products = () => {
             <div className="flex items-center justify-center min-h-[60vh]">
                 <div className="flex flex-col items-center gap-4">
                     <div className="w-12 h-12 border-4 border-teal-500/20 border-t-teal-500 rounded-full animate-spin"></div>
-                    <p className="text-slate-400 font-bold animate-pulse text-sm">Loading Product Catalog...</p>
+                    <p className="text-sm font-bold text-muted-foreground animate-pulse">Loading Product Catalog...</p>
                 </div>
             </div>
         );
@@ -303,8 +303,8 @@ const Products = () => {
         <div className="space-y-5 pb-12">
             <div className="flex items-start justify-between">
                 <div>
-                    <h2 className="text-2xl font-bold text-slate-900">Products Management</h2>
-                    <p className="text-slate-500 text-sm mt-1">{totalProducts.toLocaleString()} total products registered in the platform</p>
+                    <h2 className="text-2xl font-bold text-foreground">Products Management</h2>
+                    <p className="mt-1 text-sm text-muted-foreground">{totalProducts.toLocaleString()} total products registered in the platform</p>
                 </div>
                 <button
                     onClick={() => handleOpenModal()}
@@ -315,7 +315,7 @@ const Products = () => {
                 </button>
             </div>
 
-            <div className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
+            <div className="premium-card overflow-hidden">
                 <ProductToolbar
                     search={search}
                     onSearchChange={val => { setSearch(val); setPage(1); }}

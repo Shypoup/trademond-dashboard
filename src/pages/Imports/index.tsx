@@ -33,7 +33,7 @@ const Imports = () => {
         <div className="space-y-8 animate-in fade-in duration-500 pb-12">
             <div className="flex items-center justify-between">
                 <div>
-                    <h2 className="text-2xl font-bold text-slate-900 font-outfit">Mass Import Gateways</h2>
+                    <h2 className="text-2xl font-bold text-foreground font-outfit">Mass Import Gateways</h2>
                     <p className="text-slate-500 text-sm mt-1">Accepts standard .xlsx mapping templates</p>
                 </div>
             </div>
@@ -52,7 +52,7 @@ const Imports = () => {
                         {loadingInd ? <Loader2 size={32} className="animate-spin" /> : <FileSpreadsheet size={32} />}
                     </div>
                     <h3 className="text-xl font-bold font-outfit text-slate-800">Industries Classification</h3>
-                    <p className="text-sm text-slate-500 mt-2 max-w-xs">Drop your .xlsx sheet containing standard TRD-IND hierarchical data mapping.</p>
+                    <p className="text-sm text-muted-foreground mt-2 max-w-xs">Drop your .xlsx sheet containing standard TRD-IND hierarchical data mapping.</p>
                     <div className="mt-8 flex items-center gap-2 text-xs font-bold text-indigo-600 bg-indigo-50 px-4 py-2 rounded-xl">
                         <UploadCloud size={16} /> Choose File
                     </div>
@@ -71,7 +71,7 @@ const Imports = () => {
                         {loadingISIC ? <Loader2 size={32} className="animate-spin" /> : <FileSpreadsheet size={32} />}
                     </div>
                     <h3 className="text-xl font-bold font-outfit text-slate-800">ISIC Global Database</h3>
-                    <p className="text-sm text-slate-500 mt-2 max-w-xs">Drop your .xlsx sheet mapping Rev.4 ISIC coding standards directly into sectors.</p>
+                    <p className="text-sm text-muted-foreground mt-2 max-w-xs">Drop your .xlsx sheet mapping Rev.4 ISIC coding standards directly into sectors.</p>
                     <div className="mt-8 flex items-center gap-2 text-xs font-bold text-teal-600 bg-teal-50 px-4 py-2 rounded-xl">
                         <UploadCloud size={16} /> Choose File
                     </div>

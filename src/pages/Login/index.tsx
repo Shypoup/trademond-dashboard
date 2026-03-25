@@ -1,10 +1,13 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useQueryClient } from '@tanstack/react-query';
 import { ShieldCheck, Mail, Lock, ArrowRight, Loader2, AlertCircle } from 'lucide-react';
 import { authService } from '@services/authService';
+import { AUTH_PROFILE_QUERY_KEY } from '@hooks/useAuthProfile';
 
 const Login = () => {
     const navigate = useNavigate();
+    const queryClient = useQueryClient();
     const [loading, setLoading] = React.useState(false);
     const [error, setError] = React.useState<string | null>(null);
     const [email, setEmail] = React.useState('');
@@ -18,6 +21,7 @@ const Login = () => {
         try {
             const result = await authService.login({ email, password });
             if (result.success) {
+                void queryClient.invalidateQueries({ queryKey: AUTH_PROFILE_QUERY_KEY });
                 navigate('/');
             } else {
                 setError(result.message || 'Authentication failed. Please check your credentials.');

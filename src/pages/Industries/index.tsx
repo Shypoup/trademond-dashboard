@@ -99,7 +99,7 @@ const Industries = () => {
 
   if (loading && rows.length === 0) {
     return (
-      <div className="flex min-h-[40vh] items-center justify-center gap-2 text-slate-500">
+      <div className="flex min-h-[40vh] items-center justify-center gap-2 text-muted-foreground">
         <Loader2 className="animate-spin" size={20} />
         <span>{t('common.loading')}</span>
       </div>
@@ -110,8 +110,8 @@ const Industries = () => {
     <div className="space-y-6 pb-12 animate-in fade-in duration-500">
       <div className="flex flex-wrap items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-slate-900 font-outfit">{t('sidebar.industries')}</h1>
-          <p className="mt-1 text-sm text-slate-500">{t('industriesPage.subtitle')}</p>
+          <h1 className="text-2xl font-bold text-foreground font-outfit">{t('sidebar.industries')}</h1>
+          <p className="mt-1 text-sm text-muted-foreground">{t('industriesPage.subtitle')}</p>
         </div>
         <button
           type="button"
@@ -123,22 +123,22 @@ const Industries = () => {
         </button>
       </div>
 
-      <div className="premium-card overflow-hidden bg-white">
+      <div className="premium-card overflow-hidden">
         <table className="w-full border-collapse text-start">
           <thead>
-            <tr className="border-b border-slate-100">
-              <th className="px-6 py-4 text-[11px] font-bold uppercase text-slate-400">{t('industriesPage.colName')}</th>
-              <th className="px-6 py-4 text-[11px] font-bold uppercase text-slate-400">{t('industriesPage.colSlug')}</th>
-              <th className="px-6 py-4 text-[11px] font-bold uppercase text-slate-400">{t('common.status')}</th>
-              <th className="px-6 py-4 text-[11px] font-bold uppercase text-slate-400">{t('industriesPage.colUpdated')}</th>
-              <th className="px-6 py-4 text-end text-[11px] font-bold uppercase text-slate-400">{t('common.actions')}</th>
+            <tr className="border-b border-border">
+              <th className="px-6 py-4 text-[11px] font-bold uppercase text-muted-foreground">{t('industriesPage.colName')}</th>
+              <th className="px-6 py-4 text-[11px] font-bold uppercase text-muted-foreground">{t('industriesPage.colSlug')}</th>
+              <th className="px-6 py-4 text-[11px] font-bold uppercase text-muted-foreground">{t('common.status')}</th>
+              <th className="px-6 py-4 text-[11px] font-bold uppercase text-muted-foreground">{t('industriesPage.colUpdated')}</th>
+              <th className="px-6 py-4 text-end text-[11px] font-bold uppercase text-muted-foreground">{t('common.actions')}</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-slate-50">
+          <tbody className="divide-y divide-border">
             {rows.map((row) => (
-              <tr key={row.id} className="hover:bg-slate-50/60">
-                <td className="px-6 py-4 text-sm font-semibold text-slate-800">{displayBilingual(row.name)}</td>
-                <td className="px-6 py-4 font-mono text-xs text-slate-500">{row.slug || '—'}</td>
+              <tr key={row.id} className="hover:bg-muted/50">
+                <td className="px-6 py-4 text-sm font-semibold text-foreground">{displayBilingual(row.name)}</td>
+                <td className="px-6 py-4 font-mono text-xs text-muted-foreground">{row.slug || '—'}</td>
                 <td className="px-6 py-4">
                   <span
                     className={cn(
@@ -151,12 +151,12 @@ const Industries = () => {
                     {row.active !== false ? t('common.active') : t('common.inactive')}
                   </span>
                 </td>
-                <td className="px-6 py-4 text-xs text-slate-500">{(row as { updated_at?: string }).updated_at ? formatDate((row as { updated_at?: string }).updated_at) : '—'}</td>
+                <td className="px-6 py-4 text-xs text-muted-foreground">{(row as { updated_at?: string }).updated_at ? formatDate((row as { updated_at?: string }).updated_at) : '—'}</td>
                 <td className="px-6 py-4 text-end">
                   <button
                     type="button"
                     onClick={() => openEdit(row)}
-                    className="me-2 inline-flex rounded-lg p-2 text-slate-400 hover:bg-slate-100 hover:text-teal-600"
+                    className="me-2 inline-flex rounded-lg p-2 text-muted-foreground hover:bg-muted hover:text-teal-600"
                     aria-label={t('common.edit')}
                   >
                     <Pencil size={16} />
@@ -164,7 +164,7 @@ const Industries = () => {
                   <button
                     type="button"
                     onClick={() => void handleDelete(row.id)}
-                    className="inline-flex rounded-lg p-2 text-slate-400 hover:bg-rose-50 hover:text-rose-600"
+                    className="inline-flex rounded-lg p-2 text-muted-foreground hover:bg-destructive/10 hover:text-rose-600"
                     aria-label={t('common.delete')}
                   >
                     <Trash2 size={16} />
@@ -175,7 +175,7 @@ const Industries = () => {
           </tbody>
         </table>
         {rows.length === 0 && !loading && (
-          <p className="px-6 py-12 text-center text-sm text-slate-400">{t('common.noData')}</p>
+          <p className="px-6 py-12 text-center text-sm text-muted-foreground">{t('common.noData')}</p>
         )}
       </div>
 

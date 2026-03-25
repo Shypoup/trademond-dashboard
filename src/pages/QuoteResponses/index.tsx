@@ -96,13 +96,13 @@ const QuoteResponses = () => {
   return (
     <div className="space-y-6 pb-12 animate-in fade-in duration-500">
       <div>
-        <h1 className="text-2xl font-bold text-slate-900 font-outfit">{t('sidebar.quoteResponses')}</h1>
-        <p className="mt-1 text-sm text-slate-500">{t('quoteResponsesPage.subtitle')}</p>
+        <h1 className="text-2xl font-bold text-foreground font-outfit">{t('sidebar.quoteResponses')}</h1>
+        <p className="mt-1 text-sm text-muted-foreground">{t('quoteResponsesPage.subtitle')}</p>
       </div>
 
-      <div className="premium-card flex flex-wrap items-end gap-3 bg-white p-6">
+      <div className="premium-card flex flex-wrap items-end gap-3 p-6">
         <label className="min-w-[240px] flex-1 space-y-1 text-sm">
-          <span className="text-[11px] font-bold uppercase text-slate-400">{t('quoteResponsesPage.responseUlid')}</span>
+          <span className="text-[11px] font-bold uppercase text-muted-foreground">{t('quoteResponsesPage.responseUlid')}</span>
           <input
             value={ulid}
             onChange={(e) => setUlid(e.target.value)}
@@ -122,29 +122,29 @@ const QuoteResponses = () => {
       </div>
 
       {row && (
-        <div className="premium-card space-y-4 bg-white p-6">
+        <div className="premium-card space-y-4 p-6">
           <dl className="grid gap-3 sm:grid-cols-2 text-sm">
             <div>
-              <dt className="text-[11px] font-bold uppercase text-slate-400">{t('quoteResponsesPage.quoteRequest')}</dt>
+              <dt className="text-[11px] font-bold uppercase text-muted-foreground">{t('quoteResponsesPage.quoteRequest')}</dt>
               <dd className="font-mono text-xs text-slate-700">{row.quote_request_id}</dd>
             </div>
             <div>
-              <dt className="text-[11px] font-bold uppercase text-slate-400">{t('quoteResponsesPage.price')}</dt>
+              <dt className="text-[11px] font-bold uppercase text-muted-foreground">{t('quoteResponsesPage.price')}</dt>
               <dd className="text-slate-800">
                 {row.price != null ? `${row.price} ${row.currency ?? ''}` : '—'}
               </dd>
             </div>
             <div className="sm:col-span-2">
-              <dt className="text-[11px] font-bold uppercase text-slate-400">{t('quoteResponsesPage.message')}</dt>
+              <dt className="text-[11px] font-bold uppercase text-muted-foreground">{t('quoteResponsesPage.message')}</dt>
               <dd className="whitespace-pre-wrap text-slate-700">{row.message ?? '—'}</dd>
             </div>
             <div>
-              <dt className="text-[11px] font-bold uppercase text-slate-400">{t('quoteResponsesPage.validUntil')}</dt>
+              <dt className="text-[11px] font-bold uppercase text-muted-foreground">{t('quoteResponsesPage.validUntil')}</dt>
               <dd className="text-xs text-slate-600">{row.valid_until ? formatDate(row.valid_until) : '—'}</dd>
             </div>
           </dl>
           <label className="space-y-1 text-sm">
-            <span className="text-[11px] font-bold uppercase text-slate-400">{t('quoteRequestsPage.adminNotes')}</span>
+            <span className="text-[11px] font-bold uppercase text-muted-foreground">{t('quoteRequestsPage.adminNotes')}</span>
             <textarea
               rows={3}
               value={adminNotes}
@@ -189,7 +189,7 @@ const QuoteResponses = () => {
       )}
 
       {raw !== null && (
-        <div className="premium-card bg-white p-4">
+        <div className="premium-card p-4">
           <h3 className="mb-2 text-sm font-bold text-slate-800">{t('quoteResponsesPage.rawPayload')}</h3>
           <JsonInspector data={raw} />
         </div>

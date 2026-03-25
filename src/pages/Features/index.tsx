@@ -1,5 +1,5 @@
 import React from 'react';
-import { Plus, MoreHorizontal, Layers, X, Edit, Trash2, Loader2, ChevronDown } from 'lucide-react';
+import { Plus, Layers, X, Edit, Trash2, Loader2, ChevronDown } from 'lucide-react';
 import { featureService } from '@services/featureService';
 import { Feature } from '@data-types/api';
 import { displayBilingual, getStatusStyles } from '@utils/ui';
@@ -96,13 +96,15 @@ const Features = () => {
         }));
     };
 
-    if (loading && features.length === 0) return <div className="p-8 font-bold text-slate-400">Loading features...</div>;
+    if (loading && features.length === 0) {
+        return <div className="p-8 font-bold text-muted-foreground">Loading features...</div>;
+    }
 
     return (
         <div className="space-y-6 animate-in fade-in duration-500 pb-12">
             <div className="flex items-center justify-between">
                 <div>
-                    <h2 className="text-2xl font-bold text-slate-900 font-outfit">Platform Features</h2>
+                    <h2 className="text-2xl font-bold text-foreground font-outfit">Platform Features</h2>
                     <p className="text-slate-500 text-sm mt-1">Manage global feature toggles and limits ({features.length} mapped)</p>
                 </div>
                 <button
@@ -114,53 +116,53 @@ const Features = () => {
                 </button>
             </div>
 
-            <div className="premium-card overflow-hidden bg-white">
-                <table className="w-full text-left border-collapse">
+            <div className="premium-card overflow-hidden">
+                <table className="w-full border-collapse text-left">
                     <thead>
-                        <tr className="border-b border-slate-50">
-                            <th className="px-6 py-4 text-[11px] font-bold text-slate-400 uppercase">Feature</th>
-                            <th className="px-6 py-4 text-[11px] font-bold text-slate-400 uppercase">Category</th>
-                            <th className="px-6 py-4 text-[11px] font-bold text-slate-400 uppercase">Type</th>
-                            <th className="px-6 py-4 text-[11px] font-bold text-slate-400 uppercase">Status</th>
-                            <th className="px-6 py-4 text-[11px] font-bold text-slate-400 uppercase text-right">Actions</th>
+                        <tr className="border-b border-border bg-muted/30">
+                            <th className="px-6 py-4 text-[11px] font-bold uppercase text-muted-foreground">Feature</th>
+                            <th className="px-6 py-4 text-[11px] font-bold uppercase text-muted-foreground">Category</th>
+                            <th className="px-6 py-4 text-[11px] font-bold uppercase text-muted-foreground">Type</th>
+                            <th className="px-6 py-4 text-[11px] font-bold uppercase text-muted-foreground">Status</th>
+                            <th className="px-6 py-4 text-end text-[11px] font-bold uppercase text-muted-foreground">Actions</th>
                         </tr>
                     </thead>
-                    <tbody className="divide-y divide-slate-50">
+                    <tbody className="divide-y divide-border">
                         {features.map((f) => (
-                            <tr key={f.id} className="hover:bg-slate-50/50 transition-colors group">
+                            <tr key={f.id} className="group transition-colors hover:bg-muted/50">
                                 <td className="px-6 py-5">
                                     <div className="flex items-center gap-4">
-                                        <div className="w-10 h-10 rounded-xl bg-slate-50 border flex items-center justify-center text-slate-500 group-hover:bg-teal-50 group-hover:text-teal-600 transition-colors">
+                                        <div className="flex size-10 items-center justify-center rounded-xl border border-border bg-muted text-muted-foreground transition-colors group-hover:bg-primary/10 group-hover:text-primary">
                                             <Layers size={18} />
                                         </div>
                                         <div>
-                                            <h5 className="text-[14px] font-bold text-slate-800">{displayBilingual(f.name)}</h5>
-                                            <p className="text-[10px] text-slate-400 font-bold uppercase truncate max-w-[200px]">{f.key}</p>
+                                            <h5 className="text-[14px] font-bold text-foreground">{displayBilingual(f.name)}</h5>
+                                            <p className="max-w-[200px] truncate text-[10px] font-bold uppercase text-muted-foreground">{f.key}</p>
                                         </div>
                                     </div>
                                 </td>
-                                <td className="px-6 py-5 text-sm font-medium text-slate-600 capitalize">{f.category}</td>
+                                <td className="px-6 py-5 text-sm font-medium capitalize text-muted-foreground">{f.category}</td>
                                 <td className="px-6 py-5">
-                                    <span className="text-[10px] font-bold px-2 py-0.5 rounded border bg-slate-100 text-slate-500 uppercase">{f.type}</span>
+                                    <span className="rounded border border-border bg-muted px-2 py-0.5 text-[10px] font-bold uppercase text-muted-foreground">{f.type}</span>
                                 </td>
                                 <td className="px-6 py-5">
                                     <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full border ${getStatusStyles(f.active ? 'active' : 'inactive')}`}>
                                         {f.active ? 'Active' : 'Inactive'}
                                     </span>
                                 </td>
-                                <td className="px-6 py-5 pr-4 text-right">
+                                <td className="px-6 py-5 pe-4 text-end">
                                     <div className="flex items-center justify-end gap-1">
-                                        <button onClick={() => handleOpenModal(f)} className="text-slate-400 hover:text-blue-600 p-2 hover:bg-slate-100 rounded-lg border border-transparent hover:border-slate-200 transition-all">
+                                        <button type="button" onClick={() => handleOpenModal(f)} className="rounded-lg border border-transparent p-2 text-muted-foreground transition-all hover:border-border hover:bg-muted hover:text-primary">
                                             <Edit size={16} />
                                         </button>
-                                        <button onClick={() => handleDelete(f.id)} className="text-slate-400 hover:text-rose-600 p-2 hover:bg-slate-100 rounded-lg border border-transparent hover:border-slate-200 transition-all">
+                                        <button type="button" onClick={() => handleDelete(f.id)} className="rounded-lg border border-transparent p-2 text-muted-foreground transition-all hover:border-border hover:bg-destructive/10 hover:text-destructive">
                                             <Trash2 size={16} />
                                         </button>
                                     </div>
                                 </td>
                             </tr>
                         ))}
-                        {features.length === 0 && <tr><td colSpan={5} className="px-6 py-12 text-center text-slate-400">No features mapped.</td></tr>}
+                        {features.length === 0 && <tr><td colSpan={5} className="px-6 py-12 text-center text-muted-foreground">No features mapped.</td></tr>}
                     </tbody>
                 </table>
             </div>
@@ -171,70 +173,70 @@ const Features = () => {
                     showCloseButton={false}
                     className="p-0 !max-w-xl w-full max-h-screen overflow-y-auto border-none shadow-2xl flex flex-col gap-0 sm:!max-w-xl"
                 >
-                    <div className="p-6 border-b shrink-0 bg-slate-50">
+                    <div className="shrink-0 border-b border-border bg-muted/50 p-6">
                         <div className="flex items-center justify-between">
-                            <SheetHeader className="!p-0 !m-0">
-                                <SheetTitle className="text-xl font-bold font-outfit text-slate-900">
+                            <SheetHeader className="!m-0 !p-0">
+                                <SheetTitle className="font-outfit text-xl font-bold text-foreground">
                                     {editingId ? 'Edit Feature' : 'Map New Feature'}
                                 </SheetTitle>
                             </SheetHeader>
                             <button
                                 type="button"
                                 onClick={() => setIsModalOpen(false)}
-                                className="p-2 hover:bg-slate-200 rounded-full transition-colors text-slate-400"
+                                className="rounded-full p-2 text-muted-foreground transition-colors hover:bg-muted"
                             >
                                 <X size={20} />
                             </button>
                         </div>
                     </div>
 
-                    <form onSubmit={handleSubmit} className="flex flex-col flex-1 min-h-0">
-                        <div className="p-8 space-y-6 flex-1 overflow-y-auto premium-scrollbar">
+                    <form onSubmit={handleSubmit} className="flex min-h-0 flex-1 flex-col">
+                        <div className="premium-scrollbar flex-1 space-y-6 overflow-y-auto p-8">
                                 <div className="grid grid-cols-2 gap-6">
                                     <div className="space-y-2">
-                                        <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest pl-2">Display Name (EN)</label>
-                                        <input required className="w-full h-12 bg-slate-50 border border-slate-200 rounded-xl px-4 text-sm font-bold focus:bg-white focus:border-slate-800 transition-all outline-none" value={formData.name.en} onChange={e => updateBilingual('name', 'en', e.target.value)} />
+                                        <label className="ps-2 text-[11px] font-black uppercase tracking-widest text-muted-foreground">Display Name (EN)</label>
+                                        <input required className="h-12 w-full rounded-xl border border-border bg-background px-4 text-sm font-bold text-foreground outline-none transition-all focus:border-primary focus:ring-2 focus:ring-ring/20" value={formData.name.en} onChange={e => updateBilingual('name', 'en', e.target.value)} />
                                     </div>
                                     <div className="space-y-2">
-                                        <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest text-right block pr-2">الإسم بالعربية</label>
-                                        <input required dir="rtl" className="w-full h-12 bg-slate-50 border border-slate-200 rounded-xl px-4 text-sm font-bold focus:bg-white focus:border-slate-800 transition-all outline-none text-right" value={formData.name.ar} onChange={e => updateBilingual('name', 'ar', e.target.value)} />
+                                        <label className="block pe-2 text-end text-[11px] font-black uppercase tracking-widest text-muted-foreground">الإسم بالعربية</label>
+                                        <input required dir="rtl" className="h-12 w-full rounded-xl border border-border bg-background px-4 text-end text-sm font-bold text-foreground outline-none transition-all focus:border-primary focus:ring-2 focus:ring-ring/20" value={formData.name.ar} onChange={e => updateBilingual('name', 'ar', e.target.value)} />
                                     </div>
                                 </div>
                                 <div className="space-y-2">
-                                    <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest pl-2">System Resource Key</label>
-                                    <input required className="w-full h-12 bg-slate-50 border border-slate-200 rounded-xl px-4 text-sm font-bold text-blue-600 focus:bg-white focus:border-slate-800 transition-all outline-none font-mono" value={formData.key} onChange={e => setFormData({ ...formData, key: e.target.value })} placeholder="app.products.max_images" />
+                                    <label className="ps-2 text-[11px] font-black uppercase tracking-widest text-muted-foreground">System Resource Key</label>
+                                    <input required className="h-12 w-full rounded-xl border border-border bg-background px-4 font-mono text-sm font-bold text-primary outline-none transition-all focus:border-primary focus:ring-2 focus:ring-ring/20" value={formData.key} onChange={e => setFormData({ ...formData, key: e.target.value })} placeholder="app.products.max_images" />
                                 </div>
                                 <div className="grid grid-cols-2 gap-6">
                                     <div className="space-y-2">
-                                        <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest pl-2">Capability Type</label>
+                                        <label className="ps-2 text-[11px] font-black uppercase tracking-widest text-muted-foreground">Capability Type</label>
                                         <div className="relative">
-                                            <select required className="w-full h-12 bg-slate-50 border border-slate-200 rounded-xl px-4 text-sm font-bold appearance-none outline-none focus:border-slate-800 transition-all capitalize" value={formData.type} onChange={e => setFormData({ ...formData, type: e.target.value as any })}>
+                                            <select required className="h-12 w-full appearance-none rounded-xl border border-border bg-background px-4 pe-10 text-sm font-bold capitalize text-foreground outline-none transition-all focus:border-primary focus:ring-2 focus:ring-ring/20" value={formData.type} onChange={e => setFormData({ ...formData, type: e.target.value as any })}>
                                                 <option value="boolean">Boolean Toggle (On/Off)</option>
                                                 <option value="limit">Numeric Limit</option>
                                                 <option value="tier">Subscription Tier Based</option>
                                                 <option value="config">Complex Configuration</option>
                                             </select>
-                                            <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" size={16} />
+                                            <ChevronDown className="pointer-events-none absolute end-4 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
                                         </div>
                                     </div>
                                     <div className="space-y-2">
-                                        <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest pl-2">Module Category</label>
-                                        <input required className="w-full h-12 bg-slate-50 border border-slate-200 rounded-xl px-4 text-sm font-bold focus:bg-white focus:border-slate-800 transition-all outline-none" value={formData.category} onChange={e => setFormData({ ...formData, category: e.target.value })} placeholder="e.g. general, analytics, api" />
+                                        <label className="ps-2 text-[11px] font-black uppercase tracking-widest text-muted-foreground">Module Category</label>
+                                        <input required className="h-12 w-full rounded-xl border border-border bg-background px-4 text-sm font-bold text-foreground outline-none transition-all focus:border-primary focus:ring-2 focus:ring-ring/20" value={formData.category} onChange={e => setFormData({ ...formData, category: e.target.value })} placeholder="e.g. general, analytics, api" />
                                     </div>
                                 </div>
                                 <div className="pt-2">
-                                    <label className="flex items-center gap-3 cursor-pointer group">
+                                    <label className="group flex cursor-pointer items-center gap-3">
                                         <div className="relative">
-                                            <input type="checkbox" className="sr-only peer" checked={formData.active} onChange={e => setFormData({ ...formData, active: e.target.checked })} />
-                                            <div className="w-12 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-slate-900"></div>
+                                            <input type="checkbox" className="peer sr-only" checked={formData.active} onChange={e => setFormData({ ...formData, active: e.target.checked })} />
+                                            <div className="peer h-6 w-12 rounded-full bg-muted after:absolute after:start-[2px] after:top-[2px] after:h-5 after:w-5 after:rounded-full after:border after:border-border after:bg-background after:transition-all after:content-[''] peer-checked:bg-primary peer-checked:after:translate-x-full peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-ring/40" />
                                         </div>
-                                        <span className="text-sm font-bold text-slate-700">Feature Active Globally</span>
+                                        <span className="text-sm font-bold text-foreground">Feature Active Globally</span>
                                     </label>
                                 </div>
                         </div>
-                        <div className="p-6 border-t border-slate-100 flex justify-end gap-4 bg-slate-50 shrink-0">
-                            <button type="button" className="px-6 py-2.5 rounded-xl text-sm font-bold text-slate-500 hover:bg-slate-200 transition-all" onClick={() => setIsModalOpen(false)}>Cancel</button>
-                            <button type="submit" disabled={formSaving} className="px-10 py-2.5 bg-slate-900 rounded-xl text-sm font-black text-white hover:bg-teal-600 transition-all flex items-center gap-2 shadow-xl shadow-slate-900/20">
+                        <div className="flex shrink-0 justify-end gap-4 border-t border-border bg-muted/50 p-6">
+                            <button type="button" className="rounded-xl px-6 py-2.5 text-sm font-bold text-muted-foreground transition-all hover:bg-muted" onClick={() => setIsModalOpen(false)}>Cancel</button>
+                            <button type="submit" disabled={formSaving} className="flex items-center gap-2 rounded-xl bg-primary px-10 py-2.5 text-sm font-black text-primary-foreground shadow-xl transition-all hover:bg-primary/90 disabled:opacity-50">
                                 {formSaving && <Loader2 className="animate-spin" size={16} />} Deploy Feature Map
                             </button>
                         </div>

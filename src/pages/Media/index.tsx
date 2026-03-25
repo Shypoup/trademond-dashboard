@@ -71,7 +71,7 @@ const formatBytes = (bytes?: number): string => {
  */
 const MimeIcon: React.FC<{ mime: string }> = ({ mime }) => {
     if (mime.startsWith('image/')) return <FileImage size={14} className="text-violet-500" />;
-    return <FileText size={14} className="text-slate-400" />;
+    return <FileText size={14} className="text-muted-foreground" />;
 };
 
 /**
@@ -160,7 +160,7 @@ const MediaManagement = () => {
             <div className="flex items-center justify-center min-h-[60vh]">
                 <div className="flex flex-col items-center gap-4">
                     <div className="w-12 h-12 border-4 border-teal-500/20 border-t-teal-500 rounded-full animate-spin" />
-                    <p className="text-slate-400 font-bold animate-pulse text-sm">
+                    <p className="text-sm font-bold text-muted-foreground animate-pulse">
                         {t('media.loading')}
                     </p>
                 </div>
@@ -173,10 +173,10 @@ const MediaManagement = () => {
             {/* Header */}
             <div className="flex items-center justify-between">
                 <div>
-                    <h2 className="text-2xl font-bold text-slate-900 font-outfit">
+                    <h2 className="text-2xl font-bold text-foreground font-outfit">
                         {t('media.title')}
                     </h2>
-                    <p className="text-slate-500 text-sm mt-1">
+                    <p className="mt-1 text-sm text-muted-foreground">
                         {t('media.subtitle', { count: totalMedias })}
                     </p>
                 </div>
@@ -185,40 +185,40 @@ const MediaManagement = () => {
             {/* Stat cards */}
             <div className="grid grid-cols-3 gap-4">
                 <StatCard
-                    icon={<Database size={16} className="text-teal-600" />}
+                    icon={<Database size={16} className="text-primary" />}
                     label={t('media.totalAssets')}
                     value={String(totalMedias)}
-                    bg="bg-teal-50/60"
+                    bg="bg-primary/10 dark:bg-primary/20"
                 />
                 <StatCard
-                    icon={<FileImage size={16} className="text-violet-600" />}
+                    icon={<FileImage size={16} className="text-violet-600 dark:text-violet-400" />}
                     label={t('media.images')}
                     value={String(stats.imageCount)}
-                    bg="bg-violet-50/60"
+                    bg="bg-violet-500/10 dark:bg-violet-950/40"
                 />
                 <StatCard
-                    icon={<HardDrive size={16} className="text-sky-600" />}
+                    icon={<HardDrive size={16} className="text-sky-600 dark:text-sky-400" />}
                     label={t('media.totalSize')}
                     value={formatBytes(stats.totalSize)}
-                    bg="bg-sky-50/60"
+                    bg="bg-sky-500/10 dark:bg-sky-950/40"
                 />
             </div>
 
             {/* Table card */}
-            <div className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
+            <div className="premium-card overflow-hidden">
                 {/* Toolbar */}
-                <div className="p-4 border-b border-slate-100 flex flex-wrap items-center gap-4 bg-slate-50/40">
-                    <div className="flex-1 min-w-[280px] relative">
-                        <Search className="absolute inset-y-0 start-4 flex items-center mt-3 text-slate-400" size={16} />
+                <div className="flex flex-wrap items-center gap-4 border-b border-border bg-muted/40 p-4">
+                    <div className="relative min-w-[280px] flex-1">
+                        <Search className="absolute start-4 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
                         <input
                             type="text"
                             value={search}
                             onChange={(e) => setSearch(e.target.value)}
                             placeholder={t('media.searchPlaceholder')}
-                            className="w-full h-10 ps-11 pe-4 bg-white border border-slate-200 focus:border-teal-400 focus:ring-2 focus:ring-teal-400/10 rounded-xl text-sm outline-none transition-all placeholder:text-slate-400"
+                            className="h-10 w-full rounded-xl border border-border bg-background ps-11 pe-4 text-sm text-foreground outline-none transition-all placeholder:text-muted-foreground focus:border-primary focus:ring-2 focus:ring-ring/20"
                         />
                     </div>
-                    <div className="flex items-center gap-2 text-xs text-slate-400 font-medium">
+                    <div className="flex items-center gap-2 text-xs font-medium text-muted-foreground">
                         <Database size={14} />
                         <span>{t('media.filteredCount', { count: filtered.length })}</span>
                     </div>
@@ -228,28 +228,28 @@ const MediaManagement = () => {
                 <div className="overflow-x-auto">
                     <table className="w-full text-left border-collapse">
                         <thead>
-                            <tr className="border-b border-slate-100">
-                                <th className="px-6 py-4 text-[11px] font-bold text-slate-400 uppercase tracking-wider">
+                            <tr className="border-b border-border bg-muted/30">
+                                <th className="px-6 py-4 text-[11px] font-bold uppercase tracking-wider text-muted-foreground">
                                     {t('media.colAssetName')}
                                 </th>
-                                <th className="px-6 py-4 text-[11px] font-bold text-slate-400 uppercase tracking-wider">
+                                <th className="px-6 py-4 text-[11px] font-bold uppercase tracking-wider text-muted-foreground">
                                     {t('media.colMimeType')}
                                 </th>
-                                <th className="px-6 py-4 text-[11px] font-bold text-slate-400 uppercase tracking-wider">
+                                <th className="px-6 py-4 text-[11px] font-bold uppercase tracking-wider text-muted-foreground">
                                     {t('media.colSize')}
                                 </th>
-                                <th className="px-6 py-4 text-[11px] font-bold text-slate-400 uppercase tracking-wider">
+                                <th className="px-6 py-4 text-[11px] font-bold uppercase tracking-wider text-muted-foreground">
                                     {t('media.colOwner')}
                                 </th>
-                                <th className="px-6 py-4 text-[11px] font-bold text-slate-400 uppercase tracking-wider">
+                                <th className="px-6 py-4 text-[11px] font-bold uppercase tracking-wider text-muted-foreground">
                                     {t('media.colCollection')}
                                 </th>
-                                <th className="px-6 py-4 text-[11px] font-bold text-slate-400 uppercase tracking-wider text-right">
+                                <th className="px-6 py-4 text-end text-[11px] font-bold uppercase tracking-wider text-muted-foreground">
                                     {t('common.actions')}
                                 </th>
                             </tr>
                         </thead>
-                        <tbody className="divide-y divide-slate-50">
+                        <tbody className="divide-y divide-border">
                             {paginated.map((media) => {
                                 const mime = getMimeType(media);
                                 const isImage = mime.startsWith('image/');
@@ -257,32 +257,32 @@ const MediaManagement = () => {
                                 const ownerType = media.owner?.data?.type;
 
                                 return (
-                                    <tr key={media.id} className="hover:bg-slate-50/50 transition-colors group">
+                                    <tr key={media.id} className="group transition-colors hover:bg-muted/50">
                                         {/* Asset name + thumbnail */}
                                         <td className="px-6 py-4">
                                             <div className="flex items-center gap-3">
                                                 {isImage ? (
-                                                    <div className="w-10 h-10 rounded-lg overflow-hidden bg-slate-100 flex items-center justify-center border border-slate-100 shrink-0">
+                                                    <div className="flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-lg border border-border bg-muted">
                                                         {media.url ? (
                                                             <img
                                                                 src={media.url}
                                                                 alt="asset"
-                                                                className="object-cover w-full h-full"
+                                                                className="h-full w-full object-cover"
                                                             />
                                                         ) : (
-                                                            <ImageIcon size={16} className="text-slate-400" />
+                                                            <ImageIcon size={16} className="text-muted-foreground" />
                                                         )}
                                                     </div>
                                                 ) : (
-                                                    <div className="w-10 h-10 rounded-lg bg-slate-100 flex items-center justify-center text-slate-400 border border-slate-100 shrink-0">
+                                                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-border bg-muted text-muted-foreground">
                                                         <HardDrive size={16} />
                                                     </div>
                                                 )}
                                                 <div className="min-w-0">
-                                                    <p className="text-xs font-bold text-slate-800 break-all line-clamp-1 max-w-[220px]">
+                                                    <p className="line-clamp-1 max-w-[220px] break-all text-xs font-bold text-foreground">
                                                         {getFileName(media)}
                                                     </p>
-                                                    <p className="text-[10px] text-slate-400 font-mono mt-0.5 truncate max-w-[220px]">
+                                                    <p className="mt-0.5 max-w-[220px] truncate font-mono text-[10px] text-muted-foreground">
                                                         {media.id}
                                                     </p>
                                                 </div>
@@ -291,14 +291,14 @@ const MediaManagement = () => {
 
                                         {/* Mime type */}
                                         <td className="px-6 py-4">
-                                            <span className="inline-flex items-center gap-1.5 text-[10px] font-bold bg-slate-100 text-slate-600 px-2 py-0.5 rounded-full">
+                                            <span className="inline-flex items-center gap-1.5 rounded-full bg-muted px-2 py-0.5 text-[10px] font-bold text-muted-foreground">
                                                 <MimeIcon mime={mime} />
                                                 {mime}
                                             </span>
                                         </td>
 
                                         {/* Size */}
-                                        <td className="px-6 py-4 text-xs font-bold text-slate-500">
+                                        <td className="px-6 py-4 text-xs font-bold text-muted-foreground">
                                             {formatBytes(media.size)}
                                         </td>
 
@@ -306,47 +306,48 @@ const MediaManagement = () => {
                                         <td className="px-6 py-4">
                                             {ownerName ? (
                                                 <div>
-                                                    <p className="text-xs font-bold text-slate-700 line-clamp-1 max-w-[180px]">
+                                                    <p className="line-clamp-1 max-w-[180px] text-xs font-bold text-foreground">
                                                         {ownerName}
                                                     </p>
                                                     {ownerType && (
-                                                        <span className="text-[10px] font-medium text-slate-400 capitalize">
+                                                        <span className="text-[10px] font-medium capitalize text-muted-foreground">
                                                             {ownerType}
                                                         </span>
                                                     )}
                                                 </div>
                                             ) : (
-                                                <span className="text-xs text-slate-400">—</span>
+                                                <span className="text-xs text-muted-foreground">—</span>
                                             )}
                                         </td>
 
                                         {/* Collection & disk */}
                                         <td className="px-6 py-4">
-                                            <div className="text-xs font-bold text-slate-700 capitalize">
+                                            <div className="text-xs font-bold capitalize text-foreground">
                                                 {getCollectionName(media)}
                                             </div>
-                                            <div className="text-[10px] text-slate-400 mt-0.5">
+                                            <div className="mt-0.5 text-[10px] text-muted-foreground">
                                                 {t('media.disk')}: {media.disk || 'local'}
                                             </div>
                                         </td>
 
                                         {/* Actions */}
-                                        <td className="px-6 py-4 pe-4 text-right">
-                                            <div className="flex items-center justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                                        <td className="px-6 py-4 pe-4 text-end">
+                                            <div className="flex items-center justify-end gap-1 opacity-0 transition-opacity group-hover:opacity-100">
                                                 {media.url && (
                                                     <a
                                                         href={media.url}
                                                         target="_blank"
                                                         rel="noreferrer"
-                                                        className="text-slate-400 hover:text-indigo-500 p-2 hover:bg-slate-100 rounded-lg border border-transparent hover:border-slate-200 transition-all"
+                                                        className="rounded-lg border border-transparent p-2 text-muted-foreground transition-all hover:border-border hover:bg-muted hover:text-primary"
                                                         title={t('media.viewSource')}
                                                     >
                                                         <LinkIcon size={16} />
                                                     </a>
                                                 )}
                                                 <button
+                                                    type="button"
                                                     onClick={() => setDeleteTarget(media)}
-                                                    className="text-slate-400 hover:text-rose-500 p-2 hover:bg-slate-100 rounded-lg border border-transparent hover:border-slate-200 transition-all"
+                                                    className="rounded-lg border border-transparent p-2 text-muted-foreground transition-all hover:border-border hover:bg-destructive/10 hover:text-destructive"
                                                     title={t('common.delete')}
                                                 >
                                                     <Trash2 size={16} />
@@ -358,7 +359,7 @@ const MediaManagement = () => {
                             })}
                             {paginated.length === 0 && (
                                 <tr>
-                                    <td colSpan={6} className="px-6 py-12 text-center text-slate-400">
+                                    <td colSpan={6} className="px-6 py-12 text-center text-muted-foreground">
                                         {t('media.noAssets')}
                                     </td>
                                 </tr>
@@ -368,15 +369,15 @@ const MediaManagement = () => {
                 </div>
 
                 {/* Pagination footer */}
-                <div className="px-6 py-3.5 border-t border-slate-100 flex items-center justify-between bg-slate-50/30">
+                <div className="flex items-center justify-between border-t border-border bg-muted/30 px-6 py-3.5">
                     <div className="flex items-center gap-3">
-                        <p className="text-xs font-medium text-slate-400">
+                        <p className="text-xs font-medium text-muted-foreground">
                             {t('media.rowsPerPage')}
                         </p>
                         <select
                             value={rowsPerPage}
                             onChange={(e) => setRowsPerPage(Number(e.target.value))}
-                            className="h-7 rounded-lg border border-slate-200 bg-white text-xs font-medium text-slate-600 px-2 outline-none focus:border-teal-400"
+                            className="h-7 rounded-lg border border-border bg-background px-2 text-xs font-medium text-foreground outline-none focus:border-primary focus:ring-1 focus:ring-ring/30"
                         >
                             {ROWS_OPTIONS.map((n) => (
                                 <option key={n} value={n}>{n}</option>
@@ -384,21 +385,23 @@ const MediaManagement = () => {
                         </select>
                     </div>
                     <div className="flex items-center gap-2">
-                        <span className="text-xs font-medium text-slate-400">
+                        <span className="text-xs font-medium text-muted-foreground">
                             {t('media.pageOf', { page, totalPages })}
                         </span>
                         <div className="flex gap-1">
                             <button
+                                type="button"
                                 onClick={() => setPage((p) => Math.max(1, p - 1))}
                                 disabled={page <= 1}
-                                className="h-7 w-7 flex items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-500 hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                                className="flex h-7 w-7 items-center justify-center rounded-lg border border-border bg-card text-muted-foreground transition-colors hover:bg-muted disabled:cursor-not-allowed disabled:opacity-40"
                             >
                                 <ChevronLeft size={14} />
                             </button>
                             <button
+                                type="button"
                                 onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
                                 disabled={page >= totalPages}
-                                className="h-7 w-7 flex items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-500 hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                                className="flex h-7 w-7 items-center justify-center rounded-lg border border-border bg-card text-muted-foreground transition-colors hover:bg-muted disabled:cursor-not-allowed disabled:opacity-40"
                             >
                                 <ChevronRight size={14} />
                             </button>
@@ -412,15 +415,15 @@ const MediaManagement = () => {
                 <DialogContent className="sm:!max-w-md">
                     <DialogHeader>
                         <div className="flex items-center gap-3">
-                            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-rose-100">
-                                <AlertTriangle className="h-5 w-5 text-rose-600" />
+                            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-destructive/15">
+                                <AlertTriangle className="h-5 w-5 text-destructive" />
                             </div>
-                            <DialogTitle className="text-base font-bold text-slate-900">
+                            <DialogTitle className="text-base font-bold text-foreground">
                                 {t('media.deleteTitle')}
                             </DialogTitle>
                         </div>
                     </DialogHeader>
-                    <p className="text-sm text-slate-500 mt-1 leading-relaxed">
+                    <p className="text-sm text-muted-foreground mt-1 leading-relaxed">
                         {t('media.deleteMessage', { name: deleteTarget ? getFileName(deleteTarget) : '' })}
                     </p>
                     <DialogFooter className="mt-2">
@@ -460,13 +463,13 @@ interface StatCardProps {
 
 /** Compact stat card for media metrics. */
 const StatCard: React.FC<StatCardProps> = ({ icon, label, value, bg }) => (
-    <div className={`rounded-xl border border-slate-100 px-4 py-3.5 flex items-center gap-3 ${bg}`}>
-        <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-white shadow-sm border border-slate-100">
+    <div className={`flex items-center gap-3 rounded-xl border border-border px-4 py-3.5 ${bg}`}>
+        <div className="flex h-9 w-9 items-center justify-center rounded-lg border border-border bg-card shadow-sm">
             {icon}
         </div>
         <div>
-            <p className="text-lg font-bold text-slate-800">{value}</p>
-            <p className="text-[11px] font-medium text-slate-500">{label}</p>
+            <p className="text-lg font-bold text-foreground">{value}</p>
+            <p className="text-[11px] font-medium text-muted-foreground">{label}</p>
         </div>
     </div>
 );

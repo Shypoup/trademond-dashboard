@@ -143,7 +143,7 @@ const QuoteRequests = () => {
 
   if (loading && rows.length === 0) {
     return (
-      <div className="flex min-h-[40vh] items-center justify-center gap-2 text-slate-500">
+      <div className="flex min-h-[40vh] items-center justify-center gap-2 text-muted-foreground">
         <Loader2 className="animate-spin" size={20} />
         <span>{t('common.loading')}</span>
       </div>
@@ -154,8 +154,8 @@ const QuoteRequests = () => {
     <div className="space-y-6 pb-12 animate-in fade-in duration-500">
       <div className="flex flex-wrap items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-slate-900 font-outfit">{t('sidebar.quoteRequests')}</h1>
-          <p className="mt-1 text-sm text-slate-500">{t('quoteRequestsPage.subtitle')}</p>
+          <h1 className="text-2xl font-bold text-foreground font-outfit">{t('sidebar.quoteRequests')}</h1>
+          <p className="mt-1 text-sm text-muted-foreground">{t('quoteRequestsPage.subtitle')}</p>
         </div>
         <button
           type="button"
@@ -168,7 +168,7 @@ const QuoteRequests = () => {
 
       <div className="flex flex-wrap items-center gap-3">
         <label className="flex items-center gap-2 text-sm">
-          <span className="text-[11px] font-bold uppercase text-slate-400">{t('quoteRequestsPage.filterStatus')}</span>
+          <span className="text-[11px] font-bold uppercase text-muted-foreground">{t('quoteRequestsPage.filterStatus')}</span>
           <select
             value={statusFilter}
             onChange={(e) => {
@@ -187,20 +187,20 @@ const QuoteRequests = () => {
         </label>
       </div>
 
-      <div className="premium-card overflow-hidden bg-white">
+      <div className="premium-card overflow-hidden">
         <table className="w-full border-collapse text-start">
           <thead>
-            <tr className="border-b border-slate-100">
-              <th className="px-6 py-4 text-[11px] font-bold uppercase text-slate-400">{t('quoteRequestsPage.colId')}</th>
-              <th className="px-6 py-4 text-[11px] font-bold uppercase text-slate-400">{t('quoteRequestsPage.colSubject')}</th>
-              <th className="px-6 py-4 text-[11px] font-bold uppercase text-slate-400">{t('quoteRequestsPage.colStatus')}</th>
-              <th className="px-6 py-4 text-[11px] font-bold uppercase text-slate-400">{t('quoteRequestsPage.colCreated')}</th>
-              <th className="px-6 py-4 text-end text-[11px] font-bold uppercase text-slate-400">{t('common.actions')}</th>
+            <tr className="border-b border-border">
+              <th className="px-6 py-4 text-[11px] font-bold uppercase text-muted-foreground">{t('quoteRequestsPage.colId')}</th>
+              <th className="px-6 py-4 text-[11px] font-bold uppercase text-muted-foreground">{t('quoteRequestsPage.colSubject')}</th>
+              <th className="px-6 py-4 text-[11px] font-bold uppercase text-muted-foreground">{t('quoteRequestsPage.colStatus')}</th>
+              <th className="px-6 py-4 text-[11px] font-bold uppercase text-muted-foreground">{t('quoteRequestsPage.colCreated')}</th>
+              <th className="px-6 py-4 text-end text-[11px] font-bold uppercase text-muted-foreground">{t('common.actions')}</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-slate-50">
+          <tbody className="divide-y divide-border">
             {rows.map((row) => (
-              <tr key={row.id} className="hover:bg-slate-50/60">
+              <tr key={row.id} className="hover:bg-muted/50">
                 <td className="px-6 py-4 font-mono text-xs text-slate-600">{row.id}</td>
                 <td className="max-w-xs truncate px-6 py-4 text-sm text-slate-800">{row.subject ?? '—'}</td>
                 <td className="px-6 py-4">
@@ -208,7 +208,7 @@ const QuoteRequests = () => {
                     {row.status}
                   </span>
                 </td>
-                <td className="px-6 py-4 text-xs text-slate-500">{row.created_at ? formatDate(row.created_at) : '—'}</td>
+                <td className="px-6 py-4 text-xs text-muted-foreground">{row.created_at ? formatDate(row.created_at) : '—'}</td>
                 <td className="px-6 py-4 text-end">
                   <button
                     type="button"
@@ -223,7 +223,7 @@ const QuoteRequests = () => {
             ))}
           </tbody>
         </table>
-        {rows.length === 0 && !loading && <p className="px-6 py-12 text-center text-sm text-slate-400">{t('common.noData')}</p>}
+        {rows.length === 0 && !loading && <p className="px-6 py-12 text-center text-sm text-muted-foreground">{t('common.noData')}</p>}
       </div>
 
       {meta && meta.last_page > 1 && (
@@ -261,20 +261,20 @@ const QuoteRequests = () => {
             <div className="space-y-4">
               <dl className="space-y-2 text-sm">
                 <div>
-                  <dt className="text-[11px] font-bold uppercase text-slate-400">{t('quoteRequestsPage.colId')}</dt>
+                  <dt className="text-[11px] font-bold uppercase text-muted-foreground">{t('quoteRequestsPage.colId')}</dt>
                   <dd className="font-mono text-xs text-slate-700">{active.id}</dd>
                 </div>
                 <div>
-                  <dt className="text-[11px] font-bold uppercase text-slate-400">{t('quoteRequestsPage.colStatus')}</dt>
+                  <dt className="text-[11px] font-bold uppercase text-muted-foreground">{t('quoteRequestsPage.colStatus')}</dt>
                   <dd className="font-mono text-xs">{active.status}</dd>
                 </div>
                 <div>
-                  <dt className="text-[11px] font-bold uppercase text-slate-400">{t('quoteRequestsPage.message')}</dt>
+                  <dt className="text-[11px] font-bold uppercase text-muted-foreground">{t('quoteRequestsPage.message')}</dt>
                   <dd className="whitespace-pre-wrap text-slate-700">{active.message ?? '—'}</dd>
                 </div>
               </dl>
               <label className="space-y-1 text-sm">
-                <span className="text-[11px] font-bold uppercase text-slate-400">{t('quoteRequestsPage.adminNotes')}</span>
+                <span className="text-[11px] font-bold uppercase text-muted-foreground">{t('quoteRequestsPage.adminNotes')}</span>
                 <textarea
                   rows={4}
                   value={adminNotes}

@@ -106,7 +106,7 @@ const Experiments = () => {
         <div className="space-y-6 animate-in fade-in duration-500 pb-12">
             <div className="flex items-center justify-between">
                 <div>
-                    <h2 className="text-2xl font-bold text-slate-900 font-outfit">Experiments (A/B)</h2>
+                    <h2 className="text-2xl font-bold text-foreground font-outfit">Experiments (A/B)</h2>
                     <p className="text-slate-500 text-sm mt-1">Manage active rollout systems and targeting rules</p>
                 </div>
                 <button
@@ -117,7 +117,7 @@ const Experiments = () => {
                 </button>
             </div>
 
-            <div className="premium-card overflow-hidden bg-white">
+            <div className="premium-card overflow-hidden">
                 <table className="w-full text-left border-collapse">
                     <thead>
                         <tr className="border-b border-slate-50">
@@ -129,7 +129,7 @@ const Experiments = () => {
                             <th className="px-6 py-4 text-[11px] font-bold text-slate-400 uppercase text-right">Actions</th>
                         </tr>
                     </thead>
-                    <tbody className="divide-y divide-slate-50">
+                    <tbody className="divide-y divide-border">
                         {experiments.map((exp) => (
                             <tr key={exp.id} className="hover:bg-slate-50/50 transition-colors group">
                                 <td className="px-6 py-5">

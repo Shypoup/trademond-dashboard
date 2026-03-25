@@ -93,15 +93,15 @@ const Places = () => {
   return (
     <div className="space-y-6 pb-12 animate-in fade-in duration-500">
       <div>
-        <h1 className="text-2xl font-bold text-slate-900 font-outfit">{t('sidebar.placesLookup')}</h1>
-        <p className="mt-1 text-sm text-slate-500">{t('placesPage.subtitle')}</p>
+        <h1 className="text-2xl font-bold text-foreground font-outfit">{t('sidebar.placesLookup')}</h1>
+        <p className="mt-1 text-sm text-muted-foreground">{t('placesPage.subtitle')}</p>
       </div>
 
-      <div className="premium-card space-y-4 bg-white p-6">
-        <p className="text-xs text-slate-500">{t('placesPage.sessionHint')}</p>
+      <div className="premium-card space-y-4 p-6">
+        <p className="text-xs text-muted-foreground">{t('placesPage.sessionHint')}</p>
         <div className="flex flex-wrap gap-4">
           <label className="min-w-[200px] flex-1 space-y-1 text-sm">
-            <span className="text-[11px] font-bold uppercase text-slate-400">{t('placesPage.language')}</span>
+            <span className="text-[11px] font-bold uppercase text-muted-foreground">{t('placesPage.language')}</span>
             <select
               value={language}
               onChange={(e) => setLanguage(e.target.value as PlacesLanguage)}
@@ -112,7 +112,7 @@ const Places = () => {
             </select>
           </label>
           <label className="min-w-[240px] flex-[2] space-y-1 text-sm">
-            <span className="text-[11px] font-bold uppercase text-slate-400">{t('placesPage.addressQuery')}</span>
+            <span className="text-[11px] font-bold uppercase text-muted-foreground">{t('placesPage.addressQuery')}</span>
             <input
               value={input}
               onChange={(e) => setInput(e.target.value)}
@@ -122,7 +122,7 @@ const Places = () => {
           </label>
         </div>
         {loading && (
-          <div className="flex items-center gap-2 text-sm text-slate-500">
+          <div className="flex items-center gap-2 text-sm text-muted-foreground">
             <Loader2 className="animate-spin" size={18} />
             {t('common.loading')}
           </div>
@@ -130,11 +130,11 @@ const Places = () => {
       </div>
 
       {predictions.length > 0 && (
-        <div className="premium-card overflow-hidden bg-white">
-          <div className="border-b border-slate-100 px-6 py-3">
+        <div className="premium-card overflow-hidden">
+          <div className="border-b border-border px-6 py-3">
             <h2 className="text-sm font-bold text-slate-800">{t('placesPage.predictions')}</h2>
           </div>
-          <ul className="divide-y divide-slate-50">
+          <ul className="divide-y divide-border">
             {predictions.map((p) => {
               const pid = predictionId(p);
               if (!pid) return null;
@@ -157,14 +157,14 @@ const Places = () => {
       )}
 
       {details !== null && (
-        <div className="premium-card bg-white p-4">
+        <div className="premium-card p-4">
           <h3 className="mb-2 text-sm font-bold text-slate-800">{t('placesPage.details')}</h3>
           <JsonInspector data={details} />
         </div>
       )}
 
       {lastAutocompleteRaw !== null && predictions.length === 0 && input.trim().length >= 3 && !loading && (
-        <div className="premium-card bg-white p-4">
+        <div className="premium-card p-4">
           <h3 className="mb-2 text-sm font-bold text-slate-800">{t('placesPage.autocompleteRaw')}</h3>
           <JsonInspector data={lastAutocompleteRaw} />
         </div>

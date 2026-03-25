@@ -110,7 +110,7 @@ const Roles = () => {
 
   if (loading && rows.length === 0) {
     return (
-      <div className="flex min-h-[40vh] items-center justify-center gap-2 text-slate-500">
+      <div className="flex min-h-[40vh] items-center justify-center gap-2 text-muted-foreground">
         <Loader2 className="animate-spin" size={20} />
         <span>{t('common.loading')}</span>
       </div>
@@ -120,26 +120,26 @@ const Roles = () => {
   return (
     <div className="space-y-6 pb-12 animate-in fade-in duration-500">
       <div>
-        <h1 className="text-2xl font-bold text-slate-900 font-outfit">{t('sidebar.roles')}</h1>
-        <p className="mt-1 text-sm text-slate-500">{t('rolesPage.subtitle')}</p>
+        <h1 className="text-2xl font-bold text-foreground font-outfit">{t('sidebar.roles')}</h1>
+        <p className="mt-1 text-sm text-muted-foreground">{t('rolesPage.subtitle')}</p>
       </div>
 
-      <div className="premium-card overflow-hidden bg-white">
+      <div className="premium-card overflow-hidden">
         <table className="w-full border-collapse text-start">
           <thead>
-            <tr className="border-b border-slate-100">
-              <th className="px-6 py-4 text-[11px] font-bold uppercase text-slate-400">{t('rolesPage.colRole')}</th>
-              <th className="px-6 py-4 text-[11px] font-bold uppercase text-slate-400">{t('rolesPage.colGuard')}</th>
-              <th className="px-6 py-4 text-[11px] font-bold uppercase text-slate-400">{t('rolesPage.colUsers')}</th>
-              <th className="px-6 py-4 text-end text-[11px] font-bold uppercase text-slate-400">{t('common.actions')}</th>
+            <tr className="border-b border-border">
+              <th className="px-6 py-4 text-[11px] font-bold uppercase text-muted-foreground">{t('rolesPage.colRole')}</th>
+              <th className="px-6 py-4 text-[11px] font-bold uppercase text-muted-foreground">{t('rolesPage.colGuard')}</th>
+              <th className="px-6 py-4 text-[11px] font-bold uppercase text-muted-foreground">{t('rolesPage.colUsers')}</th>
+              <th className="px-6 py-4 text-end text-[11px] font-bold uppercase text-muted-foreground">{t('common.actions')}</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-slate-50">
+          <tbody className="divide-y divide-border">
             {rows.map((row) => (
-              <tr key={String(row.id)} className="hover:bg-slate-50/60">
-                <td className="px-6 py-4 text-sm font-semibold text-slate-800">{row.name}</td>
-                <td className="px-6 py-4 font-mono text-xs text-slate-500">{row.guard_name ?? '—'}</td>
-                <td className="px-6 py-4 text-sm text-slate-600">{row.users_count ?? '—'}</td>
+              <tr key={String(row.id)} className="hover:bg-muted/50">
+                <td className="px-6 py-4 text-sm font-semibold text-foreground">{row.name}</td>
+                <td className="px-6 py-4 font-mono text-xs text-muted-foreground">{row.guard_name ?? '—'}</td>
+                <td className="px-6 py-4 text-sm text-muted-foreground">{row.users_count ?? '—'}</td>
                 <td className="px-6 py-4 text-end">
                   <button
                     type="button"
@@ -154,7 +154,7 @@ const Roles = () => {
             ))}
           </tbody>
         </table>
-        {rows.length === 0 && !loading && <p className="px-6 py-12 text-center text-sm text-slate-400">{t('common.noData')}</p>}
+        {rows.length === 0 && !loading && <p className="px-6 py-12 text-center text-sm text-muted-foreground">{t('common.noData')}</p>}
       </div>
 
       <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
@@ -167,41 +167,41 @@ const Roles = () => {
           </SheetHeader>
           <div className="flex min-h-0 flex-1 flex-col gap-4 overflow-y-auto pe-1">
             {saving && groups.length === 0 && (
-              <div className="flex items-center gap-2 text-sm text-slate-500">
+              <div className="flex items-center gap-2 text-sm text-muted-foreground">
                 <Loader2 className="animate-spin" size={18} />
                 {t('common.loading')}
               </div>
             )}
             {groups.map((g) => (
-              <div key={g.group} className="rounded-xl border border-slate-100 bg-slate-50/80 p-4">
-                <h3 className="text-[11px] font-bold uppercase tracking-wide text-slate-500">{g.group}</h3>
+              <div key={g.group} className="rounded-xl border border-border bg-muted/40 p-4">
+                <h3 className="text-[11px] font-bold uppercase tracking-wide text-muted-foreground">{g.group}</h3>
                 <div className="mt-3 grid gap-2 sm:grid-cols-2">
                   {g.items.map((perm) => (
                     <label
                       key={perm}
                       className={cn(
                         'flex cursor-pointer items-start gap-2 rounded-lg border px-3 py-2 text-xs',
-                        selected.has(perm) ? 'border-teal-300 bg-white' : 'border-transparent bg-white/60',
+                        selected.has(perm) ? 'border-primary/40 bg-card' : 'border-transparent bg-muted/50',
                       )}
                     >
                       <input
                         type="checkbox"
                         checked={selected.has(perm)}
                         onChange={() => togglePerm(perm)}
-                        className="mt-0.5 rounded border-slate-300"
+                        className="mt-0.5 rounded border-border"
                       />
-                      <span className="font-mono text-[11px] leading-snug text-slate-700">{perm}</span>
+                      <span className="font-mono text-[11px] leading-snug text-foreground">{perm}</span>
                     </label>
                   ))}
                 </div>
               </div>
             ))}
           </div>
-          <div className="flex justify-end gap-2 border-t border-slate-100 pt-4">
+          <div className="flex justify-end gap-2 border-t border-border pt-4">
             <button
               type="button"
               onClick={() => setSheetOpen(false)}
-              className="rounded-xl px-4 py-2 text-sm font-bold text-slate-500 hover:bg-slate-100"
+              className="rounded-xl px-4 py-2 text-sm font-bold text-muted-foreground hover:bg-muted"
             >
               {t('common.cancel')}
             </button>
@@ -209,7 +209,7 @@ const Roles = () => {
               type="button"
               disabled={saving || !editRole}
               onClick={() => void savePermissions()}
-              className="inline-flex items-center gap-2 rounded-xl bg-slate-900 px-6 py-2.5 text-sm font-bold text-white disabled:opacity-50"
+              className="inline-flex items-center gap-2 rounded-xl bg-primary px-6 py-2.5 text-sm font-bold text-primary-foreground disabled:opacity-50"
             >
               {saving && <Loader2 className="animate-spin" size={16} />}
               {t('rolesPage.savePermissions')}
