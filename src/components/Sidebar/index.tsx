@@ -45,7 +45,7 @@ const Sidebar = () => {
 
   const avatarUrl =
     user?.avatar ||
-    `https://ui-avatars.com/api/?name=${encodeURIComponent(user?.name || 'Admin')}&background=008080&color=fff`;
+    `https://ui-avatars.com/api/?name=${encodeURIComponent(user?.name || 'Admin')}&background=${BRAND_PRIMARY_HEX_PARAM}&color=fff`;
 
   return (
     <aside
@@ -64,7 +64,7 @@ const Sidebar = () => {
         </div>
         <div className="min-w-0">
           <h1 className="truncate font-bold leading-tight tracking-tight text-sidebar-foreground">Trademond</h1>
-          <span className="text-[10px] font-bold uppercase tracking-wider text-teal-700 dark:text-teal-300/90">
+          <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
             {t('sidebar.brandSubtitle')}
           </span>
         </div>
@@ -95,11 +95,8 @@ const Sidebar = () => {
                           'flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-colors duration-200',
                           'focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring',
                           isActive
-                            ? 'border border-teal-600/25 bg-teal-600/10 text-teal-800 dark:border-teal-500/25 dark:bg-teal-500/10 dark:text-teal-300'
-                            : cn(
-                                'border border-transparent text-muted-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground',
-                                'dark:text-slate-300 dark:hover:bg-white/[0.04] dark:hover:text-white',
-                              ),
+                            ? 'border border-transparent bg-sidebar-primary text-sidebar-primary-foreground shadow-sm'
+                            : 'border border-transparent text-muted-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground',
                         )
                       }
                     >
@@ -121,11 +118,8 @@ const Sidebar = () => {
             cn(
               'mb-1 flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-colors',
               isActive
-                ? 'bg-teal-600/10 text-teal-800 dark:bg-teal-500/10 dark:text-teal-300'
-                : cn(
-                    'text-muted-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground',
-                    'dark:text-slate-400 dark:hover:bg-white/[0.04] dark:hover:text-slate-200',
-                  ),
+                ? 'bg-sidebar-primary text-sidebar-primary-foreground'
+                : 'text-muted-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground',
             )
           }
         >
