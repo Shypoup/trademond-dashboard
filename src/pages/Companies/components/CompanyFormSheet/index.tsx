@@ -126,7 +126,7 @@ export const CompanyFormSheet: React.FC<CompanyFormSheetProps> = ({
                     </div>
                     <div className="mt-4 flex items-center gap-4 text-[11px] font-semibold uppercase tracking-widest text-muted-foreground">
                         <div className="flex items-center gap-2">
-                            <span className="w-5 h-5 rounded-full bg-teal-600 text-white flex items-center justify-center text-[10px]">
+                            <span className="flex h-5 w-5 items-center justify-center rounded-full bg-primary text-[10px] text-primary-foreground">
                                 1
                             </span>
                             <span>{t('companies.identity')}</span>
@@ -357,7 +357,7 @@ export const CompanyFormSheet: React.FC<CompanyFormSheetProps> = ({
 
                         {/* Governance */}
                         <div className="space-y-4">
-                            <h4 className="text-[11px] font-black text-teal-600 uppercase tracking-widest">
+                            <h4 className="text-[11px] font-black text-primary uppercase tracking-widest">
                                 {t('companies.governance')}
                             </h4>
                             <div className="grid grid-cols-3 gap-4">

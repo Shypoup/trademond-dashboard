@@ -184,72 +184,72 @@ const Experiments = () => {
                     showCloseButton={false}
                     className="p-0 !max-w-xl w-full max-h-screen overflow-y-auto border-none shadow-2xl flex flex-col gap-0 sm:!max-w-xl"
                 >
-                    <div className="p-6 border-b shrink-0 bg-orange-50/50">
+                    <div className="shrink-0 border-b border-border bg-muted/50 p-6">
                         <div className="flex items-center justify-between">
-                            <SheetHeader className="!p-0 !m-0">
-                                <SheetTitle className="text-xl font-bold font-outfit text-slate-900">
+                            <SheetHeader className="!m-0 !p-0">
+                                <SheetTitle className="font-outfit text-xl font-bold text-foreground">
                                     {editingId ? 'Edit Configuration' : 'Launch New A/B Testing'}
                                 </SheetTitle>
                             </SheetHeader>
                             <button
                                 type="button"
                                 onClick={() => setIsModalOpen(false)}
-                                className="p-2 hover:bg-orange-100 rounded-full transition-colors text-slate-400"
+                                className="rounded-full p-2 text-muted-foreground transition-colors hover:bg-muted"
                             >
                                 <X size={20} />
                             </button>
                         </div>
                     </div>
 
-                    <form onSubmit={handleSubmit} className="flex flex-col flex-1 min-h-0">
-                        <div className="p-8 space-y-6 flex-1 overflow-y-auto premium-scrollbar">
+                    <form onSubmit={handleSubmit} className="flex min-h-0 flex-1 flex-col">
+                        <div className="premium-scrollbar flex-1 space-y-6 overflow-y-auto p-8">
                                 <div className="space-y-2">
-                                    <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest pl-2">Experiment Label</label>
-                                    <input required className="w-full h-12 bg-slate-50 border border-slate-200 rounded-xl px-4 text-sm font-bold focus:bg-white focus:border-orange-400 transition-all outline-none" value={formData.name} onChange={e => setFormData({ ...formData, name: e.target.value })} placeholder="New Sign-up Flow 2.0" />
+                                    <label className="ps-2 text-[11px] font-black uppercase tracking-widest text-muted-foreground">Experiment Label</label>
+                                    <input required className="h-12 w-full rounded-xl border border-border bg-background px-4 text-sm font-bold text-foreground outline-none transition-all focus:border-primary focus:ring-2 focus:ring-ring/20" value={formData.name} onChange={e => setFormData({ ...formData, name: e.target.value })} placeholder="New Sign-up Flow 2.0" />
                                 </div>
                                 <div className="space-y-2">
-                                    <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest pl-2">Feature Resource Key</label>
-                                    <input required className="w-full h-12 bg-slate-50 border border-slate-200 rounded-xl px-4 text-sm font-mono text-orange-600 focus:bg-white focus:border-orange-400 transition-all outline-none" value={formData.feature_key} onChange={e => setFormData({ ...formData, feature_key: e.target.value })} placeholder="app.auth.v2" />
+                                    <label className="ps-2 text-[11px] font-black uppercase tracking-widest text-muted-foreground">Feature Resource Key</label>
+                                    <input required className="h-12 w-full rounded-xl border border-border bg-background px-4 font-mono text-sm text-primary outline-none transition-all focus:border-primary focus:ring-2 focus:ring-ring/20" value={formData.feature_key} onChange={e => setFormData({ ...formData, feature_key: e.target.value })} placeholder="app.auth.v2" />
                                 </div>
                                 <div className="grid grid-cols-2 gap-6">
                                     <div className="space-y-2">
-                                        <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest pl-2">Targeting Mode</label>
+                                        <label className="ps-2 text-[11px] font-black uppercase tracking-widest text-muted-foreground">Targeting Mode</label>
                                         <div className="relative">
-                                            <select required className="w-full h-12 bg-slate-50 border border-slate-200 rounded-xl px-4 text-sm font-bold appearance-none outline-none focus:border-orange-400 transition-all capitalize" value={formData.targeting_type} onChange={e => setFormData({ ...formData, targeting_type: e.target.value as any })}>
+                                            <select required className="h-12 w-full appearance-none rounded-xl border border-border bg-background px-4 text-sm font-bold capitalize text-foreground outline-none transition-all focus:border-primary focus:ring-2 focus:ring-ring/20" value={formData.targeting_type} onChange={e => setFormData({ ...formData, targeting_type: e.target.value as any })}>
                                                 <option value="percentage">Percentage Rollout</option>
                                                 <option value="rules">Complex Ruleset</option>
                                             </select>
-                                            <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" size={16} />
+                                            <ChevronDown className="pointer-events-none absolute end-4 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
                                         </div>
                                     </div>
                                     <div className="space-y-2">
-                                        <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest pl-2">Rollout Population (%)</label>
+                                        <label className="ps-2 text-[11px] font-black uppercase tracking-widest text-muted-foreground">Rollout Population (%)</label>
                                         <div className="relative flex items-center">
-                                            <input type="number" min="0" max="100" className="w-full h-12 bg-slate-50 border border-slate-200 rounded-xl pl-4 pr-10 text-sm font-bold focus:bg-white focus:border-orange-400 transition-all outline-none" value={formData.rollout_percentage} onChange={e => setFormData({ ...formData, rollout_percentage: Number(e.target.value) })} disabled={formData.targeting_type !== 'percentage'} />
-                                            <span className="absolute right-4 text-slate-400 font-bold">%</span>
+                                            <input type="number" min="0" max="100" className="h-12 w-full rounded-xl border border-border bg-background ps-4 pe-10 text-sm font-bold text-foreground outline-none transition-all focus:border-primary focus:ring-2 focus:ring-ring/20" value={formData.rollout_percentage} onChange={e => setFormData({ ...formData, rollout_percentage: Number(e.target.value) })} disabled={formData.targeting_type !== 'percentage'} />
+                                            <span className="pointer-events-none absolute end-4 font-bold text-muted-foreground">%</span>
                                         </div>
                                     </div>
                                 </div>
                                 <div className="flex items-center gap-6 pt-2">
-                                    <label className="flex items-center gap-3 cursor-pointer group">
-                                        <div className="relative">
-                                            <input type="checkbox" className="sr-only peer" checked={formData.enabled} onChange={e => setFormData({ ...formData, enabled: e.target.checked })} />
-                                            <div className="w-12 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-orange-500"></div>
+                                    <label className="group flex cursor-pointer items-center gap-3">
+                                        <div className="relative inline-flex scale-90 items-center">
+                                            <input type="checkbox" className="peer sr-only" checked={formData.enabled} onChange={e => setFormData({ ...formData, enabled: e.target.checked })} />
+                                            <div className="peer h-6 w-11 rounded-full bg-muted after:absolute after:start-[2px] after:top-[2px] after:h-5 after:w-5 after:rounded-full after:border after:border-border after:bg-background after:transition-all after:content-[''] peer-checked:bg-primary peer-checked:after:translate-x-full peer-checked:after:border-transparent peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-ring/40" />
                                         </div>
-                                        <span className="text-sm font-bold text-slate-700">Flag Enabled</span>
+                                        <span className="text-sm font-bold text-foreground">Flag Enabled</span>
                                     </label>
-                                    <label className="flex items-center gap-3 cursor-pointer group">
-                                        <div className="relative">
-                                            <input type="checkbox" className="sr-only peer" checked={formData.active} onChange={e => setFormData({ ...formData, active: e.target.checked })} />
-                                            <div className="w-12 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-emerald-500"></div>
+                                    <label className="group flex cursor-pointer items-center gap-3">
+                                        <div className="relative inline-flex scale-90 items-center">
+                                            <input type="checkbox" className="peer sr-only" checked={formData.active} onChange={e => setFormData({ ...formData, active: e.target.checked })} />
+                                            <div className="peer h-6 w-11 rounded-full bg-muted after:absolute after:start-[2px] after:top-[2px] after:h-5 after:w-5 after:rounded-full after:border after:border-border after:bg-background after:transition-all after:content-[''] peer-checked:bg-primary peer-checked:after:translate-x-full peer-checked:after:border-transparent peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-ring/40" />
                                         </div>
-                                        <span className="text-sm font-bold text-slate-700">Rules Executing (Active)</span>
+                                        <span className="text-sm font-bold text-foreground">Rules Executing (Active)</span>
                                     </label>
                                 </div>
                         </div>
-                        <div className="p-6 border-t border-slate-100 flex justify-end gap-3 bg-slate-50 shrink-0">
-                            <button type="button" className="px-6 py-2.5 rounded-xl text-sm font-bold text-slate-500 hover:bg-slate-200 transition-all" onClick={() => setIsModalOpen(false)}>Cancel</button>
-                            <button type="submit" disabled={formSaving} className="px-8 py-2.5 bg-slate-900 rounded-xl text-sm font-black text-white hover:bg-orange-600 transition-all flex items-center gap-2 shadow-lg shadow-orange-900/20">
+                        <div className="flex shrink-0 justify-end gap-3 border-t border-border bg-muted/50 p-6">
+                            <button type="button" className="rounded-xl px-6 py-2.5 text-sm font-bold text-muted-foreground transition-all hover:bg-muted" onClick={() => setIsModalOpen(false)}>Cancel</button>
+                            <button type="submit" disabled={formSaving} className="flex items-center gap-2 rounded-xl bg-primary px-8 py-2.5 text-sm font-black text-primary-foreground shadow-lg shadow-primary/20 transition-all hover:bg-primary/90 disabled:opacity-50">
                                 {formSaving && <Loader2 className="animate-spin" size={16} />} Deploy Experiment Matrix
                             </button>
                         </div>

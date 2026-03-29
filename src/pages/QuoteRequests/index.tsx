@@ -253,7 +253,7 @@ const QuoteRequests = () => {
       )}
 
       <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
-        <SheetContent className="w-full max-w-lg overflow-y-auto sm:max-w-lg">
+        <SheetContent className="w-full max-w-lg overflow-y-auto border-border sm:max-w-lg">
           <SheetHeader>
             <SheetTitle>{t('quoteRequestsPage.detailTitle')}</SheetTitle>
           </SheetHeader>
@@ -262,15 +262,15 @@ const QuoteRequests = () => {
               <dl className="space-y-2 text-sm">
                 <div>
                   <dt className="text-[11px] font-bold uppercase text-muted-foreground">{t('quoteRequestsPage.colId')}</dt>
-                  <dd className="font-mono text-xs text-slate-700">{active.id}</dd>
+                  <dd className="font-mono text-xs text-foreground">{active.id}</dd>
                 </div>
                 <div>
                   <dt className="text-[11px] font-bold uppercase text-muted-foreground">{t('quoteRequestsPage.colStatus')}</dt>
-                  <dd className="font-mono text-xs">{active.status}</dd>
+                  <dd className="font-mono text-xs text-foreground">{active.status}</dd>
                 </div>
                 <div>
                   <dt className="text-[11px] font-bold uppercase text-muted-foreground">{t('quoteRequestsPage.message')}</dt>
-                  <dd className="whitespace-pre-wrap text-slate-700">{active.message ?? '—'}</dd>
+                  <dd className="whitespace-pre-wrap text-foreground">{active.message ?? '—'}</dd>
                 </div>
               </dl>
               <label className="space-y-1 text-sm">
@@ -279,7 +279,7 @@ const QuoteRequests = () => {
                   rows={4}
                   value={adminNotes}
                   onChange={(e) => setAdminNotes(e.target.value)}
-                  className="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm"
+                  className="w-full rounded-xl border border-border bg-background px-3 py-2 text-sm text-foreground outline-none transition-all focus:border-primary focus:ring-2 focus:ring-ring/20"
                 />
               </label>
               <div className="flex flex-wrap gap-2">
@@ -288,7 +288,7 @@ const QuoteRequests = () => {
                   disabled={saving}
                   onClick={() => void saveNotes()}
                   className={cn(
-                    'rounded-xl bg-slate-900 px-4 py-2 text-sm font-bold text-white hover:bg-teal-700 disabled:opacity-50',
+                    'rounded-xl bg-primary px-4 py-2 text-sm font-bold text-primary-foreground transition-colors hover:bg-primary/90 disabled:opacity-50',
                   )}
                 >
                   {t('quoteRequestsPage.saveNotes')}
@@ -297,7 +297,7 @@ const QuoteRequests = () => {
                   type="button"
                   disabled={saving}
                   onClick={() => void forceClose()}
-                  className="inline-flex items-center gap-1 rounded-xl border border-amber-200 bg-amber-50 px-4 py-2 text-sm font-bold text-amber-900"
+                  className="inline-flex items-center gap-1 rounded-xl border border-amber-500/40 bg-amber-500/10 px-4 py-2 text-sm font-bold text-amber-900 dark:border-amber-400/30 dark:bg-amber-400/10 dark:text-amber-100"
                 >
                   <Ban size={16} />
                   {t('quoteRequestsPage.forceClose')}
@@ -307,7 +307,7 @@ const QuoteRequests = () => {
                     type="button"
                     disabled={saving}
                     onClick={() => void restore()}
-                    className="inline-flex items-center gap-1 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-2 text-sm font-bold text-emerald-900"
+                    className="inline-flex items-center gap-1 rounded-xl border border-primary/40 bg-primary/10 px-4 py-2 text-sm font-bold text-primary"
                   >
                     <RotateCcw size={16} />
                     {t('quoteRequestsPage.restore')}
@@ -317,7 +317,7 @@ const QuoteRequests = () => {
                     type="button"
                     disabled={saving}
                     onClick={() => void softDelete()}
-                    className="inline-flex items-center gap-1 rounded-xl border border-rose-200 bg-rose-50 px-4 py-2 text-sm font-bold text-rose-900"
+                    className="inline-flex items-center gap-1 rounded-xl border border-destructive/40 bg-destructive/10 px-4 py-2 text-sm font-bold text-destructive"
                   >
                     <Trash2 size={16} />
                     {t('quoteRequestsPage.softDelete')}

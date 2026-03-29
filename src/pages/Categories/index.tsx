@@ -195,18 +195,18 @@ const Categories = () => {
       </div>
 
       <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
-        <SheetContent className="w-full max-w-lg overflow-y-auto sm:max-w-lg">
+        <SheetContent className="w-full max-w-lg overflow-y-auto border-border sm:max-w-lg">
           <SheetHeader>
             <SheetTitle>{editingId ? t('categoriesPage.editTitle') : t('categoriesPage.createTitle')}</SheetTitle>
           </SheetHeader>
           <form onSubmit={(e) => void handleSubmit(e)} className="space-y-4">
             <div className="space-y-2">
-              <label className="text-[11px] font-bold uppercase tracking-wide text-slate-400">{t('categoriesPage.industry')}</label>
+              <label className="text-[11px] font-bold uppercase tracking-wide text-muted-foreground">{t('categoriesPage.industry')}</label>
               <select
                 required
                 value={form.industry_id}
                 onChange={(e) => setForm((f) => ({ ...f, industry_id: e.target.value }))}
-                className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm font-medium outline-none focus:border-slate-800"
+                className="w-full rounded-xl border border-border bg-background px-4 py-2.5 text-sm font-medium text-foreground outline-none transition-all focus:border-primary focus:ring-2 focus:ring-ring/20"
               >
                 <option value="">{t('categoriesPage.selectIndustry')}</option>
                 {industries.map((i) => (
@@ -217,41 +217,41 @@ const Categories = () => {
               </select>
             </div>
             <div className="space-y-2">
-              <label className="text-[11px] font-bold uppercase tracking-wide text-slate-400">{t('industriesPage.nameEn')}</label>
+              <label className="text-[11px] font-bold uppercase tracking-wide text-muted-foreground">{t('industriesPage.nameEn')}</label>
               <input
                 required
                 value={form.name_en}
                 onChange={(e) => setForm((f) => ({ ...f, name_en: e.target.value }))}
-                className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm outline-none focus:border-slate-800"
+                className="w-full rounded-xl border border-border bg-background px-4 py-2.5 text-sm text-foreground outline-none transition-all focus:border-primary focus:ring-2 focus:ring-ring/20"
               />
             </div>
             <div className="space-y-2">
-              <label className="text-[11px] font-bold uppercase tracking-wide text-slate-400">{t('industriesPage.nameAr')}</label>
+              <label className="text-[11px] font-bold uppercase tracking-wide text-muted-foreground">{t('industriesPage.nameAr')}</label>
               <input
                 required
                 dir="rtl"
                 value={form.name_ar}
                 onChange={(e) => setForm((f) => ({ ...f, name_ar: e.target.value }))}
-                className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm outline-none focus:border-slate-800"
+                className="w-full rounded-xl border border-border bg-background px-4 py-2.5 text-sm text-foreground outline-none transition-all focus:border-primary focus:ring-2 focus:ring-ring/20"
               />
             </div>
             <div className="space-y-2">
-              <label className="text-[11px] font-bold uppercase tracking-wide text-slate-400">{t('industriesPage.slugOptional')}</label>
+              <label className="text-[11px] font-bold uppercase tracking-wide text-muted-foreground">{t('industriesPage.slugOptional')}</label>
               <input
                 value={form.slug}
                 onChange={(e) => setForm((f) => ({ ...f, slug: e.target.value }))}
-                className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-2.5 font-mono text-sm outline-none focus:border-slate-800"
+                className="w-full rounded-xl border border-border bg-background px-4 py-2.5 font-mono text-sm text-foreground outline-none transition-all focus:border-primary focus:ring-2 focus:ring-ring/20"
               />
             </div>
-            <label className="flex items-center gap-2 text-sm font-medium text-slate-700">
-              <input type="checkbox" checked={form.active} onChange={(e) => setForm((f) => ({ ...f, active: e.target.checked }))} className="rounded border-slate-300" />
+            <label className="flex items-center gap-2 text-sm font-medium text-foreground">
+              <input type="checkbox" checked={form.active} onChange={(e) => setForm((f) => ({ ...f, active: e.target.checked }))} className="rounded border-border" />
               {t('common.active')}
             </label>
             <div className="flex justify-end gap-2 pt-4">
-              <button type="button" onClick={() => setSheetOpen(false)} className="rounded-xl px-4 py-2 text-sm font-bold text-slate-500 hover:bg-slate-100">
+              <button type="button" onClick={() => setSheetOpen(false)} className="rounded-xl px-4 py-2 text-sm font-bold text-muted-foreground transition-colors hover:bg-muted">
                 {t('common.cancel')}
               </button>
-              <button type="submit" disabled={saving} className="inline-flex items-center gap-2 rounded-xl bg-slate-900 px-6 py-2.5 text-sm font-bold text-white disabled:opacity-50">
+              <button type="submit" disabled={saving} className="inline-flex items-center gap-2 rounded-xl bg-primary px-6 py-2.5 text-sm font-bold text-primary-foreground transition-colors hover:bg-primary/90 disabled:opacity-50">
                 {saving && <Loader2 className="animate-spin" size={16} />}
                 {t('common.save')}
               </button>

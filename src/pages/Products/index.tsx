@@ -136,8 +136,8 @@ const Products = () => {
             setFormData({
                 name: { en: (data.name as any).en || '', ar: (data.name as any).ar || '' },
                 description: { en: (data.description as any).en || '', ar: (data.description as any).ar || '' },
-                category_id: String(data.categoryId || ''),
-                company_id: String(data.companyId || ''),
+                category_id: String(data.categoryId || '').trim(),
+                company_id: String(data.companyId || '').trim(),
                 price: String(data.price || ''),
                 sku: data.sku || '',
                 active: !!data.active,

@@ -179,68 +179,68 @@ const Entitlements = () => {
                     showCloseButton={false}
                     className="p-0 !max-w-xl w-full max-h-screen overflow-y-auto border-none shadow-2xl flex flex-col gap-0 sm:!max-w-xl"
                 >
-                    <div className="p-6 border-b shrink-0 bg-teal-50">
+                    <div className="shrink-0 border-b border-border bg-muted/50 p-6">
                         <div className="flex items-center justify-between">
-                            <SheetHeader className="!p-0 !m-0">
-                                <SheetTitle className="text-xl font-bold font-outfit text-slate-900">
+                            <SheetHeader className="!m-0 !p-0">
+                                <SheetTitle className="font-outfit text-xl font-bold text-foreground">
                                     {editingId ? 'Modify System Entitlement' : 'Provision Entitlement Access'}
                                 </SheetTitle>
                             </SheetHeader>
                             <button
                                 type="button"
                                 onClick={() => setIsModalOpen(false)}
-                                className="p-2 hover:bg-teal-100 rounded-full transition-colors text-slate-400"
+                                className="rounded-full p-2 text-muted-foreground transition-colors hover:bg-muted"
                             >
                                 <X size={20} />
                             </button>
                         </div>
                     </div>
 
-                    <form onSubmit={handleSubmit} className="flex flex-col flex-1 min-h-0">
-                        <div className="p-8 space-y-6 flex-1 overflow-y-auto premium-scrollbar">
+                    <form onSubmit={handleSubmit} className="flex min-h-0 flex-1 flex-col">
+                        <div className="premium-scrollbar flex-1 space-y-6 overflow-y-auto p-8">
                                 <div className="grid grid-cols-2 gap-6">
                                     <div className="space-y-2">
-                                        <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest pl-2">Company ID Target</label>
-                                        <input required disabled={!!editingId} className="w-full h-12 bg-slate-50 border border-slate-200 rounded-xl px-4 text-sm font-mono focus:bg-white focus:border-teal-400 transition-all outline-none disabled:opacity-50" value={formData.company_ulid} onChange={e => setFormData({ ...formData, company_ulid: e.target.value })} placeholder="01H..." />
+                                        <label className="ps-2 text-[11px] font-black uppercase tracking-widest text-muted-foreground">Company ID Target</label>
+                                        <input required disabled={!!editingId} className="h-12 w-full rounded-xl border border-border bg-background px-4 font-mono text-sm text-foreground outline-none transition-all focus:border-primary focus:ring-2 focus:ring-ring/20 disabled:opacity-50" value={formData.company_ulid} onChange={e => setFormData({ ...formData, company_ulid: e.target.value })} placeholder="01H..." />
                                     </div>
                                     <div className="space-y-2">
-                                        <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest pl-2">Feature Registry Key</label>
-                                        <input required disabled={!!editingId} className="w-full h-12 bg-slate-50 border border-slate-200 rounded-xl px-4 text-sm font-bold focus:bg-white focus:border-teal-400 transition-all outline-none disabled:opacity-50" value={formData.feature_key} onChange={e => setFormData({ ...formData, feature_key: e.target.value })} placeholder="api.usage.limit" />
+                                        <label className="ps-2 text-[11px] font-black uppercase tracking-widest text-muted-foreground">Feature Registry Key</label>
+                                        <input required disabled={!!editingId} className="h-12 w-full rounded-xl border border-border bg-background px-4 text-sm font-bold text-foreground outline-none transition-all focus:border-primary focus:ring-2 focus:ring-ring/20 disabled:opacity-50" value={formData.feature_key} onChange={e => setFormData({ ...formData, feature_key: e.target.value })} placeholder="api.usage.limit" />
                                     </div>
                                 </div>
                                 <div className="grid grid-cols-3 gap-6">
                                     <div className="space-y-2">
-                                        <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest pl-2">Class</label>
+                                        <label className="ps-2 text-[11px] font-black uppercase tracking-widest text-muted-foreground">Class</label>
                                         <div className="relative">
-                                            <select required disabled={!!editingId} className="w-full h-12 bg-slate-50 border border-slate-200 rounded-xl px-4 text-sm font-bold appearance-none outline-none focus:border-teal-400 transition-all capitalize disabled:opacity-50" value={formData.type} onChange={e => setFormData({ ...formData, type: e.target.value as any })}>
+                                            <select required disabled={!!editingId} className="h-12 w-full appearance-none rounded-xl border border-border bg-background px-4 text-sm font-bold capitalize text-foreground outline-none transition-all focus:border-primary focus:ring-2 focus:ring-ring/20 disabled:opacity-50" value={formData.type} onChange={e => setFormData({ ...formData, type: e.target.value as any })}>
                                                 <option value="slot">Slot-Based</option>
                                                 <option value="credit">Credit Pool</option>
                                                 <option value="boolean">Boolean Toggle</option>
                                             </select>
-                                            <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" size={16} />
+                                            <ChevronDown className="pointer-events-none absolute end-4 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
                                         </div>
                                     </div>
                                     <div className="space-y-2">
-                                        <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest pl-2">Total Slots</label>
-                                        <input type="number" min="1" disabled={formData.type !== 'slot'} className="w-full h-12 bg-slate-50 border border-slate-200 rounded-xl px-4 text-sm font-bold focus:bg-white focus:border-teal-400 transition-all outline-none disabled:opacity-50" value={formData.slots_total} onChange={e => setFormData({ ...formData, slots_total: e.target.value })} placeholder="Unlimited" />
+                                        <label className="ps-2 text-[11px] font-black uppercase tracking-widest text-muted-foreground">Total Slots</label>
+                                        <input type="number" min="1" disabled={formData.type !== 'slot'} className="h-12 w-full rounded-xl border border-border bg-background px-4 text-sm font-bold text-foreground outline-none transition-all focus:border-primary focus:ring-2 focus:ring-ring/20 disabled:opacity-50" value={formData.slots_total} onChange={e => setFormData({ ...formData, slots_total: e.target.value })} placeholder="Unlimited" />
                                     </div>
                                     <div className="space-y-2">
-                                        <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest pl-2">Total Credits</label>
-                                        <input type="number" min="1" disabled={formData.type !== 'credit'} className="w-full h-12 bg-slate-50 border border-slate-200 rounded-xl px-4 text-sm font-bold focus:bg-white focus:border-teal-400 transition-all outline-none disabled:opacity-50" value={formData.credits_total} onChange={e => setFormData({ ...formData, credits_total: e.target.value })} placeholder="Unlimited" />
+                                        <label className="ps-2 text-[11px] font-black uppercase tracking-widest text-muted-foreground">Total Credits</label>
+                                        <input type="number" min="1" disabled={formData.type !== 'credit'} className="h-12 w-full rounded-xl border border-border bg-background px-4 text-sm font-bold text-foreground outline-none transition-all focus:border-primary focus:ring-2 focus:ring-ring/20 disabled:opacity-50" value={formData.credits_total} onChange={e => setFormData({ ...formData, credits_total: e.target.value })} placeholder="Unlimited" />
                                     </div>
                                 </div>
                                 <div className="flex items-center gap-6 pt-2">
-                                    <label className="flex items-center gap-3 cursor-pointer group">
-                                        <div className="relative">
-                                            <input type="checkbox" className="sr-only peer" checked={formData.active} onChange={e => setFormData({ ...formData, active: e.target.checked })} />
-                                            <div className="w-12 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-teal-600"></div>
+                                    <label className="group flex cursor-pointer items-center gap-3">
+                                        <div className="relative inline-flex scale-90 items-center">
+                                            <input type="checkbox" className="peer sr-only" checked={formData.active} onChange={e => setFormData({ ...formData, active: e.target.checked })} />
+                                            <div className="peer h-6 w-11 rounded-full bg-muted after:absolute after:start-[2px] after:top-[2px] after:h-5 after:w-5 after:rounded-full after:border after:border-border after:bg-background after:transition-all after:content-[''] peer-checked:bg-primary peer-checked:after:translate-x-full peer-checked:after:border-transparent peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-ring/40" />
                                         </div>
-                                        <span className="text-sm font-bold text-slate-700">Entitlement Valid Functionally</span>
+                                        <span className="text-sm font-bold text-foreground">Entitlement Valid Functionally</span>
                                     </label>
                                 </div>
                         </div>
-                        <div className="p-6 border-t border-slate-100 flex justify-end gap-3 bg-slate-50 shrink-0">
-                            <button type="button" className="px-6 py-2.5 rounded-xl text-sm font-bold text-slate-500 hover:bg-slate-200 transition-all" onClick={() => setIsModalOpen(false)}>Cancel</button>
+                        <div className="flex shrink-0 justify-end gap-3 border-t border-border bg-muted/50 p-6">
+                            <button type="button" className="rounded-xl px-6 py-2.5 text-sm font-bold text-muted-foreground transition-all hover:bg-muted" onClick={() => setIsModalOpen(false)}>Cancel</button>
                             <button type="submit" disabled={formSaving} className="flex items-center gap-2 rounded-xl bg-primary px-8 py-2.5 text-sm font-black text-primary-foreground shadow-lg shadow-primary/20 transition-all hover:bg-primary/90 disabled:opacity-50">
                                 {formSaving && <Loader2 className="animate-spin" size={16} />} Deploy Grant
                             </button>

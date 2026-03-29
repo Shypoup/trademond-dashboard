@@ -54,6 +54,25 @@ export interface ProductFormData {
 }
 
 /**
+ * Reads an id from a flattened JSON:API relationship (`{ data: { id } } }`), a nested resource, or a scalar.
+ */
+export const resolveRelatedResourceId = (rel: unknown): string | number | '' => {
+    if (rel == null || rel === '') return '';
+    if (typeof rel === 'string' || typeof rel === 'number') return rel;
+    if (typeof rel !== 'object') return '';
+    const o = rel as Record<string, unknown>;
+    if (o.id != null && (typeof o.id === 'string' || typeof o.id === 'number')) {
+        return o.id;
+    }
+    const data = o.data;
+    if (data && typeof data === 'object') {
+        const id = (data as Record<string, unknown>).id;
+        if (typeof id === 'string' || typeof id === 'number') return id;
+    }
+    return '';
+};
+
+/**
  * Extracts nested json:api fields or falls back to flat struct for a product item.
  */
 export const getProductData = (item: unknown): ProductData => {
@@ -65,6 +84,18 @@ export const getProductData = (item: unknown): ProductData => {
     const active = attrs.active !== undefined ? attrs.active : (p.active !== undefined ? p.active : true);
     const published = attrs.published !== undefined ? attrs.published : p.published;
 
+    const hasScalarCompany =
+        p.company_id !== undefined && p.company_id !== null && String(p.company_id).trim() !== '';
+    const companyId = hasScalarCompany
+        ? (p.company_id as string | number)
+        : resolveRelatedResourceId(rels.company) || resolveRelatedResourceId(p.company) || '';
+
+    const hasScalarCategory =
+        p.category_id !== undefined && p.category_id !== null && String(p.category_id).trim() !== '';
+    const categoryId = hasScalarCategory
+        ? (p.category_id as string | number)
+        : resolveRelatedResourceId(rels.category) || resolveRelatedResourceId(p.category) || '';
+
     return {
         id: p.id,
         name: attrs.name || p.name || { en: '', ar: '' },
@@ -75,9 +106,9 @@ export const getProductData = (item: unknown): ProductData => {
         searchable: attrs.searchable !== undefined ? attrs.searchable : p.searchable,
         createdAt: attrs.createdAt || attrs.created_at || p.created_at || '',
         updatedAt: attrs.updatedAt || attrs.updated_at || p.updated_at || attrs.createdAt || '',
-        companyId: rels.company?.id || p.company_id || p.company?.id || '',
+        companyId,
         companyName: rels.company?.name || p.company?.name || p.company || 'N/A',
-        categoryId: rels.category?.id || p.category_id || p.category?.id || '',
+        categoryId,
         categoryName: rels.category?.name || p.category?.name || p.category || 'N/A',
         ownerName: rels.owner?.name || p.owner?.name || '',
         ownerEmail: rels.owner?.email || p.owner?.email || '',

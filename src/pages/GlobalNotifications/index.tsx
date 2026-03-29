@@ -215,7 +215,7 @@ const GlobalNotifications = () => {
       </div>
 
       <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
-        <SheetContent className="w-full max-w-lg overflow-y-auto sm:max-w-lg">
+        <SheetContent className="w-full max-w-lg overflow-y-auto border-border sm:max-w-lg">
           <SheetHeader>
             <SheetTitle>{editingId ? t('globalNotificationsPage.editTitle') : t('globalNotificationsPage.createTitle')}</SheetTitle>
           </SheetHeader>
@@ -226,7 +226,7 @@ const GlobalNotifications = () => {
                 required
                 value={form.type}
                 onChange={(e) => setForm((f) => ({ ...f, type: e.target.value }))}
-                className="w-full rounded-xl border border-slate-200 px-3 py-2 font-mono text-sm"
+                className="w-full rounded-xl border border-border bg-background px-3 py-2 font-mono text-sm text-foreground outline-none transition-all focus:border-primary focus:ring-2 focus:ring-ring/20"
               />
             </label>
             <label className="space-y-1 text-sm">
@@ -235,7 +235,7 @@ const GlobalNotifications = () => {
                 required
                 value={form.title_en}
                 onChange={(e) => setForm((f) => ({ ...f, title_en: e.target.value }))}
-                className="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm"
+                className="w-full rounded-xl border border-border bg-background px-3 py-2 text-sm text-foreground outline-none transition-all focus:border-primary focus:ring-2 focus:ring-ring/20"
               />
             </label>
             <label className="space-y-1 text-sm">
@@ -245,7 +245,7 @@ const GlobalNotifications = () => {
                 dir="rtl"
                 value={form.title_ar}
                 onChange={(e) => setForm((f) => ({ ...f, title_ar: e.target.value }))}
-                className="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm"
+                className="w-full rounded-xl border border-border bg-background px-3 py-2 text-sm text-foreground outline-none transition-all focus:border-primary focus:ring-2 focus:ring-ring/20"
               />
             </label>
             <label className="space-y-1 text-sm">
@@ -255,7 +255,7 @@ const GlobalNotifications = () => {
                 rows={3}
                 value={form.body_en}
                 onChange={(e) => setForm((f) => ({ ...f, body_en: e.target.value }))}
-                className="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm"
+                className="w-full rounded-xl border border-border bg-background px-3 py-2 text-sm text-foreground outline-none transition-all focus:border-primary focus:ring-2 focus:ring-ring/20"
               />
             </label>
             <label className="space-y-1 text-sm">
@@ -266,7 +266,7 @@ const GlobalNotifications = () => {
                 dir="rtl"
                 value={form.body_ar}
                 onChange={(e) => setForm((f) => ({ ...f, body_ar: e.target.value }))}
-                className="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm"
+                className="w-full rounded-xl border border-border bg-background px-3 py-2 text-sm text-foreground outline-none transition-all focus:border-primary focus:ring-2 focus:ring-ring/20"
               />
             </label>
             <label className="space-y-1 text-sm">
@@ -274,7 +274,7 @@ const GlobalNotifications = () => {
               <input
                 value={form.link_url}
                 onChange={(e) => setForm((f) => ({ ...f, link_url: e.target.value }))}
-                className="w-full rounded-xl border border-slate-200 px-3 py-2 font-mono text-sm"
+                className="w-full rounded-xl border border-border bg-background px-3 py-2 font-mono text-sm text-foreground outline-none transition-all focus:border-primary focus:ring-2 focus:ring-ring/20"
               />
             </label>
             <label className="space-y-1 text-sm">
@@ -282,7 +282,7 @@ const GlobalNotifications = () => {
               <input
                 value={form.link_label_en}
                 onChange={(e) => setForm((f) => ({ ...f, link_label_en: e.target.value }))}
-                className="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm"
+                className="w-full rounded-xl border border-border bg-background px-3 py-2 text-sm text-foreground outline-none transition-all focus:border-primary focus:ring-2 focus:ring-ring/20"
               />
             </label>
             <label className="space-y-1 text-sm">
@@ -291,7 +291,7 @@ const GlobalNotifications = () => {
                 dir="rtl"
                 value={form.link_label_ar}
                 onChange={(e) => setForm((f) => ({ ...f, link_label_ar: e.target.value }))}
-                className="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm"
+                className="w-full rounded-xl border border-border bg-background px-3 py-2 text-sm text-foreground outline-none transition-all focus:border-primary focus:ring-2 focus:ring-ring/20"
               />
             </label>
             <div className="grid gap-3 sm:grid-cols-2">
@@ -301,7 +301,7 @@ const GlobalNotifications = () => {
                   type="datetime-local"
                   value={form.starts_at}
                   onChange={(e) => setForm((f) => ({ ...f, starts_at: e.target.value }))}
-                  className="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm"
+                  className="w-full rounded-xl border border-border bg-background px-3 py-2 text-sm text-foreground outline-none transition-all focus:border-primary focus:ring-2 focus:ring-ring/20"
                 />
               </label>
               <label className="space-y-1 text-sm">
@@ -310,19 +310,19 @@ const GlobalNotifications = () => {
                   type="datetime-local"
                   value={form.ends_at}
                   onChange={(e) => setForm((f) => ({ ...f, ends_at: e.target.value }))}
-                  className="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm"
+                  className="w-full rounded-xl border border-border bg-background px-3 py-2 text-sm text-foreground outline-none transition-all focus:border-primary focus:ring-2 focus:ring-ring/20"
                 />
               </label>
             </div>
-            <label className="flex items-center gap-2 text-sm font-medium">
-              <input type="checkbox" checked={form.active} onChange={(e) => setForm((f) => ({ ...f, active: e.target.checked }))} />
+            <label className="flex items-center gap-2 text-sm font-medium text-foreground">
+              <input type="checkbox" checked={form.active} onChange={(e) => setForm((f) => ({ ...f, active: e.target.checked }))} className="rounded border-border" />
               {t('common.active')}
             </label>
             <div className="flex justify-end gap-2 pt-4">
-              <button type="button" onClick={() => setSheetOpen(false)} className="rounded-xl px-4 py-2 text-sm font-bold text-slate-500 hover:bg-slate-100">
+              <button type="button" onClick={() => setSheetOpen(false)} className="rounded-xl px-4 py-2 text-sm font-bold text-muted-foreground transition-colors hover:bg-muted">
                 {t('common.cancel')}
               </button>
-              <button type="submit" disabled={saving} className="inline-flex items-center gap-2 rounded-xl bg-slate-900 px-6 py-2.5 text-sm font-bold text-white disabled:opacity-50">
+              <button type="submit" disabled={saving} className="inline-flex items-center gap-2 rounded-xl bg-primary px-6 py-2.5 text-sm font-bold text-primary-foreground transition-colors hover:bg-primary/90 disabled:opacity-50">
                 {saving && <Loader2 className="animate-spin" size={16} />}
                 {t('common.save')}
               </button>

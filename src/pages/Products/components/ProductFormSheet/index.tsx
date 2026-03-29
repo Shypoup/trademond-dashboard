@@ -20,6 +20,13 @@ import { BilingualText, Tag } from '@data-types/api';
 import type { ProductFormData } from '../../utils/productHelpers';
 
 /**
+ * Normalizes option ids to strings so Base UI Select matches items with strict equality (`Object.is`).
+ */
+function selectOptionValue(id: string | number): string {
+    return String(id).trim();
+}
+
+/**
  * Props for the ProductFormSheet component.
  */
 export interface ProductFormSheetProps {
@@ -67,55 +74,69 @@ export const ProductFormSheet: React.FC<ProductFormSheetProps> = ({
     onFormFieldChange,
     onToggleTagSelection,
 }) => {
+    const categoryLabel = React.useMemo(() => {
+        const v = formData.category_id?.trim();
+        if (!v) return undefined;
+        const row = categories.find((c) => selectOptionValue(c.id) === v);
+        return row ? displayBilingual(row.name) : undefined;
+    }, [formData.category_id, categories]);
+
+    const companyLabel = React.useMemo(() => {
+        const v = formData.company_id?.trim();
+        if (!v) return undefined;
+        const row = companies.find((c) => selectOptionValue(c.id) === v);
+        return row ? displayBilingual(row.name) : undefined;
+    }, [formData.company_id, companies]);
+
     return (
         <Sheet open={isOpen} onOpenChange={onOpenChange}>
-            <SheetContent side="right" className="p-0 !max-w-4xl w-full max-h-screen overflow-y-auto border-none shadow-2xl flex flex-col">
-                <div className="px-8 py-6 bg-slate-50/80 backdrop-blur-md border-b">
+            <SheetContent side="right" className="flex !max-w-4xl w-full max-h-screen flex-col overflow-y-auto border-none p-0 shadow-2xl">
+                <div className="border-b border-border bg-muted/50 px-8 py-6 backdrop-blur-md">
                     <SheetHeader>
-                        <SheetTitle className="text-xl font-bold text-slate-900 font-outfit">
+                        <SheetTitle className="font-outfit text-xl font-bold text-foreground">
                             {editingId ? 'Refine Product' : 'List New Product'}
                         </SheetTitle>
-                        <div className="mt-4 flex items-center gap-4 text-[11px] font-semibold text-slate-400 uppercase tracking-widest">
+                        <div className="mt-4 flex items-center gap-4 text-[11px] font-semibold uppercase tracking-widest text-muted-foreground">
                             <div className="flex items-center gap-2">
-                                <span className="w-5 h-5 rounded-full bg-teal-600 text-white flex items-center justify-center text-[10px]">1</span>
+                                <span className="flex h-5 w-5 items-center justify-center rounded-full bg-primary text-[10px] text-primary-foreground">1</span>
                                 <span>Basic Information</span>
                             </div>
-                            <div className="h-px w-6 bg-slate-200" />
+                            <div className="h-px w-6 bg-border" />
                             <div className="flex items-center gap-2">
-                                <span className="w-5 h-5 rounded-full bg-slate-200 text-slate-500 flex items-center justify-center text-[10px]">2</span>
+                                <span className="flex h-5 w-5 items-center justify-center rounded-full bg-muted text-[10px] text-muted-foreground">2</span>
                                 <span>Technical Data</span>
                             </div>
-                            <div className="h-px w-6 bg-slate-200" />
+                            <div className="h-px w-6 bg-border" />
                             <div className="flex items-center gap-2">
-                                <span className="w-5 h-5 rounded-full bg-slate-200 text-slate-500 flex items-center justify-center text-[10px]">3</span>
+                                <span className="flex h-5 w-5 items-center justify-center rounded-full bg-muted text-[10px] text-muted-foreground">3</span>
                                 <span>Governance &amp; Approval</span>
                             </div>
                         </div>
                     </SheetHeader>
                 </div>
 
-                <form onSubmit={onSubmit} className="flex flex-col flex-1">
-                    <div className="p-8 space-y-10 flex-1 overflow-y-auto premium-scrollbar">
+                <form onSubmit={onSubmit} className="flex flex-1 flex-col">
+                    <div className="premium-scrollbar flex-1 space-y-10 overflow-y-auto p-8">
                         <div className="space-y-6">
-                            <h3 className="text-xs font-black text-teal-600 uppercase tracking-widest border-b border-teal-100 pb-2">Basic Information</h3>
+                            <h3 className="border-b border-primary/20 pb-2 text-xs font-black uppercase tracking-widest text-primary">Basic Information</h3>
                             <div className="grid grid-cols-2 gap-6">
                                 <div className="space-y-2">
-                                    <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest">Product Name (EN) <span className="text-rose-500">*</span></label>
-                                    <input required className="w-full h-12 bg-white border border-slate-200 rounded-xl px-4 text-sm font-bold focus:border-teal-500 transition-all outline-none" placeholder="e.g. Pro Drill" value={formData.name.en} onChange={e => onUpdateBilingual('name', 'en', e.target.value)} />
+                                    <label className="text-[11px] font-black uppercase tracking-widest text-muted-foreground">Product Name (EN) <span className="text-destructive">*</span></label>
+                                    <input required className="h-12 w-full rounded-xl border border-border bg-background px-4 text-sm font-bold text-foreground outline-none transition-all focus:border-primary focus:ring-2 focus:ring-ring/20" placeholder="e.g. Pro Drill" value={formData.name.en} onChange={e => onUpdateBilingual('name', 'en', e.target.value)} />
                                 </div>
                                 <div className="space-y-2">
-                                    <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest text-right block">الإسم (بالعربية) <span className="text-rose-500">*</span></label>
-                                    <input dir="rtl" className="w-full h-12 bg-white border border-slate-200 rounded-xl px-4 text-sm font-bold focus:border-teal-500 transition-all outline-none text-right" placeholder="اسم المنتج..." value={formData.name.ar} onChange={e => onUpdateBilingual('name', 'ar', e.target.value)} />
+                                    <label className="block text-end text-[11px] font-black uppercase tracking-widest text-muted-foreground">الإسم (بالعربية) <span className="text-destructive">*</span></label>
+                                    <input dir="rtl" className="h-12 w-full rounded-xl border border-border bg-background px-4 text-end text-sm font-bold text-foreground outline-none transition-all focus:border-primary focus:ring-2 focus:ring-ring/20" placeholder="اسم المنتج..." value={formData.name.ar} onChange={e => onUpdateBilingual('name', 'ar', e.target.value)} />
                                 </div>
                             </div>
                             <div className="grid grid-cols-2 gap-6">
                                 <div className="space-y-2">
-                                    <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest">Description (EN)</label>
-                                    <textarea rows={4} className="w-full bg-white border border-slate-200 rounded-xl px-4 py-3 text-sm font-medium focus:border-teal-500 transition-all outline-none resize-none" placeholder="Product details in English..." value={formData.description.en} onChange={e => onUpdateBilingual('description', 'en', e.target.value)} />
+                                    <label className="text-[11px] font-black uppercase tracking-widest text-muted-foreground">Description (EN)</label>
+                                    <textarea rows={4} className="w-full resize-none rounded-xl border border-border bg-background px-4 py-3 text-sm font-medium text-foreground outline-none transition-all focus:border-primary focus:ring-2 focus:ring-ring/20" placeholder="Product details in English..." value={formData.description.en} onChange={e => onUpdateBilingual('description', 'en', e.target.value)} />
                                 </div>
                                 <div className="space-y-2">
-                                    <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest text-right block">الوصف (بالعربية)</label>
-                                    <textarea rows={4} dir="rtl" className="w-full bg-white border border-slate-200 rounded-xl px-4 py-3 text-sm font-medium focus:border-teal-500 transition-all outline-none resize-none text-right" placeholder="تفاصيل المنتج بالعربية..." value={formData.description.ar} onChange={e => onUpdateBilingual('description', 'ar', e.target.value)} />
+                                    <label className="block text-end text-[11px] font-black uppercase tracking-widest text-muted-foreground">الوصف (بالعربية)</label>
+                                    <textarea rows={4} dir="rtl" className="w-full resize-none rounded-xl border border-border bg-background px-4 py-3 text-end text-sm font-medium text-foreground outline-none transition-all focus:border-primary focus:ring-2 focus:ring-ring/20" placeholder="تفاصيل المنتج بالعربية..." value={formData.description.ar} onChange={e => onUpdateBilingual('description', 'ar', e.target.value)} />
                                 </div>
                             </div>
                         </div>
@@ -123,30 +144,36 @@ export const ProductFormSheet: React.FC<ProductFormSheetProps> = ({
                         <Separator />
 
                         <div className="space-y-6">
-                            <h3 className="text-xs font-black text-teal-600 uppercase tracking-widest border-b border-teal-100 pb-2">Technical Data</h3>
+                            <h3 className="border-b border-primary/20 pb-2 text-xs font-black uppercase tracking-widest text-primary">Technical Data</h3>
                             <div className="grid grid-cols-2 gap-6">
                                 <div className="space-y-2">
-                                    <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest">Category <span className="text-rose-500">*</span></label>
-                                    <Select value={formData.category_id} onValueChange={(val) => onFormFieldChange('category_id', val ?? '')}>
-                                        <SelectTrigger className="w-full h-12 bg-white border-slate-200 rounded-xl px-4 text-sm font-bold">
-                                            <SelectValue placeholder="Categorize item..." />
+                                    <label className="text-[11px] font-black uppercase tracking-widest text-muted-foreground">Category <span className="text-destructive">*</span></label>
+                                    <Select
+                                        value={formData.category_id ? selectOptionValue(formData.category_id) : ''}
+                                        onValueChange={(val) => onFormFieldChange('category_id', val ?? '')}
+                                    >
+                                        <SelectTrigger className="h-12 w-full rounded-xl border-border bg-background px-4 text-sm font-bold">
+                                            <SelectValue placeholder="Categorize item...">{categoryLabel}</SelectValue>
                                         </SelectTrigger>
-                                        <SelectContent className="rounded-xl shadow-xl border-slate-200">
+                                        <SelectContent className="rounded-xl border-border shadow-xl">
                                             {categories.map(c => (
-                                                <SelectItem key={c.id} value={String(c.id)} className="text-sm border-b border-slate-50 last:border-0">{displayBilingual(c.name)}</SelectItem>
+                                                <SelectItem key={c.id} value={selectOptionValue(c.id)} className="border-b border-border/50 text-sm last:border-0">{displayBilingual(c.name)}</SelectItem>
                                             ))}
                                         </SelectContent>
                                     </Select>
                                 </div>
                                 <div className="space-y-2">
-                                    <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest">Company <span className="text-rose-500">*</span></label>
-                                    <Select value={formData.company_id} onValueChange={(val) => onFormFieldChange('company_id', val ?? '')}>
-                                        <SelectTrigger className="w-full h-12 bg-white border-slate-200 rounded-xl px-4 text-sm font-bold">
-                                            <SelectValue placeholder="Assign proprietor..." />
+                                    <label className="text-[11px] font-black uppercase tracking-widest text-muted-foreground">Company <span className="text-destructive">*</span></label>
+                                    <Select
+                                        value={formData.company_id ? selectOptionValue(formData.company_id) : ''}
+                                        onValueChange={(val) => onFormFieldChange('company_id', val ?? '')}
+                                    >
+                                        <SelectTrigger className="h-12 w-full rounded-xl border-border bg-background px-4 text-sm font-bold">
+                                            <SelectValue placeholder="Assign proprietor...">{companyLabel}</SelectValue>
                                         </SelectTrigger>
-                                        <SelectContent className="rounded-xl shadow-xl border-slate-200">
+                                        <SelectContent className="rounded-xl border-border shadow-xl">
                                             {companies.map(c => (
-                                                <SelectItem key={c.id} value={String(c.id)} className="text-sm border-b border-slate-50 last:border-0">{displayBilingual(c.name)}</SelectItem>
+                                                <SelectItem key={c.id} value={selectOptionValue(c.id)} className="border-b border-border/50 text-sm last:border-0">{displayBilingual(c.name)}</SelectItem>
                                             ))}
                                         </SelectContent>
                                     </Select>
@@ -155,21 +182,21 @@ export const ProductFormSheet: React.FC<ProductFormSheetProps> = ({
 
                             <div className="grid grid-cols-2 gap-6">
                                 <div className="space-y-2">
-                                    <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest">Base Price (USD)</label>
+                                    <label className="text-[11px] font-black uppercase tracking-widest text-muted-foreground">Base Price (USD)</label>
                                     <div className="relative">
-                                        <input type="number" step="0.01" min="0" className="w-full h-12 bg-white border border-slate-200 rounded-xl px-4 text-sm font-bold focus:border-teal-500 transition-all outline-none" placeholder="0.00" value={formData.price} onChange={e => onFormFieldChange('price', e.target.value)} />
-                                        <div className="absolute right-4 top-1/2 -translate-y-1/2 text-[10px] font-black text-slate-300 uppercase">EGP</div>
+                                        <input type="number" step="0.01" min="0" className="h-12 w-full rounded-xl border border-border bg-background px-4 pe-14 text-sm font-bold text-foreground outline-none transition-all focus:border-primary focus:ring-2 focus:ring-ring/20" placeholder="0.00" value={formData.price} onChange={e => onFormFieldChange('price', e.target.value)} />
+                                        <div className="pointer-events-none absolute end-4 top-1/2 -translate-y-1/2 text-[10px] font-black uppercase text-muted-foreground">EGP</div>
                                     </div>
                                 </div>
                                 <div className="space-y-2">
-                                    <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest">SKU Ledger ID</label>
-                                    <input className="w-full h-12 bg-white border border-slate-200 rounded-xl px-4 text-sm font-bold focus:border-teal-500 transition-all outline-none uppercase placeholder:lowercase" placeholder="e.g. PRO-123" value={formData.sku} onChange={e => onFormFieldChange('sku', e.target.value)} />
+                                    <label className="text-[11px] font-black uppercase tracking-widest text-muted-foreground">SKU Ledger ID</label>
+                                    <input className="h-12 w-full rounded-xl border border-border bg-background px-4 text-sm font-bold uppercase text-foreground outline-none transition-all placeholder:normal-case focus:border-primary focus:ring-2 focus:ring-ring/20" placeholder="e.g. PRO-123" value={formData.sku} onChange={e => onFormFieldChange('sku', e.target.value)} />
                                 </div>
                             </div>
 
                             <div className="space-y-3">
-                                <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest">Market Tags <span className="text-slate-300 font-bold ml-1">({formData.tags.length}/5)</span></label>
-                                <div className="flex flex-wrap gap-2 p-4 bg-slate-50 border border-slate-200 rounded-2xl min-h-[100px]">
+                                <label className="text-[11px] font-black uppercase tracking-widest text-muted-foreground">Market Tags <span className="ms-1 font-bold text-muted-foreground/80">({formData.tags.length}/5)</span></label>
+                                <div className="flex min-h-[100px] flex-wrap gap-2 rounded-2xl border border-border bg-muted/40 p-4">
                                     {allTags.map(tag => {
                                         const id = String(tag.id);
                                         const isSelected = formData.tags.includes(id);
@@ -180,10 +207,10 @@ export const ProductFormSheet: React.FC<ProductFormSheetProps> = ({
                                                 type="button"
                                                 onClick={() => onToggleTagSelection(id)}
                                                 disabled={isDisabled}
-                                                className={`px-3 py-1.5 rounded-full text-[11px] font-bold border transition-all ${isSelected
-                                                    ? 'bg-teal-600 border-teal-600 text-white shadow-md shadow-teal-600/10'
-                                                    : 'bg-white border-slate-200 text-slate-600 hover:border-teal-400 hover:text-teal-600'
-                                                    } ${isDisabled ? 'opacity-30 grayscale cursor-not-allowed' : ''}`}
+                                                className={`rounded-full border px-3 py-1.5 text-[11px] font-bold transition-all ${isSelected
+                                                    ? 'border-primary bg-primary text-primary-foreground shadow-md shadow-primary/15'
+                                                    : 'border-border bg-card text-muted-foreground hover:border-primary hover:text-primary'
+                                                    } ${isDisabled ? 'cursor-not-allowed opacity-30 grayscale' : ''}`}
                                             >
                                                 {displayBilingual(tag.name)}
                                             </button>
@@ -196,53 +223,53 @@ export const ProductFormSheet: React.FC<ProductFormSheetProps> = ({
                         <Separator />
 
                         <div className="space-y-6">
-                            <h3 className="text-xs font-black text-teal-600 uppercase tracking-widest border-b border-teal-100 pb-2">Governance & Approval</h3>
+                            <h3 className="border-b border-primary/20 pb-2 text-xs font-black uppercase tracking-widest text-primary">Governance & Approval</h3>
                             <div className="space-y-4">
-                                <div className="flex items-center justify-between p-4 bg-white border border-slate-100 rounded-2xl shadow-sm">
+                                <div className="flex items-center justify-between rounded-2xl border border-border bg-card p-4 shadow-sm">
                                     <div className="flex items-center gap-4">
-                                        <div className="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center">
+                                        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/15 text-primary">
                                             <CheckCircle size={18} />
                                         </div>
-                                        <div className="space-y-0.5 text-left">
-                                            <p className="text-sm font-bold text-slate-800">Active Listing</p>
-                                            <p className="text-[11px] text-slate-400 font-medium">Mark as approved and ready for transactions.</p>
+                                        <div className="space-y-0.5 text-start">
+                                            <p className="text-sm font-bold text-foreground">Active Listing</p>
+                                            <p className="text-[11px] font-medium text-muted-foreground">Mark as approved and ready for transactions.</p>
                                         </div>
                                     </div>
-                                    <div className="relative inline-flex items-center cursor-pointer scale-90">
-                                        <input type="checkbox" checked={formData.active} onChange={e => onFormFieldChange('active', e.target.checked)} className="sr-only peer" id="active-toggle" />
-                                        <div className="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-teal-600"></div>
+                                    <div className="relative inline-flex scale-90 cursor-pointer items-center">
+                                        <input type="checkbox" checked={formData.active} onChange={e => onFormFieldChange('active', e.target.checked)} className="peer sr-only" id="active-toggle" />
+                                        <div className="h-6 w-11 rounded-full bg-muted after:absolute after:start-[2px] after:top-[2px] after:h-5 after:w-5 after:rounded-full after:border after:border-border after:bg-background after:transition-all after:content-[''] peer-checked:bg-primary peer-checked:after:translate-x-full peer-checked:after:border-transparent peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-ring/40" />
                                     </div>
                                 </div>
 
-                                <div className="flex items-center justify-between p-4 bg-white border border-slate-100 rounded-2xl shadow-sm">
+                                <div className="flex items-center justify-between rounded-2xl border border-border bg-card p-4 shadow-sm">
                                     <div className="flex items-center gap-4">
-                                        <div className="w-10 h-10 rounded-xl bg-sky-50 text-sky-600 flex items-center justify-center">
+                                        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-muted text-chart-2">
                                             <Eye size={18} />
                                         </div>
-                                        <div className="space-y-0.5 text-left">
-                                            <p className="text-sm font-bold text-slate-800">Public Visibility</p>
-                                            <p className="text-[11px] text-slate-400 font-medium">Toggle whether this item is indexed in search.</p>
+                                        <div className="space-y-0.5 text-start">
+                                            <p className="text-sm font-bold text-foreground">Public Visibility</p>
+                                            <p className="text-[11px] font-medium text-muted-foreground">Toggle whether this item is indexed in search.</p>
                                         </div>
                                     </div>
-                                    <div className="relative inline-flex items-center cursor-pointer scale-90">
-                                        <input type="checkbox" checked={formData.published} onChange={e => onFormFieldChange('published', e.target.checked)} className="sr-only peer" id="pub-toggle" />
-                                        <div className="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-teal-600"></div>
+                                    <div className="relative inline-flex scale-90 cursor-pointer items-center">
+                                        <input type="checkbox" checked={formData.published} onChange={e => onFormFieldChange('published', e.target.checked)} className="peer sr-only" id="pub-toggle" />
+                                        <div className="h-6 w-11 rounded-full bg-muted after:absolute after:start-[2px] after:top-[2px] after:h-5 after:w-5 after:rounded-full after:border after:border-border after:bg-background after:transition-all after:content-[''] peer-checked:bg-primary peer-checked:after:translate-x-full peer-checked:after:border-transparent peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-ring/40" />
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <div className="px-8 py-6 bg-slate-50/80 backdrop-blur-md border-t flex items-center justify-between">
-                        <Button type="button" variant="ghost" onClick={() => onOpenChange(false)} className="px-6 rounded-xl font-bold text-slate-500 hover:bg-slate-200/50 transition-all">
+                    <div className="flex items-center justify-between border-t border-border bg-muted/50 px-8 py-6 backdrop-blur-md">
+                        <Button type="button" variant="ghost" onClick={() => onOpenChange(false)} className="rounded-xl px-6 font-bold text-muted-foreground transition-all hover:bg-muted">
                             Discard
                         </Button>
                         <Button
                             type="submit"
                             disabled={formSaving}
-                            className="h-12 px-10 bg-teal-600 hover:bg-teal-700 rounded-xl font-black text-white shadow-lg shadow-teal-600/20 transition-all active:scale-95"
+                            className="h-12 rounded-xl bg-primary px-10 font-black text-primary-foreground shadow-lg shadow-primary/20 transition-all hover:bg-primary/90 active:scale-95"
                         >
-                            {formSaving && <Loader2 className="animate-spin mr-2" size={16} />}
+                            {formSaving && <Loader2 className="me-2 animate-spin" size={16} />}
                             {editingId ? 'Update Listing' : 'Publish Product'}
                         </Button>
                     </div>

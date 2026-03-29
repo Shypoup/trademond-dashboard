@@ -257,7 +257,7 @@ const SponsoredAds = () => {
       </div>
 
       <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
-        <SheetContent className="w-full max-w-lg overflow-y-auto sm:max-w-lg">
+        <SheetContent className="w-full max-w-lg overflow-y-auto border-border sm:max-w-lg">
           <SheetHeader>
             <SheetTitle>{editingId ? t('sponsoredAdsPage.editTitle') : t('sponsoredAdsPage.createTitle')}</SheetTitle>
           </SheetHeader>

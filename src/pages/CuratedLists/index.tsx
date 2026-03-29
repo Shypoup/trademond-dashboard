@@ -183,86 +183,86 @@ const CuratedLists = () => {
                     showCloseButton={false}
                     className="p-0 !max-w-3xl w-full max-h-screen overflow-y-auto border-none shadow-2xl flex flex-col gap-0 sm:!max-w-3xl"
                 >
-                    <div className="p-6 border-b shrink-0 bg-purple-50/50">
+                    <div className="shrink-0 border-b border-border bg-muted/50 p-6">
                         <div className="flex items-center justify-between">
-                            <SheetHeader className="!p-0 !m-0">
-                                <SheetTitle className="text-xl font-bold font-outfit text-slate-900">
+                            <SheetHeader className="!m-0 !p-0">
+                                <SheetTitle className="font-outfit text-xl font-bold text-foreground">
                                     {editingId ? 'Edit Collection' : 'Create Collection'}
                                 </SheetTitle>
                             </SheetHeader>
                             <button
                                 type="button"
                                 onClick={() => setIsModalOpen(false)}
-                                className="p-2 hover:bg-purple-100 rounded-full transition-colors text-slate-400"
+                                className="rounded-full p-2 text-muted-foreground transition-colors hover:bg-muted"
                             >
                                 <X size={20} />
                             </button>
                         </div>
                     </div>
 
-                    <form onSubmit={handleSubmit} className="flex flex-col flex-1 min-h-0">
-                        <div className="p-8 space-y-6 flex-1 overflow-y-auto premium-scrollbar">
+                    <form onSubmit={handleSubmit} className="flex min-h-0 flex-1 flex-col">
+                        <div className="premium-scrollbar flex-1 space-y-6 overflow-y-auto p-8">
                                 <div className="grid grid-cols-2 gap-6">
                                     <div className="space-y-2">
-                                        <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest pl-2">Collection Name (EN)</label>
-                                        <input required className="w-full h-12 bg-slate-50 border border-slate-200 rounded-xl px-4 text-sm font-bold focus:bg-white focus:border-purple-400 transition-all outline-none" value={formData.name.en} onChange={e => updateBilingual('name', 'en', e.target.value)} />
+                                        <label className="ps-2 text-[11px] font-black uppercase tracking-widest text-muted-foreground">Collection Name (EN)</label>
+                                        <input required className="h-12 w-full rounded-xl border border-border bg-background px-4 text-sm font-bold text-foreground outline-none transition-all focus:border-primary focus:ring-2 focus:ring-ring/20" value={formData.name.en} onChange={e => updateBilingual('name', 'en', e.target.value)} />
                                     </div>
                                     <div className="space-y-2">
-                                        <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest text-right block pr-2">الإسم (عربي)</label>
-                                        <input required dir="rtl" className="w-full h-12 bg-slate-50 border border-slate-200 rounded-xl px-4 text-sm font-bold focus:bg-white focus:border-purple-400 transition-all outline-none text-right" value={formData.name.ar} onChange={e => updateBilingual('name', 'ar', e.target.value)} />
+                                        <label className="block pe-2 text-end text-[11px] font-black uppercase tracking-widest text-muted-foreground">الإسم (عربي)</label>
+                                        <input required dir="rtl" className="h-12 w-full rounded-xl border border-border bg-background px-4 text-end text-sm font-bold text-foreground outline-none transition-all focus:border-primary focus:ring-2 focus:ring-ring/20" value={formData.name.ar} onChange={e => updateBilingual('name', 'ar', e.target.value)} />
                                     </div>
                                 </div>
                                 <div className="grid grid-cols-2 gap-6">
                                     <div className="space-y-2">
-                                        <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest pl-2">Tagline/Headline (EN)</label>
-                                        <input className="w-full h-12 bg-slate-50 border border-slate-200 rounded-xl px-4 text-sm focus:bg-white focus:border-purple-400 transition-all outline-none" value={formData.headline.en} onChange={e => updateBilingual('headline', 'en', e.target.value)} />
+                                        <label className="ps-2 text-[11px] font-black uppercase tracking-widest text-muted-foreground">Tagline/Headline (EN)</label>
+                                        <input className="h-12 w-full rounded-xl border border-border bg-background px-4 text-sm text-foreground outline-none transition-all focus:border-primary focus:ring-2 focus:ring-ring/20" value={formData.headline.en} onChange={e => updateBilingual('headline', 'en', e.target.value)} />
                                     </div>
                                     <div className="space-y-2">
-                                        <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest text-right block pr-2">السطر التوضيحي</label>
-                                        <input dir="rtl" className="w-full h-12 bg-slate-50 border border-slate-200 rounded-xl px-4 text-sm focus:bg-white focus:border-purple-400 transition-all outline-none text-right" value={formData.headline.ar} onChange={e => updateBilingual('headline', 'ar', e.target.value)} />
+                                        <label className="block pe-2 text-end text-[11px] font-black uppercase tracking-widest text-muted-foreground">السطر التوضيحي</label>
+                                        <input dir="rtl" className="h-12 w-full rounded-xl border border-border bg-background px-4 text-end text-sm text-foreground outline-none transition-all focus:border-primary focus:ring-2 focus:ring-ring/20" value={formData.headline.ar} onChange={e => updateBilingual('headline', 'ar', e.target.value)} />
                                     </div>
                                 </div>
                                 <div className="grid grid-cols-3 gap-6">
                                     <div className="col-span-1 space-y-2">
-                                        <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest pl-2">Entity Type</label>
+                                        <label className="ps-2 text-[11px] font-black uppercase tracking-widest text-muted-foreground">Entity Type</label>
                                         <div className="relative">
-                                            <select required className="w-full h-12 bg-slate-50 border border-slate-200 rounded-xl px-4 text-sm font-bold appearance-none outline-none focus:border-purple-400 transition-all capitalize" value={formData.type} onChange={e => setFormData({ ...formData, type: e.target.value as any })}>
+                                            <select required className="h-12 w-full appearance-none rounded-xl border border-border bg-background px-4 text-sm font-bold capitalize text-foreground outline-none transition-all focus:border-primary focus:ring-2 focus:ring-ring/20" value={formData.type} onChange={e => setFormData({ ...formData, type: e.target.value as any })}>
                                                 <option value="companies">Companies</option>
                                                 <option value="products">Products</option>
                                                 <option value="services">Services</option>
                                             </select>
-                                            <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" size={16} />
+                                            <ChevronDown className="pointer-events-none absolute end-4 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
                                         </div>
                                     </div>
                                     <div className="col-span-1 space-y-2">
-                                        <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest pl-2">Slug URL ID</label>
-                                        <input required className="w-full h-12 bg-slate-50 border border-slate-200 rounded-xl px-4 text-sm font-mono text-purple-600 focus:bg-white focus:border-purple-400 transition-all outline-none" value={formData.slug} onChange={e => setFormData({ ...formData, slug: e.target.value })} placeholder="top-100-egy" />
+                                        <label className="ps-2 text-[11px] font-black uppercase tracking-widest text-muted-foreground">Slug URL ID</label>
+                                        <input required className="h-12 w-full rounded-xl border border-border bg-background px-4 font-mono text-sm text-primary outline-none transition-all focus:border-primary focus:ring-2 focus:ring-ring/20" value={formData.slug} onChange={e => setFormData({ ...formData, slug: e.target.value })} placeholder="top-100-egy" />
                                     </div>
                                     <div className="col-span-1 space-y-2">
-                                        <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest pl-2">Max Capacity</label>
-                                        <input type="number" min="1" className="w-full h-12 bg-slate-50 border border-slate-200 rounded-xl px-4 text-sm font-bold focus:bg-white focus:border-purple-400 transition-all outline-none" value={formData.max_items} onChange={e => setFormData({ ...formData, max_items: e.target.value })} placeholder="Unlimited" />
+                                        <label className="ps-2 text-[11px] font-black uppercase tracking-widest text-muted-foreground">Max Capacity</label>
+                                        <input type="number" min="1" className="h-12 w-full rounded-xl border border-border bg-background px-4 text-sm font-bold text-foreground outline-none transition-all focus:border-primary focus:ring-2 focus:ring-ring/20" value={formData.max_items} onChange={e => setFormData({ ...formData, max_items: e.target.value })} placeholder="Unlimited" />
                                     </div>
                                 </div>
                                 <div className="flex items-center gap-6 pt-2">
-                                    <label className="flex items-center gap-3 cursor-pointer group">
-                                        <div className="relative">
-                                            <input type="checkbox" className="sr-only peer" checked={formData.active} onChange={e => setFormData({ ...formData, active: e.target.checked })} />
-                                            <div className="w-12 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-purple-600"></div>
+                                    <label className="group flex cursor-pointer items-center gap-3">
+                                        <div className="relative inline-flex scale-90 items-center">
+                                            <input type="checkbox" className="peer sr-only" checked={formData.active} onChange={e => setFormData({ ...formData, active: e.target.checked })} />
+                                            <div className="peer h-6 w-11 rounded-full bg-muted after:absolute after:start-[2px] after:top-[2px] after:h-5 after:w-5 after:rounded-full after:border after:border-border after:bg-background after:transition-all after:content-[''] peer-checked:bg-primary peer-checked:after:translate-x-full peer-checked:after:border-transparent peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-ring/40" />
                                         </div>
-                                        <span className="text-sm font-bold text-slate-700">Internally Active</span>
+                                        <span className="text-sm font-bold text-foreground">Internally Active</span>
                                     </label>
-                                    <label className="flex items-center gap-3 cursor-pointer group">
-                                        <div className="relative">
-                                            <input type="checkbox" className="sr-only peer" checked={formData.published} onChange={e => setFormData({ ...formData, published: e.target.checked })} />
-                                            <div className="w-12 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-emerald-500"></div>
+                                    <label className="group flex cursor-pointer items-center gap-3">
+                                        <div className="relative inline-flex scale-90 items-center">
+                                            <input type="checkbox" className="peer sr-only" checked={formData.published} onChange={e => setFormData({ ...formData, published: e.target.checked })} />
+                                            <div className="peer h-6 w-11 rounded-full bg-muted after:absolute after:start-[2px] after:top-[2px] after:h-5 after:w-5 after:rounded-full after:border after:border-border after:bg-background after:transition-all after:content-[''] peer-checked:bg-primary peer-checked:after:translate-x-full peer-checked:after:border-transparent peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-ring/40" />
                                         </div>
-                                        <span className="text-sm font-bold text-slate-700">Published to Clients</span>
+                                        <span className="text-sm font-bold text-foreground">Published to Clients</span>
                                     </label>
                                 </div>
                         </div>
-                        <div className="p-6 border-t border-slate-100 flex justify-end gap-3 bg-slate-50 shrink-0">
-                            <button type="button" className="px-6 py-2.5 rounded-xl text-sm font-bold text-slate-500 hover:bg-slate-200 transition-all" onClick={() => setIsModalOpen(false)}>Cancel</button>
-                            <button type="submit" disabled={formSaving} className="px-8 py-2.5 bg-slate-900 rounded-xl text-sm font-black text-white hover:bg-purple-600 transition-all flex items-center gap-2 shadow-lg shadow-purple-900/20">
+                        <div className="flex shrink-0 justify-end gap-3 border-t border-border bg-muted/50 p-6">
+                            <button type="button" className="rounded-xl px-6 py-2.5 text-sm font-bold text-muted-foreground transition-all hover:bg-muted" onClick={() => setIsModalOpen(false)}>Cancel</button>
+                            <button type="submit" disabled={formSaving} className="flex items-center gap-2 rounded-xl bg-primary px-8 py-2.5 text-sm font-black text-primary-foreground shadow-lg shadow-primary/20 transition-all hover:bg-primary/90 disabled:opacity-50">
                                 {formSaving && <Loader2 className="animate-spin" size={16} />} Deploy Collection
                             </button>
                         </div>

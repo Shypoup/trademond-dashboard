@@ -126,46 +126,46 @@ const EntityFormModalInner: React.FC<InnerProps> = ({
 
     return (
         <>
-            <div className="p-6 border-b shrink-0 bg-slate-50">
+            <div className="shrink-0 border-b border-border bg-muted/50 p-6">
                 <div className="flex items-center justify-between gap-4">
-                    <SheetHeader className="!p-0 !m-0 flex-1 min-w-0">
-                        <SheetTitle className="text-xl font-bold font-outfit text-slate-900">
+                    <SheetHeader className="!m-0 !min-w-0 !flex-1 !p-0">
+                        <SheetTitle className="font-outfit text-xl font-bold text-foreground">
                             {title}
                         </SheetTitle>
-                        <p className="text-xs text-muted-foreground font-medium mt-1">
+                        <p className="mt-1 text-xs font-medium text-muted-foreground">
                             {t('profile.modalSubtitle')}
                         </p>
                     </SheetHeader>
                     <button
                         type="button"
                         onClick={onClose}
-                        className="p-2 hover:bg-slate-200 rounded-full transition-colors text-slate-400 shrink-0"
+                        className="shrink-0 rounded-full p-2 text-muted-foreground transition-colors hover:bg-muted"
                     >
                         <X size={20} />
                     </button>
                 </div>
             </div>
 
-            <form onSubmit={handleFormSubmit} className="flex flex-col flex-1 min-h-0">
-                <div className="p-8 space-y-6 flex-1 overflow-y-auto premium-scrollbar">
+            <form onSubmit={handleFormSubmit} className="flex min-h-0 flex-1 flex-col">
+                <div className="premium-scrollbar flex-1 space-y-6 overflow-y-auto p-8">
                     <div className="grid grid-cols-2 gap-6">
                         <div className="space-y-2">
-                            <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest">
+                            <label className="text-[11px] font-black uppercase tracking-widest text-muted-foreground">
                                 {t('profile.englishName')}
                             </label>
                             <input
-                                className="w-full h-12 bg-slate-50 border border-slate-200 rounded-xl px-4 text-sm font-bold focus:bg-white focus:border-teal-500 transition-all outline-none"
+                                className="h-12 w-full rounded-xl border border-border bg-background px-4 text-sm font-bold text-foreground outline-none transition-all focus:border-primary focus:ring-2 focus:ring-ring/20"
                                 value={typeof nameValue === 'string' ? nameValue : (nameValue as Record<string, string>)?.en || ''}
                                 onChange={(e) => updateBilingual('name', 'en', e.target.value)}
                                 required
                             />
                         </div>
                         <div className="space-y-2">
-                            <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest text-end block">
+                            <label className="block text-end text-[11px] font-black uppercase tracking-widest text-muted-foreground">
                                 {t('profile.arabicName')}
                             </label>
                             <input
-                                className="w-full h-12 bg-slate-50 border border-slate-200 rounded-xl px-4 text-sm font-bold focus:bg-white focus:border-teal-500 transition-all outline-none text-right"
+                                className="h-12 w-full rounded-xl border border-border bg-background px-4 text-end text-sm font-bold text-foreground outline-none transition-all focus:border-primary focus:ring-2 focus:ring-ring/20"
                                 value={(nameValue as Record<string, string>)?.ar || ''}
                                 onChange={(e) => updateBilingual('name', 'ar', e.target.value)}
                                 dir="rtl"
@@ -177,12 +177,12 @@ const EntityFormModalInner: React.FC<InnerProps> = ({
                     {(modal.type === 'product' || modal.type === 'service') && (
                         <div className="grid grid-cols-2 gap-6">
                             <div className="space-y-2">
-                                <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest">
+                                <label className="text-[11px] font-black uppercase tracking-widest text-muted-foreground">
                                     {t('products.category')}
                                 </label>
                                 <div className="relative">
                                     <select
-                                        className="w-full h-12 bg-slate-50 border border-slate-200 rounded-xl px-4 text-sm font-bold appearance-none outline-none focus:border-teal-500 transition-all"
+                                        className="h-12 w-full appearance-none rounded-xl border border-border bg-background px-4 text-sm font-bold text-foreground outline-none transition-all focus:border-primary focus:ring-2 focus:ring-ring/20"
                                         value={(localForm.category_id as string) || ''}
                                         onChange={(e) => setLocalForm({ ...localForm, category_id: e.target.value })}
                                         required
@@ -193,16 +193,16 @@ const EntityFormModalInner: React.FC<InnerProps> = ({
                                             </option>
                                         ))}
                                     </select>
-                                    <ChevronDown className="absolute end-4 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" size={16} />
+                                    <ChevronDown className="pointer-events-none absolute end-4 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
                                 </div>
                             </div>
                             <div className="space-y-2">
-                                <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest">
+                                <label className="text-[11px] font-black uppercase tracking-widest text-muted-foreground">
                                     {t('products.company')}
                                 </label>
                                 <div className="relative">
                                     <select
-                                        className="w-full h-12 bg-slate-50 border border-slate-200 rounded-xl px-4 text-sm font-bold appearance-none outline-none focus:border-teal-500 transition-all"
+                                        className="h-12 w-full appearance-none rounded-xl border border-border bg-background px-4 text-sm font-bold text-foreground outline-none transition-all focus:border-primary focus:ring-2 focus:ring-ring/20"
                                         value={(localForm.company_id as string) || ''}
                                         onChange={(e) => setLocalForm({ ...localForm, company_id: e.target.value })}
                                         required
@@ -214,18 +214,18 @@ const EntityFormModalInner: React.FC<InnerProps> = ({
                                             </option>
                                         ))}
                                     </select>
-                                    <ChevronDown className="absolute end-4 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" size={16} />
+                                    <ChevronDown className="pointer-events-none absolute end-4 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
                                 </div>
                             </div>
                         </div>
                     )}
 
                     <div className="space-y-2">
-                        <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest">
+                        <label className="text-[11px] font-black uppercase tracking-widest text-muted-foreground">
                             {t('profile.descriptionEn')}
                         </label>
                         <textarea
-                            className="w-full min-h-[100px] bg-slate-50 border border-slate-200 rounded-2xl p-4 text-sm font-medium focus:bg-white focus:border-teal-500 transition-all outline-none"
+                            className="min-h-[100px] w-full resize-none rounded-2xl border border-border bg-background p-4 text-sm font-medium text-foreground outline-none transition-all focus:border-primary focus:ring-2 focus:ring-ring/20"
                             value={typeof descValue === 'string' ? descValue : (descValue as Record<string, string>)?.en || aboutValue?.en || ''}
                             onChange={(e) => updateBilingual(descField, 'en', e.target.value)}
                             placeholder={t('profile.descriptionPlaceholder')}
@@ -233,11 +233,11 @@ const EntityFormModalInner: React.FC<InnerProps> = ({
                     </div>
 
                     <div className="space-y-2 text-right">
-                        <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest">
+                        <label className="text-[11px] font-black uppercase tracking-widest text-muted-foreground">
                             {t('profile.descriptionAr')}
                         </label>
                         <textarea
-                            className="w-full min-h-[100px] bg-slate-50 border border-slate-200 rounded-2xl p-4 text-sm font-medium focus:bg-white focus:border-teal-500 transition-all outline-none text-right"
+                            className="min-h-[100px] w-full resize-none rounded-2xl border border-border bg-background p-4 text-end text-sm font-medium text-foreground outline-none transition-all focus:border-primary focus:ring-2 focus:ring-ring/20"
                             value={(descValue as Record<string, string>)?.ar || aboutValue?.ar || ''}
                             onChange={(e) => updateBilingual(descField, 'ar', e.target.value)}
                             placeholder={t('profile.descriptionPlaceholderAr')}
@@ -246,10 +246,10 @@ const EntityFormModalInner: React.FC<InnerProps> = ({
                     </div>
                 </div>
 
-                <div className="p-6 border-t border-slate-100 flex justify-end gap-4 bg-slate-50 shrink-0">
+                <div className="flex shrink-0 justify-end gap-4 border-t border-border bg-muted/50 p-6">
                     <button
                         type="button"
-                        className="px-6 py-2.5 rounded-xl text-sm font-bold text-slate-500 hover:bg-slate-200 transition-all"
+                        className="rounded-xl px-6 py-2.5 text-sm font-bold text-muted-foreground transition-all hover:bg-muted"
                         onClick={onClose}
                     >
                         {t('common.cancel')}
@@ -257,7 +257,7 @@ const EntityFormModalInner: React.FC<InnerProps> = ({
                     <button
                         type="submit"
                         disabled={formSaving}
-                        className="px-10 py-2.5 bg-slate-900 rounded-xl text-sm font-black text-white hover:bg-teal-600 transition-all flex items-center gap-2 disabled:opacity-50"
+                        className="flex items-center gap-2 rounded-xl bg-primary px-10 py-2.5 text-sm font-black text-primary-foreground transition-all hover:bg-primary/90 disabled:opacity-50"
                     >
                         {formSaving && <Loader2 className="animate-spin" size={16} />}
                         {isEditing ? t('profile.saveChanges') : t('profile.addEntity', { type: modal.type })}

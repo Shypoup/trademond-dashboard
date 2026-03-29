@@ -158,7 +158,7 @@ const Roles = () => {
       </div>
 
       <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
-        <SheetContent className="flex w-full max-w-2xl flex-col overflow-hidden sm:max-w-2xl">
+        <SheetContent className="flex w-full max-w-2xl flex-col overflow-hidden border-border sm:max-w-2xl">
           <SheetHeader>
             <SheetTitle className="flex items-center gap-2">
               <Shield size={20} />
