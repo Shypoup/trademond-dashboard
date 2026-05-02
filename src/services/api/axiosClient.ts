@@ -19,6 +19,23 @@ export const ACCESS_TOKEN_KEY = 'trademond_token';
 export const REFRESH_TOKEN_KEY = 'trademond_refresh_token';
 
 /**
+ * Axios rejection payload that preserves HTTP status and parsed JSON body (validation,
+ * duplicate conflicts, etc.) while still exposing `message` for legacy callers.
+ */
+export class ApiRequestError extends Error {
+  readonly status?: number;
+
+  readonly body?: unknown;
+
+  constructor(message: string, status?: number, body?: unknown) {
+    super(message);
+    this.name = 'ApiRequestError';
+    this.status = status;
+    this.body = body;
+  }
+}
+
+/**
  * Bare client for `/api/*` routes without dashboard interceptors (refresh call).
  */
 const refreshAxios = axios.create({
@@ -121,7 +138,9 @@ axiosClient.interceptors.response.use(
         (error.response?.data as { message?: string } | undefined)?.message ||
         error.message ||
         'API Error';
-      return Promise.reject(new Error(message));
+      return Promise.reject(
+        new ApiRequestError(message, status, error.response?.data),
+      );
     }
 
     const url = String(originalConfig.url ?? '');

@@ -52,7 +52,7 @@ export function PlacesThemedSelect({
 
   /**
    * Label shown in the closed trigger. Base UI `SelectValue` otherwise renders the raw `value`
-   * string (e.g. taxonomy id) instead of the option’s visible text.
+   * string (e.g. taxonomy id) instead of the option's visible text.
    */
   const triggerLabel = React.useMemo(() => {
     if (optionalNone && innerValue === PLACES_SELECT_NONE_VALUE) {
