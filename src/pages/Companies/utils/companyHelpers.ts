@@ -1,6 +1,20 @@
 import { BilingualText } from '@data-types/api';
 
 /**
+ * Coerces JSON/API boolean-like values to a strict boolean for form controls.
+ *
+ * @param value - Raw value from flat attributes or JSON payloads.
+ * @param defaultValue - Used when `value` is `null` or `undefined`.
+ */
+export const coerceApiBoolean = (value: unknown, defaultValue: boolean): boolean => {
+    if (typeof value === 'boolean') return value;
+    if (value === 1 || value === '1' || value === 'true') return true;
+    if (value === 0 || value === '0' || value === 'false') return false;
+    if (value === null || value === undefined) return defaultValue;
+    return defaultValue;
+};
+
+/**
  * Normalized shape of a company record after flattening
  * both legacy flat payloads and JSON:API-style payloads.
  */
@@ -83,6 +97,11 @@ export const getCompanyData = (item: unknown): NormalizedCompany => {
     const attrs = c.attributes || c;
     const rels = c.relationships || {};
 
+    const rawActive = attrs.active !== undefined ? attrs.active : c.active;
+    const rawPublished = attrs.published !== undefined ? attrs.published : c.published;
+    const rawSearchable = attrs.searchable !== undefined ? attrs.searchable : c.searchable;
+    const rawVerified = attrs.verified !== undefined ? attrs.verified : c.verified;
+
     return {
         id: c.id,
         name: attrs.name || c.name || { en: '', ar: '' },
@@ -90,10 +109,10 @@ export const getCompanyData = (item: unknown): NormalizedCompany => {
         acronym: attrs.acronym || c.acronym || '',
         slogan: attrs.slogan || c.slogan || { en: '', ar: '' },
         profilePhoto: attrs.profilePhoto || attrs.profile_photo || c.profilePhoto || '',
-        active: attrs.active !== undefined ? attrs.active : (c.active !== undefined ? c.active : true),
-        published: attrs.published !== undefined ? attrs.published : (c.published !== undefined ? c.published : true),
-        searchable: attrs.searchable !== undefined ? attrs.searchable : (c.searchable !== undefined ? c.searchable : true),
-        verified: attrs.verified !== undefined ? attrs.verified : (c.verified !== undefined ? c.verified : false),
+        active: coerceApiBoolean(rawActive, true),
+        published: coerceApiBoolean(rawPublished, true),
+        searchable: coerceApiBoolean(rawSearchable, true),
+        verified: coerceApiBoolean(rawVerified, false),
         createdAt: attrs.createdAt || attrs.created_at || c.created_at || '',
         location: rels.primaryCountry?.name || c.primaryCountry?.name || c.location || '',
         industryId: rels.industry?.id || c.industry?.id || c.industry_id || '',

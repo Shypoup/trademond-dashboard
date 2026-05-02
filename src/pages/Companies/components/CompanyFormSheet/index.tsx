@@ -421,21 +421,32 @@ interface GovernanceToggleProps {
 
 /**
  * Small toggle card used in the governance & visibility section of the form.
+ *
+ * The checkbox is visually hidden (`sr-only`); the switch track is decorative only.
+ * A {@link HTMLLabelElement} associates clicks on the track with the input so toggling works reliably.
  */
-const GovernanceToggle: React.FC<GovernanceToggleProps> = ({ label, description, checked, onChange }) => (
-    <div className="flex items-center justify-between rounded-2xl border border-border bg-card p-3 shadow-sm">
-        <div className="space-y-0.5">
-            <p className="text-xs font-bold text-foreground">{label}</p>
-            <p className="text-[10px] font-medium text-muted-foreground">{description}</p>
+const GovernanceToggle: React.FC<GovernanceToggleProps> = ({ label, description, checked, onChange }) => {
+    const inputId = React.useId();
+    return (
+        <div className="flex items-center justify-between rounded-2xl border border-border bg-card p-3 shadow-sm">
+            <div className="space-y-0.5 min-w-0 pe-2">
+                <p className="text-xs font-bold text-foreground">{label}</p>
+                <p className="text-[10px] font-medium text-muted-foreground">{description}</p>
+            </div>
+            <label htmlFor={inputId} className="relative inline-flex shrink-0 scale-90 cursor-pointer items-center">
+                <input
+                    id={inputId}
+                    type="checkbox"
+                    role="switch"
+                    checked={checked}
+                    onChange={e => onChange(e.target.checked)}
+                    className="peer sr-only"
+                />
+                <span
+                    aria-hidden
+                    className="relative inline-block h-5 w-10 rounded-full bg-muted after:absolute after:start-[2px] after:top-[2px] after:h-4 after:w-4 after:rounded-full after:border after:border-border after:bg-background after:transition-all after:content-[''] peer-checked:bg-primary peer-checked:after:translate-x-full peer-checked:after:border-transparent peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-ring/40"
+                />
+            </label>
         </div>
-        <div className="relative inline-flex scale-90 cursor-pointer items-center">
-            <input
-                type="checkbox"
-                checked={checked}
-                onChange={e => onChange(e.target.checked)}
-                className="peer sr-only"
-            />
-            <div className="peer h-5 w-10 rounded-full bg-muted after:absolute after:start-[2px] after:top-[2px] after:h-4 after:w-4 after:rounded-full after:border after:border-border after:bg-background after:transition-all after:content-[''] peer-checked:bg-primary peer-checked:after:translate-x-full peer-checked:after:border-transparent peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-ring/40" />
-        </div>
-    </div>
-);
+    );
+};
