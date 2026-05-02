@@ -1,6 +1,6 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { ChevronLeft, ChevronRight, ExternalLink, Loader2, MapPin, Upload } from 'lucide-react';
+import { ChevronLeft, ChevronRight, ExternalLink, MapPin } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { displayBilingual } from '@utils/ui';
@@ -14,6 +14,8 @@ import {
   rowPhone,
   rowWebsite,
 } from '@pages/GooglePlaces/utils/placeRowHelpers';
+import { PlacesBulkImportBar } from '@pages/GooglePlaces/components/PlacesBulkImportBar';
+import { PlacesThemedSelect } from '@pages/GooglePlaces/components/PlacesThemedSelect';
 
 const PAGE_SIZE = 10;
 const MAX_PAGE_BUTTONS = 5;
@@ -48,16 +50,16 @@ export interface PlacesResultsCardProps {
   onCategoryIdChange: (value: string) => void;
   industries: { id: string; name: Record<string, string> }[];
   categories: { id: string | number; name: Record<string, string> }[];
-  /** Place id currently being imported (disables that row’s import control). */
-  importingPlaceId: string | null;
   /** Global busy state (e.g. search in flight). */
   loading: boolean;
-  /** Imports one place by Google Place id. */
-  onImportPlace: (googlePlaceId: string) => void;
+  /** Imports all selected place ids (caller may batch by API limit). */
+  onBulkImport: (googlePlaceIds: string[]) => void | Promise<void>;
+  /** True while bulk import is running. */
+  bulkImporting: boolean;
 }
 
 /**
- * Results table with optional industry/category defaults, per-row import, badges, and pagination.
+ * Results table with checkbox selection, bulk import bar (category → industry → confirm), and pagination.
  */
 export function PlacesResultsCard({
   places,
@@ -69,11 +71,13 @@ export function PlacesResultsCard({
   onCategoryIdChange,
   industries,
   categories,
-  importingPlaceId,
   loading,
-  onImportPlace,
+  onBulkImport,
+  bulkImporting,
 }: PlacesResultsCardProps) {
   const { t, i18n } = useTranslation();
+
+  const [selectedIds, setSelectedIds] = React.useState<Set<string>>(() => new Set());
 
   const rowsWithId = React.useMemo(
     () =>
@@ -90,55 +94,120 @@ export function PlacesResultsCard({
   const startIdx = (safePage - 1) * PAGE_SIZE;
   const pageRows = rowsWithId.slice(startIdx, startIdx + PAGE_SIZE);
 
+  React.useEffect(() => {
+    setSelectedIds(new Set());
+  }, [places]);
+
+  const selectableOnPage = React.useMemo(
+    () => pageRows.filter(({ row }) => !rowIsImported(row)),
+    [pageRows],
+  );
+  const allSelectableOnPageChecked =
+    selectableOnPage.length > 0 && selectableOnPage.every(({ id }) => selectedIds.has(id));
+
+  const selectAllOnPageRef = React.useRef<HTMLInputElement>(null);
+  React.useEffect(() => {
+    const el = selectAllOnPageRef.current;
+    if (!el) return;
+    const some = selectableOnPage.some(({ id }) => selectedIds.has(id));
+    el.indeterminate = some && !allSelectableOnPageChecked;
+  }, [selectableOnPage, selectedIds, allSelectableOnPageChecked]);
+
+  const toggleSelectId = (id: string, checked: boolean) => {
+    setSelectedIds((prev) => {
+      const next = new Set(prev);
+      if (checked) next.add(id);
+      else next.delete(id);
+      return next;
+    });
+  };
+
+  const toggleSelectAllOnPage = (checked: boolean) => {
+    setSelectedIds((prev) => {
+      const next = new Set(prev);
+      for (const { id } of selectableOnPage) {
+        if (checked) next.add(id);
+        else next.delete(id);
+      }
+      return next;
+    });
+  };
+
   const from = total === 0 ? 0 : startIdx + 1;
   const to = Math.min(startIdx + PAGE_SIZE, total);
 
+  const showHeaderTaxonomySelects = selectedIds.size === 0;
+
+  const categoryOptions = React.useMemo(
+    () =>
+      categories.map((c) => ({
+        value: String(c.id),
+        label: displayBilingual(c.name),
+      })),
+    [categories],
+  );
+
+  const industryOptions = React.useMemo(
+    () =>
+      industries.map((i) => ({
+        value: String(i.id),
+        label: displayBilingual(i.name),
+      })),
+    [industries],
+  );
+
   return (
-    <div className="premium-card overflow-hidden">
+    <div className="premium-card relative overflow-hidden">
       <div className="border-b border-border px-6 py-4">
         <h2 className="text-sm font-bold text-foreground">{t('googlePlacesPage.results')}</h2>
-        <div className="mt-3 flex flex-col gap-3 lg:flex-row lg:flex-wrap lg:items-end">
-          <label className="flex min-w-[12rem] flex-1 flex-col gap-1 text-xs">
-            <span className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground">
-              {t('googlePlacesPage.optionalIndustry')}
-            </span>
-            <select
-              value={industryId}
-              onChange={(e) => onIndustryIdChange(e.target.value)}
-              className="h-10 w-full rounded-lg border border-border bg-muted/60 px-3 text-sm dark:bg-muted/40"
-            >
-              <option value="">{t('googlePlacesPage.none')}</option>
-              {industries.map((i) => (
-                <option key={i.id} value={i.id}>
-                  {displayBilingual(i.name)}
-                </option>
-              ))}
-            </select>
-          </label>
-          <label className="flex min-w-[12rem] flex-1 flex-col gap-1 text-xs">
-            <span className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground">
-              {t('googlePlacesPage.optionalCategory')}
-            </span>
-            <select
-              value={categoryId}
-              onChange={(e) => onCategoryIdChange(e.target.value)}
-              className="h-10 w-full rounded-lg border border-border bg-muted/60 px-3 text-sm dark:bg-muted/40"
-            >
-              <option value="">{t('googlePlacesPage.none')}</option>
-              {categories.map((c) => (
-                <option key={String(c.id)} value={String(c.id)}>
-                  {displayBilingual(c.name)}
-                </option>
-              ))}
-            </select>
-          </label>
-        </div>
+        {showHeaderTaxonomySelects ? (
+          <div className="mt-3 flex flex-col gap-3 lg:flex-row lg:flex-wrap lg:items-end">
+            <label className="flex min-w-[12rem] flex-1 flex-col gap-1 text-xs">
+              <span className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground">
+                {t('googlePlacesPage.optionalCategory')}
+              </span>
+              <PlacesThemedSelect
+                value={categoryId}
+                onValueChange={onCategoryIdChange}
+                options={categoryOptions}
+                optionalNone
+                noneLabel={t('googlePlacesPage.none')}
+                aria-label={t('googlePlacesPage.optionalCategory')}
+              />
+            </label>
+            <label className="flex min-w-[12rem] flex-1 flex-col gap-1 text-xs">
+              <span className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground">
+                {t('googlePlacesPage.optionalIndustry')}
+              </span>
+              <PlacesThemedSelect
+                value={industryId}
+                onValueChange={onIndustryIdChange}
+                options={industryOptions}
+                optionalNone
+                noneLabel={t('googlePlacesPage.none')}
+                aria-label={t('googlePlacesPage.optionalIndustry')}
+              />
+            </label>
+          </div>
+        ) : null}
       </div>
 
       <div className="overflow-x-auto">
-        <table className="w-full min-w-[52rem] border-collapse text-start">
+        <table className="w-full min-w-[56rem] border-collapse text-start">
           <thead>
             <tr className="border-b border-border">
+              <th className="w-12 px-2 py-3 text-center align-middle">
+                <span className="sr-only">{t('googlePlacesPage.colSelect')}</span>
+                <input
+                  ref={selectAllOnPageRef}
+                  type="checkbox"
+                  checked={allSelectableOnPageChecked}
+                  onChange={(e) => toggleSelectAllOnPage(e.target.checked)}
+                  disabled={loading || selectableOnPage.length === 0}
+                  aria-label={t('googlePlacesPage.selectAllOnPage')}
+                  className="size-4 rounded border-border text-primary focus-visible:ring-2 focus-visible:ring-primary"
+                />
+              </th>
               <th className="px-4 py-3 text-[10px] font-bold uppercase tracking-wide text-muted-foreground">
                 {t('googlePlacesPage.colBusinessName')}
               </th>
@@ -166,9 +235,22 @@ export function PlacesResultsCard({
               const phone = rowPhone(row);
               const address = rowAddress(row);
               const rowLabel = displayName(row, { locale: i18n.language });
-              const rowBusy = importingPlaceId === pid;
               return (
                 <tr key={pid} className="border-b border-border last:border-0 hover:bg-muted/40">
+                  <td className="w-12 px-2 py-4 align-middle text-center">
+                    {imported ? (
+                      <span className="sr-only">{t('googlePlacesPage.rowImportedNoSelect')}</span>
+                    ) : (
+                      <input
+                        type="checkbox"
+                        checked={selectedIds.has(pid)}
+                        onChange={(e) => toggleSelectId(pid, e.target.checked)}
+                        disabled={loading}
+                        aria-label={t('googlePlacesPage.selectRowAriaLabel', { name: rowLabel })}
+                        className="size-4 rounded border-border text-primary focus-visible:ring-2 focus-visible:ring-primary"
+                      />
+                    )}
+                  </td>
                   <td className="px-4 py-4 align-top">
                     <div className="text-sm font-bold text-foreground">{rowLabel}</div>
                     <div className="mt-0.5 text-xs text-muted-foreground">
@@ -219,33 +301,15 @@ export function PlacesResultsCard({
                         {t('googlePlacesPage.actionLinked')}
                       </span>
                     ) : (
-                      <div className="flex flex-wrap items-center gap-2">
-                        <a
-                          href={rowMapsUrl(row, pid)}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          aria-label={t('googlePlacesPage.openInMaps')}
-                          className="inline-flex text-muted-foreground transition-colors hover:text-primary"
-                        >
-                          <MapPin className="size-5" />
-                        </a>
-                        <Button
-                          type="button"
-                          variant="secondary"
-                          size="sm"
-                          disabled={loading || rowBusy}
-                          onClick={() => onImportPlace(pid)}
-                          aria-label={t('googlePlacesPage.importRowAriaLabel', { name: rowLabel })}
-                          className="h-8 gap-1.5 text-xs font-bold"
-                        >
-                          {rowBusy ? (
-                            <Loader2 className="size-3.5 animate-spin" aria-hidden />
-                          ) : (
-                            <Upload className="size-3.5" aria-hidden />
-                          )}
-                          {t('googlePlacesPage.importRow')}
-                        </Button>
-                      </div>
+                      <a
+                        href={rowMapsUrl(row, pid)}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        aria-label={t('googlePlacesPage.openInMaps')}
+                        className="inline-flex text-muted-foreground transition-colors hover:text-primary"
+                      >
+                        <MapPin className="size-5" />
+                      </a>
                     )}
                   </td>
                 </tr>
@@ -254,6 +318,22 @@ export function PlacesResultsCard({
           </tbody>
         </table>
       </div>
+
+      <PlacesBulkImportBar
+        selectedCount={selectedIds.size}
+        categoryId={categoryId}
+        onCategoryIdChange={onCategoryIdChange}
+        industryId={industryId}
+        onIndustryIdChange={onIndustryIdChange}
+        categories={categories}
+        industries={industries}
+        onClearSelection={() => setSelectedIds(new Set())}
+        onImportSelected={() => {
+          void onBulkImport(Array.from(selectedIds));
+        }}
+        bulkImporting={bulkImporting}
+        disabled={loading}
+      />
 
       <div className="flex flex-col gap-3 border-t border-border px-6 py-4 sm:flex-row sm:items-center sm:justify-between">
         <p className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground">

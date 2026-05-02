@@ -43,14 +43,15 @@ function asRows(res: unknown): unknown[] {
 const GooglePlaces = () => {
   const { t, i18n } = useTranslation();
   const [tab, setTab] = React.useState<Tab>('search');
-  const [loading, setLoading] = React.useState(false);
+  const [searchLoading, setSearchLoading] = React.useState(false);
+  const [importsLoading, setImportsLoading] = React.useState(false);
   const [query, setQuery] = React.useState('');
   const [region, setRegion] = React.useState('');
   const [city, setCity] = React.useState('');
   const [language, setLanguage] = React.useState<GooglePlacesLanguage>('en');
   const [places, setPlaces] = React.useState<Array<Record<string, unknown>>>([]);
   const [resultsPage, setResultsPage] = React.useState(1);
-  const [importingPlaceId, setImportingPlaceId] = React.useState<string | null>(null);
+  const [bulkImporting, setBulkImporting] = React.useState(false);
   const [industryId, setIndustryId] = React.useState('');
   const [categoryId, setCategoryId] = React.useState('');
   const [industries, setIndustries] = React.useState<{ id: string; name: Record<string, string> }[]>([]);
@@ -104,7 +105,7 @@ const GooglePlaces = () => {
       toast.error(t('googlePlacesPage.queryRequired'));
       return;
     }
-    setLoading(true);
+    setSearchLoading(true);
     try {
       const res = await googlePlacesAdminService.search({
         query: query.trim(),
@@ -120,44 +121,56 @@ const GooglePlaces = () => {
       showApiErrorToast(e, t, i18n.language);
       setPlaces([]);
     } finally {
-      setLoading(false);
+      setSearchLoading(false);
     }
   };
 
-  const runImportPlace = async (googlePlaceId: string) => {
-    setImportingPlaceId(googlePlaceId);
+  const BULK_IMPORT_CHUNK = 20;
+
+  const runBulkImport = async (googlePlaceIds: string[]) => {
+    if (googlePlaceIds.length === 0) return;
+    if (!categoryId.trim() || !industryId.trim()) {
+      toast.error(t('googlePlacesPage.importTaxonomyRequired'));
+      return;
+    }
+    setBulkImporting(true);
     try {
-      const placesPayload: GooglePlacesImportPlaceRow[] = [
-        {
+      for (let i = 0; i < googlePlaceIds.length; i += BULK_IMPORT_CHUNK) {
+        const slice = googlePlaceIds.slice(i, i + BULK_IMPORT_CHUNK);
+        const placesPayload: GooglePlacesImportPlaceRow[] = slice.map((googlePlaceId) => ({
           googlePlaceId,
           industryId: industryId || null,
           categoryId: categoryId || null,
-        },
-      ];
-      await googlePlacesAdminService.importPlaces({
-        language,
-        places: placesPayload,
-      });
+        }));
+        await googlePlacesAdminService.importPlaces({
+          language,
+          places: placesPayload,
+        });
+      }
       toast.success(t('googlePlacesPage.importQueued'));
       setPlaces((prev) =>
-        prev.map((row) => (placeIdOf(row) === googlePlaceId ? { ...row, alreadyImported: true } : row)),
+        prev.map((row) => {
+          const pid = placeIdOf(row);
+          if (pid && googlePlaceIds.includes(pid)) return { ...row, alreadyImported: true };
+          return row;
+        }),
       );
     } catch (e) {
       showApiErrorToast(e, t, i18n.language);
     } finally {
-      setImportingPlaceId(null);
+      setBulkImporting(false);
     }
   };
 
   const loadImports = React.useCallback(async () => {
-    setLoading(true);
+    setImportsLoading(true);
     try {
       const res = await googlePlacesAdminService.listImports({ per_page: 50 });
       setImports(asRows(res));
     } catch (e) {
       showApiErrorToast(e, t, i18n.language);
     } finally {
-      setLoading(false);
+      setImportsLoading(false);
     }
   }, [t, i18n.language]);
 
@@ -264,7 +277,7 @@ const GooglePlaces = () => {
               onCityChange={setCity}
               language={language}
               onLanguageChange={setLanguage}
-              loading={loading}
+              loading={searchLoading}
               onSearch={() => void runSearch()}
             />
           </div>
@@ -280,9 +293,9 @@ const GooglePlaces = () => {
               onCategoryIdChange={setCategoryId}
               industries={industries}
               categories={categories}
-              importingPlaceId={importingPlaceId}
-              loading={loading}
-              onImportPlace={(id) => void runImportPlace(id)}
+              bulkImporting={bulkImporting}
+              loading={searchLoading || bulkImporting}
+              onBulkImport={(ids) => void runBulkImport(ids)}
             />
           ) : null}
         </div>
@@ -300,7 +313,7 @@ const GooglePlaces = () => {
               {t('common.refresh')}
             </button>
           </div>
-          {loading && imports.length === 0 ? (
+          {importsLoading && imports.length === 0 ? (
             <div className="flex items-center gap-2 text-muted-foreground">
               <Loader2 className="animate-spin" size={18} />
               {t('common.loading')}
