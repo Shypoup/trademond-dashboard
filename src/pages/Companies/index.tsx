@@ -4,11 +4,12 @@ import { Plus, Building2, ShieldCheck, Globe, Eye } from 'lucide-react';
 import { toast } from 'sonner';
 import { companyService } from '@services/companyService';
 import { tagService } from '@services/tagService';
+import { taxonomyService, type AdminIndustry } from '@services/taxonomyService';
 import { userService } from '@services/userService';
 import { authService } from '@services/authService';
 import { Company, Tag, User } from '@data-types/api';
 import { displayBilingual } from '@utils/ui';
-import { getCompanyData, EMPTY_COMPANY_FORM, toBilingualParts } from './utils/companyHelpers';
+import { getCompanyData, EMPTY_COMPANY_FORM, toBilingualParts, validateCompanyEditRequiredFields } from './utils/companyHelpers';
 import type { CompanyFormData } from './utils/companyHelpers';
 import { CompanyTable } from './components/CompanyTable';
 import { CompanyFormSheet } from './components/CompanyFormSheet';
@@ -21,7 +22,7 @@ import { DeleteCompanyDialog } from './components/DeleteCompanyDialog';
  * toast notifications, and a proper delete confirmation dialog.
  */
 const Companies = () => {
-    const { t } = useTranslation();
+    const { t, i18n } = useTranslation();
 
     const [loading, setLoading] = React.useState(true);
     const [companyList, setCompanyList] = React.useState<Company[]>([]);
@@ -34,6 +35,7 @@ const Companies = () => {
     const [formData, setFormData] = React.useState<CompanyFormData>({ ...EMPTY_COMPANY_FORM });
     const [allExpertises, setAllExpertises] = React.useState<Tag[]>([]);
     const [allUsers, setAllUsers] = React.useState<User[]>([]);
+    const [allIndustries, setAllIndustries] = React.useState<AdminIndustry[]>([]);
 
     const [search, setSearch] = React.useState('');
     const [page, setPage] = React.useState(1);
@@ -85,10 +87,21 @@ const Companies = () => {
         }
     };
 
+    const fetchIndustries = async () => {
+        try {
+            const res = await taxonomyService.getIndustries({ per_page: 200 });
+            if (res && res.data) setAllIndustries(res.data as AdminIndustry[]);
+            else if (Array.isArray(res)) setAllIndustries(res as AdminIndustry[]);
+        } catch {
+            /* non-critical — form still works */
+        }
+    };
+
     React.useEffect(() => {
         fetchCompanies();
         fetchExpertises();
         fetchUsers();
+        void fetchIndustries();
     }, []);
 
     React.useEffect(() => {
@@ -213,6 +226,21 @@ const Companies = () => {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+        if (editingId !== null) {
+            const validation = validateCompanyEditRequiredFields(formData, { uiLanguage: i18n.language });
+            if (!validation.ok) {
+                if (validation.reason === 'established_year_invalid') {
+                    toast.error(t('companies.validationEstablishedYearRange', { maxYear: new Date().getFullYear() }));
+                } else if (validation.reason === 'missing_name_en') {
+                    toast.error(t('companies.validationNameEnRequired'));
+                } else if (validation.reason === 'missing_name_ar') {
+                    toast.error(t('companies.validationNameArRequired'));
+                } else {
+                    toast.error(t('companies.validationFillRequiredEdit'));
+                }
+                return;
+            }
+        }
         setFormSaving(true);
         try {
             const basePayload: Record<string, unknown> = {
@@ -228,7 +256,9 @@ const Companies = () => {
                 published: formData.published,
             };
 
-            if (formData.established) {
+            if (editingId !== null) {
+                basePayload.established = Number(formData.established);
+            } else if (formData.established) {
                 basePayload.established = Number(formData.established);
             }
 
@@ -341,6 +371,7 @@ const Companies = () => {
                 formSaving={formSaving}
                 allExpertises={allExpertises}
                 allUsers={allUsers}
+                allIndustries={allIndustries}
                 loginOwnerId={loginOwnerId}
             />
 

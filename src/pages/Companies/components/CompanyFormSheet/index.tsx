@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { X, Loader2, Tag as TagIcon, ChevronDown, Search } from 'lucide-react';
 import { Tag, User } from '@data-types/api';
 import { displayBilingual } from '@utils/ui';
+import type { AdminIndustry } from '@services/taxonomyService';
 import {
     Sheet,
     SheetContent,
@@ -10,6 +11,7 @@ import {
     SheetTitle,
 } from '@/components/ui/sheet';
 import type { CompanyFormData } from '../../utils/companyHelpers';
+import { isArabicUiLanguage } from '../../utils/companyHelpers';
 
 /** Props for the {@link CompanyFormSheet} component. */
 export interface CompanyFormSheetProps {
@@ -31,6 +33,8 @@ export interface CompanyFormSheetProps {
     allExpertises: Tag[];
     /** Available users to pick from as company owner. */
     allUsers: User[];
+    /** Industries from `/admin/industries` for the industry select (value = id). */
+    allIndustries: AdminIndustry[];
     /** The logged-in user's id, used as default owner for new companies. */
     loginOwnerId: string;
 }
@@ -49,9 +53,16 @@ export const CompanyFormSheet: React.FC<CompanyFormSheetProps> = ({
     formSaving,
     allExpertises,
     allUsers,
+    allIndustries,
     loginOwnerId,
 }) => {
-    const { t } = useTranslation();
+    const { t, i18n } = useTranslation();
+
+    const isEditMode = editingId !== null;
+    const arabicUi = isArabicUiLanguage(i18n.language);
+    /** When editing, the “other” locale’s company name is optional (validated per UI language). */
+    const englishNameOptional = isEditMode && arabicUi;
+    const arabicNameOptional = isEditMode && !arabicUi;
     const [ownerSearch, setOwnerSearch] = React.useState('');
     const [ownerDropdownOpen, setOwnerDropdownOpen] = React.useState(false);
     const ownerRef = React.useRef<HTMLDivElement>(null);
@@ -85,6 +96,11 @@ export const CompanyFormSheet: React.FC<CompanyFormSheetProps> = ({
     const selectedUser = React.useMemo(
         () => allUsers.find((u) => String(u.id) === formData.owner_id),
         [allUsers, formData.owner_id],
+    );
+
+    /** True when the saved company references an industry id not present in the loaded list (e.g. stale data). */
+    const industryMissingFromList = Boolean(
+        formData.industry_id && !allIndustries.some((i) => i.id === formData.industry_id),
     );
 
     /** Updates a single language key inside a bilingual field. */
@@ -142,7 +158,7 @@ export const CompanyFormSheet: React.FC<CompanyFormSheetProps> = ({
                 </div>
 
                 {/* Form */}
-                <form onSubmit={onSubmit} className="flex flex-col flex-1">
+                <form noValidate onSubmit={onSubmit} className="flex flex-col flex-1">
                     <div className="p-8 space-y-8 overflow-y-auto premium-scrollbar flex-1">
                         {/* Identity */}
                         <div className="space-y-6">
@@ -150,9 +166,14 @@ export const CompanyFormSheet: React.FC<CompanyFormSheetProps> = ({
                                 <div className="space-y-2">
                                     <label className="text-[11px] font-black uppercase tracking-widest text-muted-foreground">
                                         {t('companies.englishName')}
+                                        {englishNameOptional ? (
+                                            <span className="ms-1 font-medium normal-case text-muted-foreground">
+                                                ({t('companies.optional')})
+                                            </span>
+                                        ) : null}
                                     </label>
                                     <input
-                                        required
+                                        aria-required={isEditMode && !arabicUi}
                                         className="h-12 w-full rounded-xl border border-border bg-background px-4 text-sm font-bold text-foreground outline-none transition-all focus:border-primary focus:ring-2 focus:ring-ring/20"
                                         value={formData.name.en}
                                         onChange={e => updateBilingual('name', 'en', e.target.value)}
@@ -161,9 +182,14 @@ export const CompanyFormSheet: React.FC<CompanyFormSheetProps> = ({
                                 <div className="space-y-2">
                                     <label className="text-[11px] font-black uppercase tracking-widest text-muted-foreground text-end block">
                                         {t('companies.arabicName')}
+                                        {arabicNameOptional ? (
+                                            <span className="me-1 font-medium normal-case text-muted-foreground">
+                                                ({t('companies.optional')})
+                                            </span>
+                                        ) : null}
                                     </label>
                                     <input
-                                        required
+                                        aria-required={isEditMode && arabicUi}
                                         dir="rtl"
                                         className="h-12 w-full rounded-xl border border-border bg-background px-4 text-end text-sm font-bold text-foreground outline-none transition-all focus:border-primary focus:ring-2 focus:ring-ring/20"
                                         value={formData.name.ar}
@@ -178,6 +204,7 @@ export const CompanyFormSheet: React.FC<CompanyFormSheetProps> = ({
                                         {t('companies.sloganEn')}
                                     </label>
                                     <input
+                                        aria-required={Boolean(editingId)}
                                         className="h-11 w-full rounded-xl border border-border bg-background px-4 text-sm font-medium text-foreground outline-none transition-all focus:border-primary focus:ring-2 focus:ring-ring/20"
                                         value={formData.slogan.en}
                                         onChange={e => setFormData(prev => ({ ...prev, slogan: { ...prev.slogan, en: e.target.value } }))}
@@ -188,6 +215,7 @@ export const CompanyFormSheet: React.FC<CompanyFormSheetProps> = ({
                                         {t('companies.sloganAr')}
                                     </label>
                                     <input
+                                        aria-required={Boolean(editingId)}
                                         dir="rtl"
                                         className="h-11 w-full rounded-xl border border-border bg-background px-4 text-end text-sm font-medium text-foreground outline-none transition-all focus:border-primary focus:ring-2 focus:ring-ring/20"
                                         value={formData.slogan.ar}
@@ -202,6 +230,7 @@ export const CompanyFormSheet: React.FC<CompanyFormSheetProps> = ({
                                         {t('companies.acronym')}
                                     </label>
                                     <input
+                                        aria-required={Boolean(editingId)}
                                         className="h-11 w-full rounded-xl border border-border bg-background px-4 text-sm font-bold uppercase text-foreground outline-none transition-all placeholder:lowercase focus:border-primary focus:ring-2 focus:ring-ring/20"
                                         value={formData.acronym}
                                         onChange={e => setFormData(prev => ({ ...prev, acronym: e.target.value }))}
@@ -212,6 +241,7 @@ export const CompanyFormSheet: React.FC<CompanyFormSheetProps> = ({
                                         {t('companies.handle')}
                                     </label>
                                     <input
+                                        aria-required={Boolean(editingId)}
                                         className="h-11 w-full rounded-xl border border-border bg-background px-4 text-sm font-medium text-foreground outline-none transition-all focus:border-primary focus:ring-2 focus:ring-ring/20"
                                         placeholder="@handle"
                                         value={formData.handle}
@@ -223,6 +253,7 @@ export const CompanyFormSheet: React.FC<CompanyFormSheetProps> = ({
                                         {t('companies.establishedYear')}
                                     </label>
                                     <input
+                                        aria-required={Boolean(editingId)}
                                         type="number"
                                         min="1800"
                                         max={new Date().getFullYear()}
@@ -307,13 +338,28 @@ export const CompanyFormSheet: React.FC<CompanyFormSheetProps> = ({
                                 </div>
                                 <div className="space-y-2">
                                     <label className="text-[11px] font-black uppercase tracking-widest text-muted-foreground">
-                                        {t('companies.industryUlid')}
+                                        {t('companies.industry')}
                                     </label>
-                                    <input
-                                        className="h-11 w-full rounded-xl border border-border bg-background px-4 font-mono text-sm text-foreground outline-none transition-all focus:border-primary focus:ring-2 focus:ring-ring/20"
+                                    <select
+                                        aria-required={Boolean(editingId)}
                                         value={formData.industry_id}
-                                        onChange={e => setFormData(prev => ({ ...prev, industry_id: e.target.value }))}
-                                    />
+                                        onChange={(e) =>
+                                            setFormData((prev) => ({ ...prev, industry_id: e.target.value }))
+                                        }
+                                        className="h-11 w-full rounded-xl border border-border bg-background px-4 text-sm font-medium text-foreground outline-none transition-all focus:border-primary focus:ring-2 focus:ring-ring/20"
+                                    >
+                                        <option value="">{t('companies.selectIndustry')}</option>
+                                        {industryMissingFromList && (
+                                            <option value={formData.industry_id}>
+                                                {t('companies.unknownIndustryOption', { id: formData.industry_id })}
+                                            </option>
+                                        )}
+                                        {allIndustries.map((ind) => (
+                                            <option key={ind.id} value={ind.id}>
+                                                {displayBilingual(ind.name)}
+                                            </option>
+                                        ))}
+                                    </select>
                                 </div>
                             </div>
 

@@ -160,7 +160,9 @@
     "searchUsers": "البحث بالاسم أو البريد الإلكتروني...",
     "noUsersFound": "لم يتم العثور على مستخدمين.",
     "ownerUlid": "معرّف المالك",
-    "industryUlid": "معرّف القطاع",
+    "industry": "القطاع",
+    "selectIndustry": "اختر القطاع…",
+    "unknownIndustryOption": "قطاع غير معروف ({{id}})",
     "expertises": "التخصصات",
     "noExpertises": "لم يتم تحميل التخصصات من الواجهة البرمجية.",
     "governance": "الحوكمة والظهور",
@@ -191,7 +193,12 @@
     "publishedCompanies": "منشورة",
     "filteredCount": "{{count}} شركة",
     "rowsPerPage": "صفوف لكل صفحة",
-    "pageOf": "صفحة {{page}} من {{totalPages}}"
+    "pageOf": "صفحة {{page}} من {{totalPages}}",
+    "optional": "اختياري",
+    "validationNameEnRequired": "أدخل اسم الشركة بالإنجليزية قبل الحفظ.",
+    "validationNameArRequired": "أدخل اسم الشركة بالعربية قبل الحفظ.",
+    "validationFillRequiredEdit": "أدخل الشعار باللغتين، والاختصار، والمعرّف، والقطاع، وسنة التأسيس قبل الحفظ (واسم الشركة بلغة واجهة الإدارة الحالية).",
+    "validationEstablishedYearRange": "يجب أن تكون سنة التأسيس رقماً صحيحاً بين 1800 و {{maxYear}}."
   },
   "users": {
     "title": "المستخدمون",

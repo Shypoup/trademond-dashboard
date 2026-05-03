@@ -75,6 +75,72 @@ export const EMPTY_COMPANY_FORM: CompanyFormData = {
     published: true,
 };
 
+/** Outcome of {@link validateCompanyEditRequiredFields}. */
+export type CompanyEditValidationResult =
+    | { ok: true }
+    | {
+          ok: false;
+          reason:
+              | 'missing_required'
+              | 'missing_name_en'
+              | 'missing_name_ar'
+              | 'established_year_invalid';
+      };
+
+/**
+ * Returns trimmed string or empty when falsy.
+ *
+ * @param value - Raw input string.
+ */
+const trimField = (value: string) => value.trim();
+
+/**
+ * Whether the active UI locale uses Arabic as the primary editing language (requires Arabic name on edit).
+ *
+ * @param uiLanguage - Value from i18n (`en`, `ar`, `en-US`, …).
+ */
+export function isArabicUiLanguage(uiLanguage: string): boolean {
+    return uiLanguage.toLowerCase().startsWith('ar');
+}
+
+/**
+ * Validates name (by UI language), slogan, acronym, handle, industry id, and established year
+ * before updating an existing company from the admin sheet.
+ *
+ * When the admin UI is English, only the English name is required; when Arabic, only the Arabic name.
+ *
+ * @param data - Current {@link CompanyFormData} from the sheet.
+ * @param options.uiLanguage - Active i18n language for which name field is required.
+ */
+export function validateCompanyEditRequiredFields(
+    data: CompanyFormData,
+    options: { uiLanguage: string },
+): CompanyEditValidationResult {
+    if (isArabicUiLanguage(options.uiLanguage)) {
+        if (!trimField(data.name.ar)) {
+            return { ok: false, reason: 'missing_name_ar' };
+        }
+    } else if (!trimField(data.name.en)) {
+        return { ok: false, reason: 'missing_name_en' };
+    }
+    if (!trimField(data.slogan.en) || !trimField(data.slogan.ar)) {
+        return { ok: false, reason: 'missing_required' };
+    }
+    if (!trimField(data.acronym) || !trimField(data.handle) || !trimField(data.industry_id)) {
+        return { ok: false, reason: 'missing_required' };
+    }
+    const establishedRaw = trimField(data.established);
+    if (!establishedRaw) {
+        return { ok: false, reason: 'missing_required' };
+    }
+    const year = Number(establishedRaw);
+    const maxYear = new Date().getFullYear();
+    if (!Number.isFinite(year) || !Number.isInteger(year) || year < 1800 || year > maxYear) {
+        return { ok: false, reason: 'established_year_invalid' };
+    }
+    return { ok: true };
+}
+
 /**
  * Safely extracts `{ en, ar }` parts from a {@link BilingualText} value.
  * When the value is a plain string it is treated as the English part.

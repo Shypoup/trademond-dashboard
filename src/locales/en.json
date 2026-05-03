@@ -160,7 +160,9 @@
     "searchUsers": "Search by name or email...",
     "noUsersFound": "No users found.",
     "ownerUlid": "Owner ULID",
-    "industryUlid": "Industry ULID",
+    "industry": "Industry",
+    "selectIndustry": "Select industry…",
+    "unknownIndustryOption": "Unknown industry ({{id}})",
     "expertises": "Expertises",
     "noExpertises": "No expertises loaded from API.",
     "governance": "Governance & Visibility",
@@ -191,7 +193,12 @@
     "publishedCompanies": "Published",
     "filteredCount": "{{count}} companies",
     "rowsPerPage": "Rows per page",
-    "pageOf": "Page {{page}} of {{totalPages}}"
+    "pageOf": "Page {{page}} of {{totalPages}}",
+    "optional": "optional",
+    "validationNameEnRequired": "Enter the English company name before saving.",
+    "validationNameArRequired": "Enter the Arabic company name before saving.",
+    "validationFillRequiredEdit": "Enter both slogan languages, acronym, handle, industry, and established year before saving (and the company name in your current interface language).",
+    "validationEstablishedYearRange": "Established year must be a whole number between 1800 and {{maxYear}}."
   },
   "users": {
     "title": "Users",
