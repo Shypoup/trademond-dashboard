@@ -14,6 +14,7 @@ import type { CompanyFormData } from './utils/companyHelpers';
 import { CompanyTable } from './components/CompanyTable';
 import { CompanyFormSheet } from './components/CompanyFormSheet';
 import { DeleteCompanyDialog } from './components/DeleteCompanyDialog';
+import { TransferOwnershipSheet } from './components/TransferOwnershipSheet';
 
 /**
  * Company Management page.
@@ -43,6 +44,7 @@ const Companies = () => {
 
     const [deleteTarget, setDeleteTarget] = React.useState<Company | null>(null);
     const [isDeleting, setIsDeleting] = React.useState(false);
+    const [transferTarget, setTransferTarget] = React.useState<Company | null>(null);
 
     // -----------------------------------------------------------------------
     // Data fetching
@@ -224,6 +226,36 @@ const Companies = () => {
         }
     };
 
+    /**
+     * Updates the company list after a successful ownership transfer.
+     */
+    const applyTransfer = (
+        companyId: string | number,
+        owner: { id: string; name: string; email: string },
+    ) => {
+        setCompanyList((prev) =>
+            prev.map((c) => {
+                if (c.id !== companyId) return c;
+                const raw = c as unknown as Record<string, unknown>;
+                const attrs = (raw.attributes as Record<string, unknown> | undefined) ?? {};
+                const rels = (raw.relationships as Record<string, unknown> | undefined) ?? {};
+                return {
+                    ...raw,
+                    attributes: { ...attrs, source: 'claimed' },
+                    relationships: {
+                        ...rels,
+                        owner: { id: owner.id, name: owner.name, email: owner.email },
+                    },
+                } as unknown as Company;
+            }),
+        );
+    };
+
+    const editingCompany = React.useMemo(
+        () => (editingId != null ? companyList.find((c) => c.id === editingId) ?? null : null),
+        [companyList, editingId],
+    );
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         if (editingId !== null) {
@@ -358,6 +390,7 @@ const Companies = () => {
                 onEdit={handleOpenModal}
                 onDelete={(c) => setDeleteTarget(c)}
                 onToggleStatus={handleToggleStatus}
+                onTransfer={(c) => setTransferTarget(c)}
             />
 
             {/* Create / Edit sheet */}
@@ -373,6 +406,8 @@ const Companies = () => {
                 allUsers={allUsers}
                 allIndustries={allIndustries}
                 loginOwnerId={loginOwnerId}
+                editingCompany={editingCompany}
+                onTransfer={(c) => setTransferTarget(c)}
             />
 
             {/* Delete confirmation dialog */}
@@ -382,6 +417,17 @@ const Companies = () => {
                 onConfirm={handleConfirmDelete}
                 isDeleting={isDeleting}
                 companyName={deleteTarget ? displayBilingual(getCompanyData(deleteTarget).name) : undefined}
+            />
+
+            <TransferOwnershipSheet
+                isOpen={transferTarget !== null}
+                onOpenChange={(open) => {
+                    if (!open) setTransferTarget(null);
+                }}
+                company={transferTarget}
+                onTransferred={(companyId, owner) => {
+                    applyTransfer(companyId, owner);
+                }}
             />
         </div>
     );

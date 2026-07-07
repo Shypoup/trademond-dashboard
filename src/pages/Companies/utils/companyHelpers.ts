@@ -18,6 +18,9 @@ export const coerceApiBoolean = (value: unknown, defaultValue: boolean): boolean
  * Normalized shape of a company record after flattening
  * both legacy flat payloads and JSON:API-style payloads.
  */
+/** Company profile source as returned by the API. */
+export type CompanySource = 'manual' | 'google_places' | 'claimed' | string;
+
 export interface NormalizedCompany {
     id: string | number;
     name: BilingualText;
@@ -36,6 +39,12 @@ export interface NormalizedCompany {
     ownerId: string;
     ownerName: string;
     ownerEmail: string;
+    /** Profile source: `manual`, `google_places`, or `claimed`. */
+    source: CompanySource;
+    /** True when the company has been claimed by a real business owner. */
+    claimed: boolean;
+    /** True when the current owner is a real user (claimed profile). */
+    ownerIsRealUser: boolean;
     ranking: number | null;
     established: number | null;
     expertiseIds: string[];
@@ -167,6 +176,8 @@ export const getCompanyData = (item: unknown): NormalizedCompany => {
     const rawPublished = attrs.published !== undefined ? attrs.published : c.published;
     const rawSearchable = attrs.searchable !== undefined ? attrs.searchable : c.searchable;
     const rawVerified = attrs.verified !== undefined ? attrs.verified : c.verified;
+    const rawSource = String(attrs.source ?? c.source ?? 'manual');
+    const claimed = rawSource === 'claimed';
 
     return {
         id: c.id,
@@ -186,6 +197,9 @@ export const getCompanyData = (item: unknown): NormalizedCompany => {
         ownerId: rels.owner?.id || c.owner?.id || c.owner_id || '',
         ownerName: rels.owner?.name || c.owner?.name || '',
         ownerEmail: rels.owner?.email || c.owner?.email || '',
+        source: rawSource,
+        claimed,
+        ownerIsRealUser: claimed,
         ranking: attrs.ranking ?? c.ranking ?? null,
         established: attrs.established ?? c.established ?? null,
         expertiseIds: Array.isArray(rels.expertises)

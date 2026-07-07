@@ -11,6 +11,8 @@ import {
     Shield,
     ShieldCheck,
     Building2,
+    ArrowRightLeft,
+    CheckCircle2,
 } from 'lucide-react';
 import { Company } from '@data-types/api';
 import { BRAND_PRIMARY_HEX_PARAM } from '@utils/core/colors';
@@ -43,6 +45,8 @@ export interface CompanyTableProps {
     onDelete: (company: Company) => void;
     /** Callback when the user toggles the published state. */
     onToggleStatus: (id: string | number) => void;
+    /** Callback when the user initiates ownership transfer. */
+    onTransfer: (company: Company) => void;
 }
 
 /**
@@ -62,6 +66,7 @@ export const CompanyTable: React.FC<CompanyTableProps> = ({
     onEdit,
     onDelete,
     onToggleStatus,
+    onTransfer,
 }) => {
     const { t } = useTranslation();
 
@@ -97,6 +102,9 @@ export const CompanyTable: React.FC<CompanyTableProps> = ({
                             </th>
                             <th className="px-6 py-3.5 text-[11px] font-bold uppercase tracking-wider text-muted-foreground">
                                 {t('companies.location')}
+                            </th>
+                            <th className="px-6 py-3.5 text-[11px] font-bold uppercase tracking-wider text-muted-foreground">
+                                {t('companies.ownershipStatus')}
                             </th>
                             <th className="px-6 py-3.5 text-[11px] font-bold uppercase tracking-wider text-muted-foreground">
                                 {t('common.status')}
@@ -169,6 +177,20 @@ export const CompanyTable: React.FC<CompanyTableProps> = ({
                                         </div>
                                     </td>
 
+                                    {/* Ownership */}
+                                    <td className="px-6 py-4">
+                                        {d.claimed ? (
+                                            <span className="inline-flex items-center gap-1 rounded-full border border-primary/30 bg-primary/10 px-2.5 py-0.5 text-[10px] font-bold text-primary">
+                                                <CheckCircle2 size={11} />
+                                                {t('companies.claimed')}
+                                            </span>
+                                        ) : (
+                                            <span className="inline-flex items-center rounded-full border border-amber-200 bg-amber-50 px-2.5 py-0.5 text-[10px] font-bold text-amber-700 dark:border-amber-900 dark:bg-amber-950/40 dark:text-amber-300">
+                                                {t('companies.unclaimed')}
+                                            </span>
+                                        )}
+                                    </td>
+
                                     {/* Status badges */}
                                     <td className="px-6 py-4">
                                         <div className="flex flex-wrap items-center gap-1.5">
@@ -205,6 +227,21 @@ export const CompanyTable: React.FC<CompanyTableProps> = ({
                                     <td className="px-6 py-4 text-end">
                                         <div className="flex items-center justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
                                             <button
+                                                onClick={() => onTransfer(c)}
+                                                className={`rounded-lg p-2 transition-all hover:bg-muted ${
+                                                    d.claimed
+                                                        ? 'text-muted-foreground hover:text-primary'
+                                                        : 'text-primary hover:bg-primary/10'
+                                                }`}
+                                                title={
+                                                    d.claimed
+                                                        ? t('companies.transferOwnership')
+                                                        : t('companies.assignOwner')
+                                                }
+                                            >
+                                                <ArrowRightLeft size={15} />
+                                            </button>
+                                            <button
                                                 onClick={() => onEdit(c)}
                                                 className="rounded-lg p-2 text-muted-foreground transition-all hover:bg-muted hover:text-primary"
                                                 title={t('common.edit')}
@@ -225,7 +262,7 @@ export const CompanyTable: React.FC<CompanyTableProps> = ({
                         })}
                         {companies.length === 0 && (
                             <tr>
-                                <td colSpan={5} className="px-6 py-16 text-center">
+                                <td colSpan={6} className="px-6 py-16 text-center">
                                     <div className="flex flex-col items-center gap-3">
                                         <Building2 size={36} className="text-muted-foreground/30" />
                                         <p className="text-sm font-medium text-muted-foreground">

@@ -205,4 +205,38 @@ export const companyService = {
     });
     return response.data;
   },
+
+  // ─── Ownership Transfer ───────────────────────────────────
+
+  /**
+   * Resolves a candidate new owner by email or 26-char ULID without mutating the company.
+   * @param companyId - Company ULID.
+   * @param query - Email address or account ULID.
+   */
+  previewTransferOwnership: async (companyId: string, query: string) => {
+    const response = await axiosClient.post(
+      `/admin/companies/${companyId}/transfer-ownership/preview`,
+      { query },
+    );
+    return response.data;
+  },
+
+  /**
+   * Atomically reassigns company ownership to a real user account.
+   * @param companyId - Company ULID.
+   * @param payload - `new_owner_id` and optional `previous_owner_action`.
+   */
+  transferOwnership: async (
+    companyId: string,
+    payload: {
+      new_owner_id: string;
+      previous_owner_action?: 'keep_as_admin' | 'keep_as_member' | 'remove';
+    },
+  ) => {
+    const response = await axiosClient.post(
+      `/admin/companies/${companyId}/transfer-ownership`,
+      payload,
+    );
+    return response.data;
+  },
 };

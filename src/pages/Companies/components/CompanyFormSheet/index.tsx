@@ -1,6 +1,6 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { X, Loader2, Tag as TagIcon, ChevronDown, Search } from 'lucide-react';
+import { X, Loader2, Tag as TagIcon, ChevronDown, Search, ArrowRightLeft, CheckCircle2 } from 'lucide-react';
 import { Tag, User } from '@data-types/api';
 import { displayBilingual } from '@utils/ui';
 import type { AdminIndustry } from '@services/taxonomyService';
@@ -11,7 +11,8 @@ import {
     SheetTitle,
 } from '@/components/ui/sheet';
 import type { CompanyFormData } from '../../utils/companyHelpers';
-import { isArabicUiLanguage } from '../../utils/companyHelpers';
+import { isArabicUiLanguage, getCompanyData } from '../../utils/companyHelpers';
+import type { Company } from '@data-types/api';
 
 /** Props for the {@link CompanyFormSheet} component. */
 export interface CompanyFormSheetProps {
@@ -37,6 +38,10 @@ export interface CompanyFormSheetProps {
     allIndustries: AdminIndustry[];
     /** The logged-in user's id, used as default owner for new companies. */
     loginOwnerId: string;
+    /** Full company record when editing (for ownership section). */
+    editingCompany?: Company | null;
+    /** Opens the ownership transfer flow for the company being edited. */
+    onTransfer?: (company: Company) => void;
 }
 
 /**
@@ -55,10 +60,13 @@ export const CompanyFormSheet: React.FC<CompanyFormSheetProps> = ({
     allUsers,
     allIndustries,
     loginOwnerId,
+    editingCompany = null,
+    onTransfer,
 }) => {
     const { t, i18n } = useTranslation();
 
     const isEditMode = editingId !== null;
+    const editCompanyData = editingCompany ? getCompanyData(editingCompany) : null;
     const arabicUi = isArabicUiLanguage(i18n.language);
     /** When editing, the “other” locale’s company name is optional (validated per UI language). */
     const englishNameOptional = isEditMode && arabicUi;
@@ -153,6 +161,13 @@ export const CompanyFormSheet: React.FC<CompanyFormSheetProps> = ({
                                 2
                             </span>
                             <span>{t('companies.locationMeta')}</span>
+                        </div>
+                        <div className="h-px w-6 bg-border" />
+                        <div className="flex items-center gap-2">
+                            <span className="flex h-5 w-5 items-center justify-center rounded-full bg-muted text-[10px] text-muted-foreground">
+                                3
+                            </span>
+                            <span>{t('companies.ownershipStatus')}</span>
                         </div>
                     </div>
                 </div>
@@ -400,6 +415,81 @@ export const CompanyFormSheet: React.FC<CompanyFormSheetProps> = ({
                                 </div>
                             </div>
                         </div>
+
+                        {/* Ownership & status (edit mode only) */}
+                        {isEditMode && editCompanyData && editingCompany && (
+                            <div className="space-y-4">
+                                <h4 className="text-[11px] font-black text-primary uppercase tracking-widest">
+                                    {t('companies.ownershipStatus')}
+                                </h4>
+                                <div
+                                    className={`rounded-2xl border p-5 sm:p-6 ${
+                                        editCompanyData.claimed
+                                            ? 'border-primary/25 bg-primary/5'
+                                            : 'border-amber-200/60 bg-amber-50/50 dark:border-amber-900/40 dark:bg-amber-950/20'
+                                    }`}
+                                >
+                                    {editCompanyData.claimed ? (
+                                        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                                            <div className="min-w-0 space-y-2">
+                                                <p className="text-[11px] font-bold uppercase tracking-widest text-muted-foreground">
+                                                    {t('companies.claimedOwnerLabel')}
+                                                </p>
+                                                <p className="break-words text-sm font-bold text-foreground">
+                                                    {editCompanyData.ownerName}
+                                                </p>
+                                                {editCompanyData.ownerEmail && (
+                                                    <p dir="ltr" className="break-all text-xs text-muted-foreground">
+                                                        {editCompanyData.ownerEmail}
+                                                    </p>
+                                                )}
+                                                <span className="inline-flex items-center gap-1 rounded-full border border-primary/30 bg-primary/10 px-2.5 py-0.5 text-[10px] font-bold text-primary">
+                                                    <CheckCircle2 size={11} />
+                                                    {t('companies.claimed')}
+                                                </span>
+                                            </div>
+                                            {onTransfer && (
+                                                <button
+                                                    type="button"
+                                                    onClick={() => {
+                                                        onOpenChange(false);
+                                                        setTimeout(() => onTransfer(editingCompany), 80);
+                                                    }}
+                                                    className="inline-flex shrink-0 items-center justify-center gap-2 rounded-xl border border-border bg-card px-4 py-2.5 text-sm font-bold text-foreground transition-colors hover:bg-muted"
+                                                >
+                                                    <ArrowRightLeft size={15} />
+                                                    {t('companies.transferOwnership')}
+                                                </button>
+                                            )}
+                                        </div>
+                                    ) : (
+                                        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                                            <div className="min-w-0 space-y-2">
+                                                <p className="text-sm leading-relaxed text-muted-foreground">
+                                                    {t('companies.unclaimedHint')}
+                                                </p>
+                                                <span className="inline-flex items-center rounded-full border border-amber-200 bg-amber-50 px-2.5 py-0.5 text-[10px] font-bold text-amber-700 dark:border-amber-900 dark:bg-amber-950/40 dark:text-amber-300">
+                                                    {t('companies.unclaimed')}
+                                                </span>
+                                            </div>
+                                            {onTransfer && (
+                                                <button
+                                                    type="button"
+                                                    onClick={() => {
+                                                        onOpenChange(false);
+                                                        setTimeout(() => onTransfer(editingCompany), 80);
+                                                    }}
+                                                    className="inline-flex shrink-0 items-center justify-center gap-2 rounded-xl bg-primary px-4 py-2.5 text-sm font-bold text-primary-foreground transition-colors hover:bg-primary/90"
+                                                >
+                                                    <ArrowRightLeft size={15} />
+                                                    {t('companies.assignOwner')}
+                                                </button>
+                                            )}
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
+                        )}
 
                         {/* Governance */}
                         <div className="space-y-4">
